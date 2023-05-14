@@ -1,0 +1,10 @@
+type Tag {
+  id: ID!
+  name: String!
+  category: Category
+}
+
+input CreateTagInput {
+  name: String!
+  category: String
+}

@@ -1,0 +1,29 @@
+type Moment {
+    id: ID!
+    username: String!
+    character: Character!
+    content: String!
+    createdAt: String!
+    likeNumber: Int!
+    commentNumber: Int!
+    isLiked: Boolean!
+    comments: [Comment!]
+    tags: [Tag!]!
+}
+
+input CreateMomentInput {
+    username: String!
+    character: String!
+    content: String!
+    tags: [String!]!
+}
+
+input LikeAndUnlikeMomentInput {
+    momentId: ID!
+    username: String!
+}
+
+input FilterMomentInput {
+    category: String
+    followedBy: String
+}

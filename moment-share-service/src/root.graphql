@@ -1,0 +1,18 @@
+type Query {
+  moments(input: FilterMomentInput): [Moment!]
+  moment(id: ID!): Moment!
+  characters: [Character!]
+  categories: [Category!]
+  tags: [Tag!]
+}
+
+type Mutation {
+  createMoment(input: CreateMomentInput!): Moment!
+  deleteMoment(id: ID!): Boolean!
+  createCharacter(name: String!): Character
+  likeMoment(input: LikeAndUnlikeMomentInput!): Moment!
+  unlikeMoment(input: LikeAndUnlikeMomentInput!): Moment!
+  createComment(input: CreateCommentInput!): Comment!
+  createCategory(input: CreateCategoryInput!): Category!
+  createTag(input: CreateTagInput!): Tag!
+}

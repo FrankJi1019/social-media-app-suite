@@ -1,0 +1,15 @@
+type Comment {
+  id: ID!
+  username: String!
+  content: String!
+  createdAt: String!
+  character: Character!
+  moment: Moment!
+}
+
+input CreateCommentInput {
+  username: String!
+  character: String!
+  content: String!
+  momentId: String!
+}

@@ -1,0 +1,18 @@
+@font-face {
+    font-family: "demo";
+    src: local("demo"),
+    url(./assets/fonts/demo-font.otf) format("truetype");
+}
+
+@font-face {
+    font-family: "NunitoRegular";
+    src: local("NunitoRegular"),
+    url(./assets/fonts/NunitoRegular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "KronaOne";
+    src: local("KronaOne"),
+    url(./assets/fonts/KronaOne.ttf) format("truetype");
+}
+

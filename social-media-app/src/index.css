@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*:not(input) {
+    box-sizing: border-box !important;
+}
+
+.MuiButtonBase-root {
+    text-transform: capitalize !important;
+}

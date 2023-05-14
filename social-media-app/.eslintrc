@@ -1,0 +1,55 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "prettier",
+    "unused-imports"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "react-app",
+    "react-app/jest"
+  ],
+  "rules": {
+    "indent": ["error", 2],
+    // Code Quality
+    "@typescript-eslint/no-explicit-any": "off",
+    "dot-notation": "error",
+    "eqeqeq": "error",
+    "prefer-const": "error",
+
+    // Style
+    "max-len": ["error", {
+      "code": 120,
+      "comments": 150
+    }],
+    "no-duplicate-imports": "error",
+    "switch-colon-spacing": "error",
+    "no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
+    "sort-vars": ["error", { "ignoreCase": true }],
+
+    // Functions
+    "func-call-spacing" : ["error", "never"],
+    // Objects
+    "key-spacing": ["error", { "mode": "strict" }],
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ]
+    // Arrays
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.stories.*"
+      ],
+      "rules": {
+        "indent": ["error", 2],
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ]
+}
