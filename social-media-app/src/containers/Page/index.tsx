@@ -1,28 +1,30 @@
-import React, { FC, ReactNode, useCallback, useEffect } from "react"
-import {
-  Box,
-  Button,
-  Drawer,
-  Grid,
-  SxProps,
-  // TextField,
-  Typography
-} from "@mui/material"
-import UserAvatar from "../../components/UserAvatar"
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react"
+import { Box, Grid, IconButton, SxProps } from "@mui/material"
 import StandardContainer from "./../StandardContainer"
 import { User } from "../../providers/CognitoAuthProvider"
 // @ts-ignore
-import profilePlaceholder from "../../assets/placeholders/profile-placeholder.jpg"
-import CreateIcon from "@mui/icons-material/Create"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Routes } from "../../routes/routes"
+// @ts-ignore
+import profile from "../../assets/placeholders/profile-placeholder.jpg"
+import AuthBlock from "../../components/AuthBlock"
+import HomeIcon from "@mui/icons-material/Home"
+import TextsmsIcon from "@mui/icons-material/Textsms"
+import ControlPointIcon from "@mui/icons-material/ControlPoint"
+import PersonIcon from "@mui/icons-material/Person"
 
 export interface PageProps {
   user?: User
   title?: string
   sx?: SxProps
   loading?: boolean
-  excludeFriendDrawer?: boolean
   friends?: Array<{ id: string; profile: string; name: string }>
   onLogin?: () => void
   onRegister?: () => void
@@ -30,87 +32,12 @@ export interface PageProps {
   children: ReactNode
 }
 
-const drawerWidth = 270
-
-const AuthenticatedSideBar: FC<{
-  username: string
-  onPostNew: () => void
-  onSignOut: () => void
-}> = ({ username, onPostNew, onSignOut }) => {
-  return (
-    <Box
-      sx={{
-        height: "100%",
-        paddingX: 3,
-        paddingY: 2,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between"
-      }}
-    >
-      <Box>
-        <Box
-          sx={{ pb: 2, borderBottom: "1px solid", borderColor: "primary.main" }}
-        >
-          <UserAvatar
-            profile={profilePlaceholder}
-            name={username}
-            reverseAlign
-            avatarStyle={"rounded"}
-          />
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <Button
-            onClick={onPostNew}
-            startIcon={<CreateIcon />}
-            variant={"outlined"}
-            sx={{ width: "100%" }}
-          >
-            Write Something
-          </Button>
-        </Box>
-      </Box>
-      <Box>
-        <Button onClick={onSignOut} variant={"outlined"} sx={{ width: "100%" }}>
-          Sign Out
-        </Button>
-      </Box>
-    </Box>
-  )
-}
-
-const UnAuthenticatedSideBar: FC<{
-  onLogin: () => void
-  onRegister: () => void
-}> = ({ onLogin, onRegister }) => {
-  return (
-    <Box sx={{ paddingX: 3, paddingY: 2 }}>
-      <Box sx={{ pb: 4 }}>
-        <Typography variant={"h3"} sx={{ textAlign: "center" }}>
-          Join us now!
-        </Typography>
-      </Box>
-      <Box sx={{ pb: 2 }}>
-        <Button onClick={onRegister} sx={{ width: "100%" }}>
-          Register
-        </Button>
-      </Box>
-      <Box>
-        <Button onClick={onLogin} variant={"outlined"} sx={{ width: "100%" }}>
-          Login
-        </Button>
-      </Box>
-    </Box>
-  )
-}
-
 const Page: FC<PageProps> = ({
   user,
   title = "[IncognitoNet]",
-  friends = [],
+  // friends = [],
   loading = false,
   sx,
-  excludeFriendDrawer = false,
   onLogin = () => {},
   onRegister = () => {},
   children,
@@ -119,6 +46,10 @@ const Page: FC<PageProps> = ({
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
+  const [currentSection, setCurrentSection] = useState<
+    "main" | "friends" | "profile"
+  >("main")
+
   const postNewMomentHandler = useCallback(() => {
     if (pathname === Routes.POST_MOMENT_PAGE.path) return
     navigate({
@@ -126,14 +57,51 @@ const Page: FC<PageProps> = ({
     })
   }, [navigate, pathname])
 
+  const mobileNavBarOptions = useMemo(
+    () => [
+      {
+        title: "main",
+        icon: <HomeIcon />,
+        onClick: () => setCurrentSection("main")
+      },
+      {
+        title: "friends",
+        icon: <TextsmsIcon />,
+        onClick: () => setCurrentSection("friends")
+      },
+      {
+        title: "new",
+        icon: <ControlPointIcon />,
+        onClick: postNewMomentHandler
+      },
+      {
+        title: "profile",
+        icon: <PersonIcon />,
+        onClick: () => setCurrentSection("profile")
+      }
+    ],
+    [postNewMomentHandler]
+  )
+
   useEffect(() => {
     document.title = title
   }, [title])
 
+  const mainContent = useMemo(() => {
+    if (currentSection === "main") {
+      return children
+    } else if (currentSection === "friends") {
+      return <Box>To be implemented</Box>
+    } else {
+      return <Box>To be implemented</Box>
+    }
+  }, [children, currentSection])
+
   if (loading) return <Box>Loading...</Box>
 
   return (
-    <Box
+    <Grid
+      container
       sx={{
         width: "100%",
         minHeight: "100vh",
@@ -142,40 +110,36 @@ const Page: FC<PageProps> = ({
         ...(sx || {})
       }}
     >
-      {!excludeFriendDrawer && (
-        <Drawer
-          variant="permanent"
-          anchor="left"
-          sx={{
-            width: drawerWidth,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth
-            }
-          }}
-        >
-          To Be Implemented
-          {/*<Box sx={{ p: 2 }}>*/}
-          {/*  <Box sx={{ mb: 4 }}>*/}
-          {/*    <TextField*/}
-          {/*      placeholder={"Search"}*/}
-          {/*      sx={{*/}
-          {/*        backgroundColor: "bg.primary",*/}
-          {/*        border: "1px solid transparent",*/}
-          {/*        borderColor: "primary.main"*/}
-          {/*      }}*/}
-          {/*    />*/}
-          {/*  </Box>*/}
-          {/*  <Box>*/}
-          {/*    {friends.map(({ id, profile, name }) => (*/}
-          {/*      <Box key={id} sx={{ mb: 2 }}>*/}
-          {/*        <UserAvatar profile={profile} name={name} />*/}
-          {/*      </Box>*/}
-          {/*    ))}*/}
-          {/*  </Box>*/}
-          {/*</Box>*/}
-        </Drawer>
-      )}
       <Grid
+        item
+        sm={3}
+        md={2}
+        sx={{ display: { xs: "none", sm: "block" }, backgroundColor: "white" }}
+      >
+        <Box sx={{ display: { xs: "none", sm: "block", md: "none" } }}>
+          <AuthBlock
+            avatarOptions={
+              user && {
+                name: user.Username as string,
+                profile,
+                avatarStyle: "rounded",
+                reverseAlign: false
+              }
+            }
+            onPostNew={user && postNewMomentHandler}
+            onSignOut={user && onSignOut}
+            onLogin={user ? undefined : onLogin}
+            onRegister={user ? undefined : onRegister}
+          />
+        </Box>
+        <Box>To Be Implemented123</Box>
+      </Grid>
+
+      <Grid
+        xs={12}
+        sm={9}
+        md={10}
+        item
         container
         sx={{
           flex: 1,
@@ -186,37 +150,78 @@ const Page: FC<PageProps> = ({
       >
         <Grid
           item
-          xs={9}
+          xs={12}
+          md={9}
           sx={{
             maxHeight: "100vh",
-            overflow: "hidden",
-            "&>*": { height: "100%" },
-            p: 4,
-            pr: 0
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end"
           }}
         >
-          {children}
-        </Grid>
-        <Grid item xs={3} sx={{ display: "flex" }}>
-          <Box sx={{ p: 4, flex: 1, display: "flex" }}>
-            <StandardContainer sx={{ flex: 1 }}>
-              {user ? (
-                <AuthenticatedSideBar
-                  username={user.Username as string}
-                  onPostNew={postNewMomentHandler}
-                  onSignOut={onSignOut}
-                />
-              ) : (
-                <UnAuthenticatedSideBar
-                  onLogin={onLogin}
-                  onRegister={onRegister}
-                />
-              )}
-            </StandardContainer>
+          <Box
+            sx={{
+              flex: 1,
+              p: {
+                xs: 2,
+                md: 4
+              },
+              pr: {
+                md: 0
+              },
+              overflow: "hidden",
+              "&>*": { height: "100%" }
+            }}
+          >
+            {mainContent}
+          </Box>
+          <Box
+            sx={{
+              paddingX: 1.5,
+              paddingY: 0.5,
+              display: { xs: "flex", sm: "none" },
+              justifyContent: "space-around",
+              backgroundColor: "bg.pure"
+            }}
+          >
+            {mobileNavBarOptions.map(({ title, icon, onClick }) => (
+              <Box key={title} onClick={onClick}>
+                <IconButton
+                  sx={{
+                    color:
+                      title === currentSection ? "primary.dark" : "grey.A700"
+                  }}
+                >
+                  {icon}
+                </IconButton>
+              </Box>
+            ))}
           </Box>
         </Grid>
+        <Grid
+          item
+          md={3}
+          sx={{ display: { xs: "none", md: "flex" }, p: 4, flex: 1 }}
+        >
+          <StandardContainer sx={{ flex: 1 }}>
+            <AuthBlock
+              avatarOptions={
+                user && {
+                  name: user.Username as string,
+                  profile,
+                  avatarStyle: "rounded",
+                  reverseAlign: true
+                }
+              }
+              onPostNew={user && postNewMomentHandler}
+              onSignOut={user && onSignOut}
+              onLogin={user ? undefined : onLogin}
+              onRegister={user ? undefined : onRegister}
+            />
+          </StandardContainer>
+        </Grid>
       </Grid>
-    </Box>
+    </Grid>
   )
 }
 

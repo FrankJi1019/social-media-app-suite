@@ -9,10 +9,10 @@ declare module "@mui/material/styles" {
     extraLight?: string
   }
   interface Palette {
-    bg: { primary: string; secondary: string; shadow: string }
+    bg: { primary: string; secondary: string; shadow: string; pure: string }
   }
   interface PaletteOptions {
-    bg: { primary: string; secondary: string; shadow: string }
+    bg: { primary: string; secondary: string; shadow: string; pure: string }
   }
 }
 
