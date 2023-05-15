@@ -68,6 +68,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
           placeholder={"USERNAME"}
           name={"username"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>
@@ -75,6 +76,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
           placeholder={"EMAIL"}
           name={"email"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>

@@ -67,14 +67,20 @@ const AuthPage: FC<AuthPageProps> = ({
         width: "100%",
         minHeight: "100vh",
         display: "flex",
-        background: `url(${bgImage})`,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        background: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center center"
       }}
     >
       <Box
         sx={{
-          width: "30%",
+          width: {
+            xs: "90%",
+            sm: "50%",
+            md: "30%"
+          },
           backdropFilter: "blur(10px)",
           paddingY: 3,
           paddingX: 4,

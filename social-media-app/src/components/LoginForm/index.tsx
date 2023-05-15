@@ -53,6 +53,7 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
           placeholder={"USERNAME"}
           name={"username"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>
@@ -61,6 +62,7 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
           type={"password"}
           name={"password"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>

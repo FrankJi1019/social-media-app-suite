@@ -57,6 +57,7 @@ const ConfirmUserForm: FC<ConfirmUserFormProps> = ({
           placeholder={"Enter your confirmation code"}
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
