@@ -37,12 +37,13 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
     <StandardFormContainer onSubmit={formik.handleSubmit}>
       <Box>
         <Typography
-          variant={"h4"}
+          variant={"h3"}
           sx={{
             textAlign: "center",
             background: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
             WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent"
+            WebkitTextFillColor: "transparent",
+            fontFamily: "KronaOne"
           }}
         >
           Login to IncognitoNet

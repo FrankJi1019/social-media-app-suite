@@ -116,7 +116,7 @@ const Page: FC<PageProps> = ({
             onRegister={user ? undefined : onRegister}
           />
         </Box>
-        <Box>To Be Implemented123</Box>
+        <Box>To Be Implemented</Box>
       </Grid>
 
       <Grid

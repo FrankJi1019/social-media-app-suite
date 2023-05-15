@@ -79,7 +79,7 @@ const AuthPage: FC<AuthPageProps> = ({
           width: {
             xs: "90%",
             sm: "50%",
-            md: "30%"
+            md: "35%"
           },
           backdropFilter: "blur(10px)",
           paddingY: 3,

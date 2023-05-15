@@ -16,3 +16,10 @@
     url(./assets/fonts/KronaOne.ttf) format("truetype");
 }
 
+@font-face {
+    font-family: "Butter";
+    src: local("Butter"),
+    url(./assets/fonts/Butter.otf) format("truetype");
+}
+
+
