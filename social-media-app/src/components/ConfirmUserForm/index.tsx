@@ -36,12 +36,13 @@ const ConfirmUserForm: FC<ConfirmUserFormProps> = ({
     <StandardFormContainer onSubmit={confirmUserHandler}>
       <Box>
         <Typography
-          variant={"h4"}
+          variant={"h3"}
           sx={{
             textAlign: "center",
             background: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
             WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent"
+            WebkitTextFillColor: "transparent",
+            fontFamily: "KronaOne"
           }}
         >
           Confirm your account
@@ -57,6 +58,7 @@ const ConfirmUserForm: FC<ConfirmUserFormProps> = ({
           placeholder={"Enter your confirmation code"}
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

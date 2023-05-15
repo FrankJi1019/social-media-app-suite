@@ -17,7 +17,8 @@ export const themeData = {
     bg: {
       primary: "#EEF2F7",
       secondary: "#FFFFFF",
-      shadow: "#959DA544"
+      shadow: "#959DA544",
+      pure: "#FFFFFF"
     }
   },
   components: {

@@ -34,7 +34,9 @@ const MomentCard: FC<MomentCardProps> = ({
         <Avatar src={profile} />
       </Box>
       <Box>
-        <Box sx={{ display: "flex" }}>
+        <Box
+          sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
+        >
           <Typography variant={"h6"} sx={{ fontWeight: "bold", mr: 1 }}>
             {character.name} {isOwnMoment && "(Me)"}
           </Typography>

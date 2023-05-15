@@ -52,12 +52,13 @@ const RegisterForm: FC<RegisterFormProps> = ({
     <StandardFormContainer onSubmit={formik.handleSubmit}>
       <Box>
         <Typography
-          variant={"h4"}
+          variant={"h3"}
           sx={{
             textAlign: "center",
             background: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
             WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent"
+            WebkitTextFillColor: "transparent",
+            fontFamily: "KronaOne"
           }}
         >
           Get start with IncognitoNet
@@ -68,6 +69,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
           placeholder={"USERNAME"}
           name={"username"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>
@@ -75,6 +77,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
           placeholder={"EMAIL"}
           name={"email"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>

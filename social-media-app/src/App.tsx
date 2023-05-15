@@ -4,7 +4,8 @@ import {
   Routes,
   Navigate,
   useNavigate,
-  createSearchParams
+  createSearchParams,
+  useLocation
 } from "react-router-dom"
 import AuthPageBuilder from "./pages/AuthPage"
 import HomePageBuilder from "./pages/HomePage"
@@ -21,6 +22,7 @@ const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
   const navigate = useNavigate()
   const notify = useNotification()
+  const { pathname } = useLocation()
 
   const navigateLoginHandler = useCallback(() => {
     navigate({
@@ -57,6 +59,13 @@ const PublicRouter = () => {
     })
   }, [navigateLoginHandler, navigateRegisterHandler, notify])
 
+  const postNewMomentHandler = useCallback(() => {
+    if (pathname === AppRoutes.POST_MOMENT_PAGE.path) return
+    navigate({
+      pathname: AppRoutes.POST_MOMENT_PAGE.path
+    })
+  }, [navigate, pathname])
+
   const tempFriends = Array(3)
     .fill({})
     .map(() => ({
@@ -72,14 +81,16 @@ const PublicRouter = () => {
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
         friends: tempFriends,
-        notifyLoginOrRegister
+        notifyLoginOrRegister,
+        onPostNew: postNewMomentHandler
       } as PageProps),
     [
       getCurrentUser,
       navigateLoginHandler,
       navigateRegisterHandler,
       tempFriends,
-      notifyLoginOrRegister
+      notifyLoginOrRegister,
+      postNewMomentHandler
     ]
   )
 

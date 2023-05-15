@@ -39,7 +39,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { data: categoriesResponse } = useFetchAllCategories()
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
-  console.log(allMoments)
+
   const allCategories = useMemo(() => {
     const categories = [
       {

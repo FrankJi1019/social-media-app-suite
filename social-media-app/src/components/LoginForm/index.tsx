@@ -37,12 +37,13 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
     <StandardFormContainer onSubmit={formik.handleSubmit}>
       <Box>
         <Typography
-          variant={"h4"}
+          variant={"h3"}
           sx={{
             textAlign: "center",
             background: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
             WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent"
+            WebkitTextFillColor: "transparent",
+            fontFamily: "KronaOne"
           }}
         >
           Login to IncognitoNet
@@ -53,6 +54,7 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
           placeholder={"USERNAME"}
           name={"username"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>
@@ -61,6 +63,7 @@ const Index: FC<LoginFormProps> = ({ onLogin, onNavigateSignup }) => {
           type={"password"}
           name={"password"}
           onChange={formik.handleChange}
+          sx={{ backgroundColor: "bg.pure" }}
         />
       </Box>
       <Box>
