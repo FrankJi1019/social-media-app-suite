@@ -22,10 +22,10 @@ const AuthBlock: FC<AuthBlockProps> = ({
     <Box
       sx={{
         height: "100%",
-        p: {
-          xs: 1.5,
-          md: 3
-        },
+        // p: {
+        //   xs: 1.5,
+        //   md: 3
+        // },
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between"

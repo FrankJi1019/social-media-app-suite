@@ -33,7 +33,11 @@ const HomePage: FC<HomePageProps> = ({
       }}
     >
       <StandardContainer
-        sx={{ p: 1, display: "flex", justifyContent: "center" }}
+        sx={{
+          display: "flex",
+          justifyContent: { xs: "flex-start", md: "center" },
+          p: 1
+        }}
       >
         <Box sx={{ display: "flex" }}>
           {filterOptions.map(({ text, filter, onClick }) => (
@@ -41,13 +45,16 @@ const HomePage: FC<HomePageProps> = ({
               key={text}
               onClick={onClick}
               sx={{
-                paddingX: 1.4,
-                paddingY: 0.4,
-                marginX: 1.5,
+                paddingX: { xs: 1, md: 1.5 },
+                paddingY: 0.5,
+                marginX: { xs: 1, md: 1.5 },
                 backgroundColor:
                   currentFilter === filter ? "primary.dark" : "transparent",
                 borderRadius: "5px",
-                cursor: "pointer"
+                cursor: "pointer",
+                "&::-webkit-scrollbar": {
+                  height: "0px !important"
+                }
               }}
             >
               <Typography
@@ -67,9 +74,7 @@ const HomePage: FC<HomePageProps> = ({
       </StandardContainer>
       <StandardContainer
         sx={{
-          mt: 3,
-          paddingY: 2,
-          paddingX: 3,
+          mt: { xs: 1.5, sm: 3 },
           flex: 1,
           overflowX: "hidden"
         }}
@@ -78,8 +83,8 @@ const HomePage: FC<HomePageProps> = ({
           <Box
             key={moment.id}
             sx={{
-              mb: 3,
-              pb: 3,
+              mb: { xs: 1.5, md: 3 },
+              pb: { xs: 1.5, md: 3 },
               borderBottom: "1px solid",
               borderColor:
                 index !== moments.length - 1 ? "primary.main" : "transparent"

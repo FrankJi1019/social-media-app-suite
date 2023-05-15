@@ -19,8 +19,13 @@ const StandardContainer: FC<StandardContainerProps> = ({
         backgroundColor: "bg.secondary",
         boxShadow: `0 8px 24px 0px ${theme.palette.bg.shadow}`,
         overflow: "auto",
+        p: {
+          xs: 1.5,
+          md: 3
+        },
         "&::-webkit-scrollbar": {
           width: 0,
+          height: 0,
           borderRadius: "1000px",
           backgroundColor: `${theme.palette.primary.main}20`
         },

@@ -71,7 +71,7 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
   }, [requestRandomNameHandler])
 
   return (
-    <Page {...commonArgs} onSignOut={signOutHandler}>
+    <Page {...commonArgs} onSignOut={signOutHandler} hideMobileNavBar>
       <PostMomentPage
         maxTagNumber={MAX_TAG_NUM}
         isSubmitting={loading}

@@ -52,9 +52,15 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <StandardContainer sx={{ flex: 1, paddingX: 3, paddingY: 1 }}>
+      <StandardContainer sx={{ flex: 1 }}>
         <StandardFormContainer onSubmit={() => {}}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: { xs: "column", md: "row" }
+            }}
+          >
             <Box>
               <Button
                 variant={"text"}
@@ -64,7 +70,13 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
                 BACK
               </Button>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end"
+              }}
+            >
               <Typography color={"grey.800"} sx={{ mr: 1 }}>
                 Your Character:{" "}
                 <span style={{ fontWeight: "bold" }}>{character}</span>
@@ -114,7 +126,7 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
               <IconButton onClick={() => notify("Feature to be implemented")}>
                 <CollectionsIcon sx={{ color: "primary.dark" }} />
               </IconButton>
-              <Box sx={{ width: "50%" }}>
+              <Box sx={{ width: { xs: "100%", md: "50%" } }}>
                 {addingTag ? (
                   <TagDropdown
                     tagList={tags}

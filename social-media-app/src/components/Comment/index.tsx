@@ -25,10 +25,10 @@ const Comment: FC<CommentProps> = ({
       }}
     >
       <Avatar src={profile} />
-      <Box sx={{ paddingX: 2 }}>
+      <Box sx={{ paddingX: { xs: 1, md: 2 } }}>
         <Box
           sx={{
-            p: 2,
+            p: { xs: 1, md: 2 },
             backgroundColor: "primary.extraLight",
             borderRadius: "10px"
           }}

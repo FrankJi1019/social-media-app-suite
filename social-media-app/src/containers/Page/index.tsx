@@ -1,17 +1,8 @@
-import React, {
-  FC,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react"
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react"
 import { Box, Grid, IconButton, SxProps } from "@mui/material"
 import StandardContainer from "./../StandardContainer"
 import { User } from "../../providers/CognitoAuthProvider"
 // @ts-ignore
-import { useLocation, useNavigate } from "react-router-dom"
-import { Routes } from "../../routes/routes"
 // @ts-ignore
 import profile from "../../assets/placeholders/profile-placeholder.jpg"
 import AuthBlock from "../../components/AuthBlock"
@@ -21,6 +12,8 @@ import ControlPointIcon from "@mui/icons-material/ControlPoint"
 import PersonIcon from "@mui/icons-material/Person"
 
 export interface PageProps {
+  children: ReactNode
+  onPostNew: () => void
   user?: User
   title?: string
   sx?: SxProps
@@ -29,7 +22,7 @@ export interface PageProps {
   onLogin?: () => void
   onRegister?: () => void
   onSignOut?: () => void
-  children: ReactNode
+  hideMobileNavBar?: boolean
 }
 
 const Page: FC<PageProps> = ({
@@ -41,21 +34,13 @@ const Page: FC<PageProps> = ({
   onLogin = () => {},
   onRegister = () => {},
   children,
-  onSignOut = () => {}
+  onSignOut = () => {},
+  onPostNew,
+  hideMobileNavBar = false
 }) => {
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
-
   const [currentSection, setCurrentSection] = useState<
     "main" | "friends" | "profile"
   >("main")
-
-  const postNewMomentHandler = useCallback(() => {
-    if (pathname === Routes.POST_MOMENT_PAGE.path) return
-    navigate({
-      pathname: Routes.POST_MOMENT_PAGE.path
-    })
-  }, [navigate, pathname])
 
   const mobileNavBarOptions = useMemo(
     () => [
@@ -72,7 +57,7 @@ const Page: FC<PageProps> = ({
       {
         title: "new",
         icon: <ControlPointIcon />,
-        onClick: postNewMomentHandler
+        onClick: onPostNew
       },
       {
         title: "profile",
@@ -80,7 +65,7 @@ const Page: FC<PageProps> = ({
         onClick: () => setCurrentSection("profile")
       }
     ],
-    [postNewMomentHandler]
+    [onPostNew]
   )
 
   useEffect(() => {
@@ -116,7 +101,7 @@ const Page: FC<PageProps> = ({
         md={2}
         sx={{ display: { xs: "none", sm: "block" }, backgroundColor: "white" }}
       >
-        <Box sx={{ display: { xs: "none", sm: "block", md: "none" } }}>
+        <Box sx={{ display: { xs: "none", sm: "block", md: "none" }, p: 2 }}>
           <AuthBlock
             avatarOptions={
               user && {
@@ -126,8 +111,7 @@ const Page: FC<PageProps> = ({
                 reverseAlign: false
               }
             }
-            onPostNew={user && postNewMomentHandler}
-            onSignOut={user && onSignOut}
+            onPostNew={user && onPostNew}
             onLogin={user ? undefined : onLogin}
             onRegister={user ? undefined : onRegister}
           />
@@ -164,6 +148,7 @@ const Page: FC<PageProps> = ({
               flex: 1,
               p: {
                 xs: 2,
+                sm: 3,
                 md: 4
               },
               pr: {
@@ -175,35 +160,37 @@ const Page: FC<PageProps> = ({
           >
             {mainContent}
           </Box>
-          <Box
-            sx={{
-              paddingX: 1.5,
-              paddingY: 0.5,
-              display: { xs: "flex", sm: "none" },
-              justifyContent: "space-around",
-              backgroundColor: "bg.pure"
-            }}
-          >
-            {mobileNavBarOptions.map(({ title, icon, onClick }) => (
-              <Box key={title} onClick={onClick}>
-                <IconButton
-                  sx={{
-                    color:
-                      title === currentSection ? "primary.dark" : "grey.A700"
-                  }}
-                >
-                  {icon}
-                </IconButton>
-              </Box>
-            ))}
-          </Box>
+          {!hideMobileNavBar && (
+            <Box
+              sx={{
+                paddingX: 1.5,
+                paddingY: 0.5,
+                display: { xs: "flex", sm: "none" },
+                justifyContent: "space-around",
+                backgroundColor: "bg.pure"
+              }}
+            >
+              {mobileNavBarOptions.map(({ title, icon, onClick }) => (
+                <Box key={title} onClick={onClick}>
+                  <IconButton
+                    sx={{
+                      color:
+                        title === currentSection ? "primary.dark" : "grey.A700"
+                    }}
+                  >
+                    {icon}
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          )}
         </Grid>
         <Grid
           item
           md={3}
           sx={{ display: { xs: "none", md: "flex" }, p: 4, flex: 1 }}
         >
-          <StandardContainer sx={{ flex: 1 }}>
+          <StandardContainer sx={{ flex: 1, p: { md: 1.5, lg: 3 } }}>
             <AuthBlock
               avatarOptions={
                 user && {
@@ -213,7 +200,7 @@ const Page: FC<PageProps> = ({
                   reverseAlign: true
                 }
               }
-              onPostNew={user && postNewMomentHandler}
+              onPostNew={user && onPostNew}
               onSignOut={user && onSignOut}
               onLogin={user ? undefined : onLogin}
               onRegister={user ? undefined : onRegister}

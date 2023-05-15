@@ -19,7 +19,9 @@ const StandardFormContainer: FC<StandardFormContainerProps> = ({
         onSubmit(e)
       }}
     >
-      <Box sx={{ "&>div.MuiBox-root": { mb: 4 }, ...sx }}>{children}</Box>
+      <Box sx={{ "&>div.MuiBox-root": { mb: { xs: 2, md: 4 } }, ...sx }}>
+        {children}
+      </Box>
     </form>
   )
 }

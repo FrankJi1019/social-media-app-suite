@@ -30,7 +30,7 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <StandardContainer sx={{ flex: 1, paddingX: 4, paddingY: 2 }}>
+      <StandardContainer sx={{ flex: 1 }}>
         <Box sx={{ mb: 2 }}>
           <Button
             variant={"text"}
@@ -42,9 +42,13 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar src={moment.profile} sx={{ mr: 1 }} />
-          <Box sx={{ display: "flex" }}>
-            <Typography variant={"h4"}>{moment.character.name}</Typography>
-            <Typography variant={"body1"} sx={{ color: "grey", ml: 1 }}>
+          <Box
+            sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
+          >
+            <Typography variant={"h4"} sx={{ mr: 1 }}>
+              {moment.character.name}
+            </Typography>
+            <Typography variant={"body1"} sx={{ color: "grey" }}>
               @ {momentFormatter(moment.postDate).format("hh:mm DD MMM")}
             </Typography>
           </Box>
