@@ -11,6 +11,7 @@ import { AuthzModule } from './authz/authz.module';
 import { CommentModule } from './comment/comment.module';
 import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TagModule } from './tag/tag.module';
     CommentModule,
     CategoryModule,
     TagModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
