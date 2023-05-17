@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../base/base.entity';
 import { Friend } from '../../friend/entities/friend.entity';
 import { Moment } from '../../moment/entities/moment.entity';
+import { Like } from '../../moment/entities/like.entity';
 
 @Entity('account')
 export class Account extends BaseEntity {
@@ -10,6 +11,9 @@ export class Account extends BaseEntity {
 
   @OneToMany(() => Moment, (moment) => moment.account)
   moments: Array<Moment>;
+
+  @OneToMany(() => Like, (like) => like.account)
+  likes: Array<Like>;
 
   @OneToMany(() => Friend, (friend) => friend.userAccount)
   friends: Array<Friend>;

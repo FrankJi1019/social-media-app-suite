@@ -89,7 +89,10 @@ export class MomentService extends BaseService<Moment> {
 
   async likeMoment(momentId: number, username: string) {
     try {
-      const likeEntity = await this.likeRepository.create({ username });
+      const account = await this.accountRepository.findOne({
+        where: { username },
+      });
+      const likeEntity = await this.likeRepository.create({ account });
       const moment = await this.findById(momentId);
       likeEntity.moment = moment;
       await likeEntity.save();
@@ -107,7 +110,7 @@ export class MomentService extends BaseService<Moment> {
     const moment = await this.findById(momentId);
     const likeEntity = await this.likeRepository.findOne({
       where: {
-        username,
+        account: { username },
         moment: { id: momentId },
       },
     });
@@ -121,7 +124,7 @@ export class MomentService extends BaseService<Moment> {
   async isLikedByUser(username: string, momentId: number) {
     return await this.likeRepository.exist({
       where: {
-        username,
+        account: { username },
         moment: { id: momentId },
       },
     });
@@ -162,7 +165,7 @@ export class MomentService extends BaseService<Moment> {
     } else {
       return await super.findAll({
         where: [
-          { likes: { username: followedBy } },
+          { likes: { account: { username: followedBy } } },
           { comments: { username: followedBy } },
         ],
         order: {
