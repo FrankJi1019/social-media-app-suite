@@ -3,6 +3,7 @@ import { BaseEntity } from '../../base/base.entity';
 import { Friend } from '../../friend/entities/friend.entity';
 import { Moment } from '../../moment/entities/moment.entity';
 import { Like } from '../../moment/entities/like.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity('account')
 export class Account extends BaseEntity {
@@ -14,6 +15,9 @@ export class Account extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.account)
   likes: Array<Like>;
+
+  @OneToMany(() => Comment, (comment) => comment.account)
+  comments: Array<Comment>;
 
   @OneToMany(() => Friend, (friend) => friend.userAccount)
   friends: Array<Friend>;

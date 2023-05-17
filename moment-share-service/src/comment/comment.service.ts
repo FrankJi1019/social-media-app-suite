@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Moment } from '../moment/entities/moment.entity';
 import { Character } from '../character/entities/character.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
+import { Account } from '../account/entities/account.entity';
 
 @Injectable()
 export class CommentService extends BaseService<Comment> {
@@ -16,6 +17,8 @@ export class CommentService extends BaseService<Comment> {
     private readonly momentRepository: Repository<Moment>,
     @InjectRepository(Character)
     private readonly characterRepository: Repository<Character>,
+    @InjectRepository(Account)
+    private readonly accountRepository: Repository<Account>,
   ) {
     super(commentRepository);
   }
@@ -31,23 +34,29 @@ export class CommentService extends BaseService<Comment> {
   }
 
   async createComment(createCommentInput: CreateCommentInput) {
-    const characterEntity = await this.characterRepository.find({
+    const characterEntity = await this.characterRepository.findOne({
       where: { name: createCommentInput.character },
     });
-    if (characterEntity.length === 0) {
+    if (!characterEntity) {
       throw new NotFoundException('Invalid character name');
     }
-    const momentEntity = await this.momentRepository.find({
+    const accountEntity = await this.accountRepository.findOne({
+      where: { username: createCommentInput.username },
+    });
+    if (!accountEntity) {
+      throw new NotFoundException('Invalid account username');
+    }
+    const momentEntity = await this.momentRepository.findOne({
       where: { id: Number(createCommentInput.momentId) },
     });
-    if (momentEntity.length === 0) {
+    if (!momentEntity) {
       throw new NotFoundException('Moment does not exist');
     }
     return await super.create({
-      username: createCommentInput.username,
+      account: accountEntity,
       content: createCommentInput.content,
-      character: characterEntity[0],
-      moment: momentEntity[0],
+      character: characterEntity,
+      moment: momentEntity,
     });
   }
 }

@@ -23,7 +23,7 @@ export const useFetchAllMoments = (input?: {
     fetchPolicy: "network-only",
     variables: { input }
   })
-  console.log(error)
+
   const { getCurrentUser } = useAuth()
   const moments: Array<MomentBrief> = useMemo(() => {
     if (!data || loading) return []

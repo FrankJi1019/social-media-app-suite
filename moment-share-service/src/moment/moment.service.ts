@@ -166,7 +166,7 @@ export class MomentService extends BaseService<Moment> {
       return await super.findAll({
         where: [
           { likes: { account: { username: followedBy } } },
-          { comments: { username: followedBy } },
+          { comments: { account: { username: followedBy } } },
         ],
         order: {
           createdAt: 'DESC',
