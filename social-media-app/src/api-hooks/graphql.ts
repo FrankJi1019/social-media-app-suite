@@ -104,3 +104,17 @@ export const ALL_TAGS_QUERY = gql`
     }
   }
 `
+
+export const ADD_FRIEND_MUTATION = gql`
+  mutation AddFriend($input: CreateFriendshipInput!) {
+    createFriendship(input: $input)
+  }
+`
+
+export const CREATE_ACCOUNT_MUTATION = gql`
+  mutation CreateAccount($input: CreateAccountInput!) {
+    createAccount(input: $input) {
+      id
+    }
+  }
+`

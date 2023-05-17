@@ -12,6 +12,8 @@ export interface MomentCardProps {
   onOpen: () => void
   onLike: () => void
   onUnlike: () => void
+  onChat: () => void
+  onReport: () => void
 }
 
 const MomentCard: FC<MomentCardProps> = ({
@@ -27,7 +29,9 @@ const MomentCard: FC<MomentCardProps> = ({
   },
   onLike,
   onOpen,
-  onUnlike
+  onUnlike,
+  onChat,
+  onReport
 }) => {
   const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
 
@@ -87,10 +91,20 @@ const MomentCard: FC<MomentCardProps> = ({
               }}
               anchorEl={anchorPos}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onChat()
+                  setAnchorPos(null)
+                }}
+              >
                 <Typography>Chat</Typography>
               </MenuItem>
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onReport()
+                  setAnchorPos(null)
+                }}
+              >
                 <Typography>Report</Typography>
               </MenuItem>
             </Menu>

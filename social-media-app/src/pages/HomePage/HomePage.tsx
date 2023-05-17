@@ -15,6 +15,8 @@ export interface HomePageProps {
   onMomentLike: (id: string) => void
   onMomentUnlike: (id: string) => void
   onMomentOpen: (id: string) => void
+  onMomentChat: (username: string, character: string) => void
+  onMomentReport: (id: string) => void
 }
 
 const HomePage: FC<HomePageProps> = ({
@@ -23,7 +25,9 @@ const HomePage: FC<HomePageProps> = ({
   filterOptions,
   onMomentLike,
   onMomentUnlike,
-  onMomentOpen
+  onMomentOpen,
+  onMomentChat,
+  onMomentReport
 }) => {
   return (
     <Box
@@ -95,6 +99,10 @@ const HomePage: FC<HomePageProps> = ({
               onLike={() => onMomentLike(moment.id)}
               onUnlike={() => onMomentUnlike(moment.id)}
               onOpen={() => onMomentOpen(moment.id)}
+              onChat={() =>
+                onMomentChat(moment.username, moment.character.name)
+              }
+              onReport={() => onMomentReport(moment.id)}
             />
           </Box>
         ))}

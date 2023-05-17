@@ -12,6 +12,7 @@ import {
 import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
+import { useNotification } from "../../providers/NotificationProvider"
 
 interface HomepageProps extends PageProps {}
 
@@ -19,6 +20,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { getCurrentUser, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const notify = useNotification()
 
   const filterOption = useMemo(() => {
     const filter = searchParams.get("filter")
@@ -31,11 +33,8 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     }
   }, [getCurrentUser, searchParams])
 
-  const {
-    data: allMoments,
-    loading: isFetchingMoments,
-    reFetch: reFetchAllMoments
-  } = useFetchAllMoments(filterOption)
+  const { data: allMoments, reFetch: reFetchAllMoments } =
+    useFetchAllMoments(filterOption)
   const { data: categoriesResponse } = useFetchAllCategories()
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
@@ -101,6 +100,17 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     [navigate]
   )
 
+  const momentChatHandler = useCallback(
+    (username: string, character: string) => {
+      alert(username + character)
+    },
+    []
+  )
+
+  const reportMomentHandler = useCallback(() => {
+    notify("Feature to be implemented")
+  }, [notify])
+
   const signOutHandler = useCallback(() => {
     signOut()
     reFetchAllMoments().then(() => {})
@@ -126,6 +136,8 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         onMomentLike={likeMomentHandler}
         onMomentUnlike={unlikeMomentHandler}
         onMomentOpen={openMomentHandler}
+        onMomentChat={momentChatHandler}
+        onMomentReport={reportMomentHandler}
       />
     </Page>
   )

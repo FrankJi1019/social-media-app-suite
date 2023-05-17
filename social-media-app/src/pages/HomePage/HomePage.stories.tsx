@@ -83,6 +83,8 @@ export const General = {
     filterOptions,
     onMomentLike: FUNCTION_PLACE_HOLDER,
     onMomentUnlike: FUNCTION_PLACE_HOLDER,
-    onMomentOpen: FUNCTION_PLACE_HOLDER
+    onMomentOpen: FUNCTION_PLACE_HOLDER,
+    onMomentReport: FUNCTION_PLACE_HOLDER,
+    onMomentChat: FUNCTION_PLACE_HOLDER
   } as HomePageProps
 } as StoryObj
