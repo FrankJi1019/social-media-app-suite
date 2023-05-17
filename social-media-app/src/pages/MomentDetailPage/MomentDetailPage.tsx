@@ -1,5 +1,14 @@
 import React, { FC, useState } from "react"
-import { Avatar, Box, Button, TextField, Typography } from "@mui/material"
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  TextField,
+  Typography
+} from "@mui/material"
 import StandardContainer from "../../containers/StandardContainer"
 import { Moment } from "../../types/moment"
 import momentFormatter from "moment"
@@ -10,6 +19,7 @@ import Comment from "../../components/Comment"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import InTextTag from "../../components/InTextTag"
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 
 export interface MomentDetailPageProps {
   moment: Moment
@@ -27,18 +37,40 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
   onComment
 }) => {
   const [comment, setComment] = useState("")
+  const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <StandardContainer sx={{ flex: 1 }}>
-        <Box sx={{ mb: 2 }}>
-          <Button
-            variant={"text"}
-            startIcon={<ArrowBackIosNewIcon />}
-            onClick={onBack}
-          >
-            BACK
-          </Button>
+        <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between" }}>
+          <Box>
+            <Button
+              variant={"text"}
+              startIcon={<ArrowBackIosNewIcon />}
+              onClick={onBack}
+            >
+              BACK
+            </Button>
+          </Box>
+          <Box>
+            <IconButton onClick={(e) => setAnchorPos(e.currentTarget)}>
+              <MoreHorizIcon sx={{ color: "grey.A400" }} />
+            </IconButton>
+            <Menu
+              open={Boolean(anchorPos)}
+              onClose={() => {
+                setAnchorPos(null)
+              }}
+              anchorEl={anchorPos}
+            >
+              <MenuItem>
+                <Typography>Chat</Typography>
+              </MenuItem>
+              <MenuItem>
+                <Typography>Report</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar src={moment.profile} sx={{ mr: 1 }} />

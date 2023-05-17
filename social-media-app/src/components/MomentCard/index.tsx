@@ -1,10 +1,11 @@
 import React, { FC } from "react"
-import { Avatar, Box, styled, Typography } from "@mui/material"
+import { Avatar, Box, Menu, MenuItem, styled, Typography } from "@mui/material"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import moment from "moment"
 import { MomentBrief } from "../../types/moment"
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 
 export interface MomentCardProps {
   moment: MomentBrief
@@ -28,12 +29,14 @@ const MomentCard: FC<MomentCardProps> = ({
   onOpen,
   onUnlike
 }) => {
+  const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
+
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", position: "relative" }}>
       <Box sx={{ mr: 1 }}>
         <Avatar src={profile} />
       </Box>
-      <Box>
+      <Box sx={{ flex: 1 }}>
         <Box
           sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
         >
@@ -58,18 +61,39 @@ const MomentCard: FC<MomentCardProps> = ({
         >
           <Typography>{content}</Typography>
         </Box>
-        <Box sx={{ display: "flex", mt: 1 }}>
-          <StandardIconText onClick={isLiked ? onUnlike : onLike}>
-            {isLiked ? (
-              <FavoriteIcon sx={{ color: "#cb0634" }} />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
-            <Typography sx={{ pl: 0.5 }}>{likeNumber}</Typography>
-          </StandardIconText>
-          <StandardIconText onClick={() => onOpen()}>
-            <CommentOutlinedIcon />
-            <Typography sx={{ pl: 0.5 }}>{commentNumber}</Typography>
+        <Box sx={{ display: "flex", mt: 1, justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex" }}>
+            <StandardIconText onClick={isLiked ? onUnlike : onLike}>
+              {isLiked ? (
+                <FavoriteIcon sx={{ color: "#cb0634" }} />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
+              <Typography sx={{ pl: 0.5 }}>{likeNumber}</Typography>
+            </StandardIconText>
+            <StandardIconText onClick={() => onOpen()}>
+              <CommentOutlinedIcon />
+              <Typography sx={{ pl: 0.5 }}>{commentNumber}</Typography>
+            </StandardIconText>
+          </Box>
+          <StandardIconText>
+            <Box onClick={(e) => setAnchorPos(e.currentTarget)}>
+              <MoreHorizIcon sx={{ color: "grey.A400" }} />
+            </Box>
+            <Menu
+              open={Boolean(anchorPos)}
+              onClose={() => {
+                setAnchorPos(null)
+              }}
+              anchorEl={anchorPos}
+            >
+              <MenuItem>
+                <Typography>Chat</Typography>
+              </MenuItem>
+              <MenuItem>
+                <Typography>Report</Typography>
+              </MenuItem>
+            </Menu>
           </StandardIconText>
         </Box>
       </Box>

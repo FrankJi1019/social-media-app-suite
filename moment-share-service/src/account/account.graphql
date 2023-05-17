@@ -1,0 +1,9 @@
+type Account {
+  id: String
+  username: String
+  createdAt: String
+}
+
+input CreateAccountInput {
+  username: String
+}

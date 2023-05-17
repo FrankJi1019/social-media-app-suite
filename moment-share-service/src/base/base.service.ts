@@ -15,6 +15,10 @@ export abstract class BaseService<T extends BaseEntity> {
     return await this.genericRepository.find(filterOptions);
   }
 
+  async findOne(filterOptions: FindOneOptions<T> = {}): Promise<T> {
+    return await this.genericRepository.findOne(filterOptions);
+  }
+
   async findById(
     id: number | string,
     options: FindOneOptions<T> = {},

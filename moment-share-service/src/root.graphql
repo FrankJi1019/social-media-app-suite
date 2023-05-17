@@ -4,6 +4,7 @@ type Query {
   characters: [Character!]
   categories: [Category!]
   tags: [Tag!]
+  account(username: String!): Account!
 }
 
 type Mutation {
@@ -15,4 +16,6 @@ type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   createCategory(input: CreateCategoryInput!): Category!
   createTag(input: CreateTagInput!): Tag!
+  createAccount(input: CreateAccountInput!): Account!
+  createFriendship(input: CreateFriendshipInput!): Boolean!
 }

@@ -1,0 +1,6 @@
+input CreateFriendshipInput {
+  account1Username: String!
+  account2Username: String!
+  account1Character: String!
+  account2Character: String!
+}

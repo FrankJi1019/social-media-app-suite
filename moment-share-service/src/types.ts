@@ -8,6 +8,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface CreateAccountInput {
+    username?: Nullable<string>;
+}
+
 export interface CreateCategoryInput {
     name: string;
 }
@@ -17,6 +21,13 @@ export interface CreateCommentInput {
     character: string;
     content: string;
     momentId: string;
+}
+
+export interface CreateFriendshipInput {
+    account1Username: string;
+    account2Username: string;
+    account1Character: string;
+    account2Character: string;
 }
 
 export interface CreateMomentInput {
@@ -39,6 +50,12 @@ export interface FilterMomentInput {
 export interface CreateTagInput {
     name: string;
     category?: Nullable<string>;
+}
+
+export interface Account {
+    id?: Nullable<string>;
+    username?: Nullable<string>;
+    createdAt?: Nullable<string>;
 }
 
 export interface Category {
@@ -80,6 +97,7 @@ export interface IQuery {
     characters(): Nullable<Character[]> | Promise<Nullable<Character[]>>;
     categories(): Nullable<Category[]> | Promise<Nullable<Category[]>>;
     tags(): Nullable<Tag[]> | Promise<Nullable<Tag[]>>;
+    account(username: string): Account | Promise<Account>;
 }
 
 export interface IMutation {
@@ -91,6 +109,8 @@ export interface IMutation {
     createComment(input: CreateCommentInput): Comment | Promise<Comment>;
     createCategory(input: CreateCategoryInput): Category | Promise<Category>;
     createTag(input: CreateTagInput): Tag | Promise<Tag>;
+    createAccount(input: CreateAccountInput): Account | Promise<Account>;
+    createFriendship(input: CreateFriendshipInput): boolean | Promise<boolean>;
 }
 
 export interface Tag {

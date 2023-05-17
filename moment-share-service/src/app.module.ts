@@ -12,6 +12,8 @@ import { CommentModule } from './comment/comment.module';
 import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
 import { ChatModule } from './chat/chat.module';
+import { AccountModule } from './account/account.module';
+import { FriendModule } from './friend/friend.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ChatModule } from './chat/chat.module';
     CategoryModule,
     TagModule,
     ChatModule,
+    AccountModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [AppService],
