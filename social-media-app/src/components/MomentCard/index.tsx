@@ -36,7 +36,42 @@ const MomentCard: FC<MomentCardProps> = ({
   const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
 
   return (
-    <Box sx={{ display: "flex", position: "relative" }}>
+    <Box
+      sx={{
+        display: "flex",
+        position: "relative",
+        p: 1
+      }}
+    >
+      <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+        <Box onClick={(e) => setAnchorPos(e.currentTarget)}>
+          <MoreHorizIcon sx={{ color: "grey.A400" }} />
+        </Box>
+        <Menu
+          open={Boolean(anchorPos)}
+          onClose={() => {
+            setAnchorPos(null)
+          }}
+          anchorEl={anchorPos}
+        >
+          <MenuItem
+            onClick={() => {
+              onChat()
+              setAnchorPos(null)
+            }}
+          >
+            <Typography>Chat</Typography>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              onReport()
+              setAnchorPos(null)
+            }}
+          >
+            <Typography>Report</Typography>
+          </MenuItem>
+        </Menu>
+      </Box>
       <Box sx={{ mr: 1 }}>
         <Avatar src={profile} />
       </Box>
@@ -80,35 +115,6 @@ const MomentCard: FC<MomentCardProps> = ({
               <Typography sx={{ pl: 0.5 }}>{commentNumber}</Typography>
             </StandardIconText>
           </Box>
-          <StandardIconText>
-            <Box onClick={(e) => setAnchorPos(e.currentTarget)}>
-              <MoreHorizIcon sx={{ color: "grey.A400" }} />
-            </Box>
-            <Menu
-              open={Boolean(anchorPos)}
-              onClose={() => {
-                setAnchorPos(null)
-              }}
-              anchorEl={anchorPos}
-            >
-              <MenuItem
-                onClick={() => {
-                  onChat()
-                  setAnchorPos(null)
-                }}
-              >
-                <Typography>Chat</Typography>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onReport()
-                  setAnchorPos(null)
-                }}
-              >
-                <Typography>Report</Typography>
-              </MenuItem>
-            </Menu>
-          </StandardIconText>
         </Box>
       </Box>
     </Box>

@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo } from "react"
 import { PageProps } from "../../types/props"
 import Page from "../../containers/Page"
 import MomentDetailPage from "./MomentDetailPage"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import {
   useFetchMomentById,
   useLikeMomentMutation,
@@ -12,12 +12,18 @@ import { Box } from "@mui/material"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
+import { useAddFriendMutation } from "../../api-hooks/friend"
+import { useNotification } from "../../providers/NotificationProvider"
+import { Routes } from "../../routes/routes"
+import { pickRandomElement } from "../../utils/random"
 
 interface MomentDetailPageProps extends PageProps {}
 
 const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
+  const navigate = useNavigate()
+  const notify = useNotification()
 
   const {
     data: moment,
@@ -25,9 +31,11 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     reFetch: reFetchMoment
   } = useFetchMomentById(id as string)
   const { data: characterList } = useFetchAllCharacters()
+
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
   const { mutate: createComment } = useCreateCommentMutation()
+  const { mutate: addFriend } = useAddFriendMutation()
 
   const goBackHandler = useCallback(() => {
     // eslint-disable-next-line no-restricted-globals
@@ -81,6 +89,40 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     [characterList, createComment, getCurrentUser, moment, reFetchMoment]
   )
 
+  const ChatHandler = useCallback(
+    async (friendUsername: string, friendCharacter: string) => {
+      if (characterList.length === 0) return
+      const username = getCurrentUser()?.Username
+      if (!username) {
+        notify("Please login first", {
+          buttonOptions: [
+            {
+              text: "Signup",
+              props: {
+                variant: "contained",
+                onClick: () => navigate({ pathname: Routes.AUTH_PATH.path })
+              }
+            }
+          ]
+        })
+        return
+      }
+      const character = pickRandomElement(characterList)
+      await addFriend({
+        account1Username: username,
+        account1Character: character,
+        account2Username: friendUsername,
+        account2Character: friendCharacter
+      })
+    },
+    [addFriend, characterList, getCurrentUser, navigate, notify]
+  )
+
+  const reportMomentHandler = useCallback(
+    () => notify("Feature to be implemented"),
+    [notify]
+  )
+
   const isLoading = useMemo(() => !moment || loading, [moment, loading])
 
   if (isLoading) return <Box>Loading</Box>
@@ -93,6 +135,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
         onLike={likeMomentHandler}
         onUnlike={unlikeMomentHandler}
         onComment={commentHandler}
+        onChat={ChatHandler}
+        onReport={reportMomentHandler}
       />
     </Page>
   )

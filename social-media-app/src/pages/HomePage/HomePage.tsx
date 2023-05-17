@@ -87,8 +87,8 @@ const HomePage: FC<HomePageProps> = ({
           <Box
             key={moment.id}
             sx={{
-              mb: { xs: 1.5, md: 3 },
-              pb: { xs: 1.5, md: 3 },
+              mb: { xs: 0.75, md: 2 },
+              pb: { xs: 0.75, md: 2 },
               borderBottom: "1px solid",
               borderColor:
                 index !== moments.length - 1 ? "primary.main" : "transparent"

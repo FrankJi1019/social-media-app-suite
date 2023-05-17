@@ -27,6 +27,8 @@ export interface MomentDetailPageProps {
   onLike: () => void
   onUnlike: () => void
   onComment: (comment: string) => void
+  onChat: (momentAuthorUsername: string, momentAuthorCharacter: string) => void
+  onReport: () => void
 }
 
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
@@ -34,7 +36,9 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
   onBack,
   onUnlike,
   onLike,
-  onComment
+  onComment,
+  onChat,
+  onReport
 }) => {
   const [comment, setComment] = useState("")
   const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
@@ -63,10 +67,20 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               }}
               anchorEl={anchorPos}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onChat(moment.account.username, moment.character.name)
+                  setAnchorPos(null)
+                }}
+              >
                 <Typography>Chat</Typography>
               </MenuItem>
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onReport()
+                  setAnchorPos(null)
+                }}
+              >
                 <Typography>Report</Typography>
               </MenuItem>
             </Menu>

@@ -1,9 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../base/base.entity';
 import { Account } from '../../account/entities/account.entity';
 import { Character } from '../../character/entities/character.entity';
 
 @Entity('friend')
+@Index('FRIEND_UNIQUE', ['userAccount.id', 'friendAccount.id'], {
+  unique: true,
+})
 export class Friend extends BaseEntity {
   @Column({ default: false })
   hasUnread: boolean;

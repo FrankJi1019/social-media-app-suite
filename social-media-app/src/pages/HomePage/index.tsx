@@ -13,6 +13,9 @@ import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
 import { useNotification } from "../../providers/NotificationProvider"
+import { useAddFriendMutation } from "../../api-hooks/friend"
+import { useFetchAllCharacters } from "../../api-hooks/characters"
+import { pickRandomElement } from "../../utils/random"
 
 interface HomepageProps extends PageProps {}
 
@@ -36,8 +39,11 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { data: allMoments, reFetch: reFetchAllMoments } =
     useFetchAllMoments(filterOption)
   const { data: categoriesResponse } = useFetchAllCategories()
+  const { data: characterList } = useFetchAllCharacters()
+
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
+  const { mutate: addFriend } = useAddFriendMutation()
 
   const allCategories = useMemo(() => {
     const categories = [
@@ -101,10 +107,32 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   )
 
   const momentChatHandler = useCallback(
-    (username: string, character: string) => {
-      alert(username + character)
+    async (friendUsername: string, friendCharacter: string) => {
+      if (characterList.length === 0) return
+      const username = getCurrentUser()?.Username
+      if (!username) {
+        notify("Please login first", {
+          buttonOptions: [
+            {
+              text: "Signup",
+              props: {
+                variant: "contained",
+                onClick: () => navigate({ pathname: Routes.AUTH_PATH.path })
+              }
+            }
+          ]
+        })
+        return
+      }
+      const character = pickRandomElement(characterList)
+      await addFriend({
+        account1Username: username,
+        account1Character: character,
+        account2Username: friendUsername,
+        account2Character: friendCharacter
+      })
     },
-    []
+    [addFriend, characterList, getCurrentUser, navigate, notify]
   )
 
   const reportMomentHandler = useCallback(() => {
