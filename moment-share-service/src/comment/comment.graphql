@@ -1,6 +1,6 @@
 type Comment {
   id: ID!
-  username: String!
+  account: Account!
   content: String!
   createdAt: String!
   character: Character!

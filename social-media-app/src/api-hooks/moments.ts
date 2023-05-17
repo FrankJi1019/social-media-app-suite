@@ -55,6 +55,7 @@ export const useFetchMomentById = (id: string) => {
   const { data, loading, error, refetch } = useQuery(MOMENT_BY_ID_QUERY, {
     variables: { id }
   })
+
   const { getCurrentUser } = useAuth()
   const moment: Moment | undefined = useMemo(() => {
     return (
@@ -64,16 +65,18 @@ export const useFetchMomentById = (id: string) => {
         profile: profilePlaceholder,
         postDate: utcTimestampToDate(Number(data.moment.createdAt)),
         comments: data.moment.comments.map(
-          (comment: { createdAt: number; username: string }) => ({
+          (comment: { createdAt: number; account: { username: string } }) => ({
             ...comment,
             commentDate: utcTimestampToDate(Number(comment.createdAt)),
             profile: profilePlaceholder,
-            isOwnComment: getCurrentUser()?.Username === comment.username
+            isOwnComment:
+              getCurrentUser()?.Username === comment.account.username
           })
         )
       } as Moment)
     )
   }, [data, getCurrentUser])
+
   return { data: moment, loading, error, reFetch: refetch }
 }
 

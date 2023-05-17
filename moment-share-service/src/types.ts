@@ -71,7 +71,7 @@ export interface Character {
 
 export interface Comment {
     id: string;
-    username: string;
+    account: Account;
     content: string;
     createdAt: string;
     character: Character;

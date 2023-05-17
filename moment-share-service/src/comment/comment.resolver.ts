@@ -29,4 +29,9 @@ export class CommentResolver {
   async findMoment(@Parent() { id }: { id: string }) {
     return await this.commentService.findMoment(id);
   }
+
+  @ResolveField('account')
+  async findAccount(@Parent() { id }: { id: number }) {
+    return await this.commentService.findAccount(id);
+  }
 }

@@ -40,7 +40,10 @@ const moment = {
   comments: [
     {
       id: "1",
-      username: "Alice",
+      account: {
+        id: "1",
+        username: "Alice"
+      },
       content: "nunc mi ipsum faucibus vitae",
       profile,
       character: {

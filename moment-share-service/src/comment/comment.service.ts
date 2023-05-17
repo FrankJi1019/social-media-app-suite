@@ -59,4 +59,13 @@ export class CommentService extends BaseService<Comment> {
       moment: momentEntity,
     });
   }
+
+  async findAccount(id: number) {
+    return (
+      await this.findOne({
+        where: { id },
+        relations: { account: true },
+      })
+    ).account;
+  }
 }

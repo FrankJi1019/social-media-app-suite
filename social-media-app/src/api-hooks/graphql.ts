@@ -35,11 +35,13 @@ export const MOMENT_BY_ID_QUERY = gql`
       isLiked
       comments {
         id
-        username
         content
         createdAt
         character {
           name
+        }
+        account {
+          username
         }
       }
       tags {
