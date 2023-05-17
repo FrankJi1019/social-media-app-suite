@@ -17,7 +17,11 @@ const render = (args: any) => Decorate(<MomentDetailPage {...args} />)
 
 const moment = {
   id: "1",
-  username: "Alice",
+  account: {
+    id: "1",
+    username: "Alice",
+    createdAt: new Date()
+  },
   content:
     // eslint-disable-next-line max-len
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Venenatis cras sed felis eget. Morbi tincidunt ornare massa eget egestas purus viverra accumsan. Suscipit adipiscing bibendum est ultricies integer. Blandit libero volutpat sed cras ornare arcu. Rhoncus dolor purus non enim praesent elementum facilisis leo. Molestie at elementum eu facilisis sed odio. Sed risus pretium quam vulputate dignissim suspendisse in.",

@@ -93,4 +93,9 @@ export class MomentResolver {
   async findAllTags(@Parent() { id }: { id: number }) {
     return await this.momentService.findMomentTags(id);
   }
+
+  @ResolveField('account')
+  async findAccount(@Parent() { id }: { id: number }) {
+    return await this.momentService.findAccount(id);
+  }
 }

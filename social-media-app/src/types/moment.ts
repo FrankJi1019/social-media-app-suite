@@ -1,11 +1,11 @@
 import { Comment } from "./comment"
 import { Character } from "./character"
 import { Tag } from "./tag"
+import { Account } from "./account"
 
 export interface MomentBrief {
   id: string
   profile: string
-  username: string
   character: Character
   postDate: Date
   content: string
@@ -13,12 +13,13 @@ export interface MomentBrief {
   commentNumber: number
   isLiked: boolean
   isOwnMoment: boolean
+  account: Account
 }
 
 export interface Moment {
   id: string
   profile: string
-  username: string
+  account: Account
   character: Character
   postDate: Date
   content: string

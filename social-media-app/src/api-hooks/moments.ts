@@ -13,6 +13,7 @@ import profilePlaceholder from "../assets/placeholders/profile-placeholder.jpg"
 import { utcTimestampToDate } from "../utils/time"
 import { Character } from "../types/character"
 import { useAuth } from "../providers/CognitoAuthProvider"
+import { Account } from "../types/account"
 
 export const useFetchAllMoments = (input?: {
   category?: string
@@ -28,7 +29,7 @@ export const useFetchAllMoments = (input?: {
     return data.moments.map(
       (moment: {
         id: string
-        username: string
+        account: Account
         character: Character
         content: string
         createdAt: string
@@ -38,7 +39,7 @@ export const useFetchAllMoments = (input?: {
       }) => {
         return {
           ...moment,
-          isOwnMoment: getCurrentUser()?.Username === moment.username,
+          isOwnMoment: getCurrentUser()?.Username === moment.account.username,
           profile: profilePlaceholder,
           postDate: utcTimestampToDate(Number(moment.createdAt))
         } as MomentBrief

@@ -100,7 +100,7 @@ const HomePage: FC<HomePageProps> = ({
               onUnlike={() => onMomentUnlike(moment.id)}
               onOpen={() => onMomentOpen(moment.id)}
               onChat={() =>
-                onMomentChat(moment.username, moment.character.name)
+                onMomentChat(moment.account.username, moment.character.name)
               }
               onReport={() => onMomentReport(moment.id)}
             />

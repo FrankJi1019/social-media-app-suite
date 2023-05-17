@@ -12,12 +12,10 @@ import { Like } from './like.entity';
 import { Character } from '../../character/entities/character.entity';
 import { Comment } from '../../comment/entities/comment.entity';
 import { Tag } from '../../tag/entities/tag.entity';
+import { Account } from '../../account/entities/account.entity';
 
 @Entity('moment')
 export class Moment extends BaseEntity {
-  @Column()
-  username: string;
-
   @Column()
   content: string;
 
@@ -33,6 +31,10 @@ export class Moment extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.moment)
   comments: Array<Comment>;
+
+  @ManyToOne(() => Account, (account) => account.moments)
+  @JoinColumn({ name: 'account' })
+  account: Account;
 
   @ManyToMany(() => Tag, (tag) => tag.moments)
   @JoinTable({

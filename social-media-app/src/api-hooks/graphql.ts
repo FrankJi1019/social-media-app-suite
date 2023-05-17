@@ -4,7 +4,9 @@ export const ALL_MOMENTS_QUERY = gql`
   query AllMoments($input: FilterMomentInput) {
     moments(input: $input) {
       id
-      username
+      account {
+        username
+      }
       character {
         name
       }
@@ -21,7 +23,9 @@ export const MOMENT_BY_ID_QUERY = gql`
   query Moment($id: ID!) {
     moment(id: $id) {
       id
-      username
+      account {
+        username
+      }
       character {
         name
       }

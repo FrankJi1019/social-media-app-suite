@@ -80,7 +80,6 @@ export interface Comment {
 
 export interface Moment {
     id: string;
-    username: string;
     character: Character;
     content: string;
     createdAt: string;
@@ -89,6 +88,7 @@ export interface Moment {
     isLiked: boolean;
     comments?: Nullable<Comment[]>;
     tags: Tag[];
+    account: Account;
 }
 
 export interface IQuery {
