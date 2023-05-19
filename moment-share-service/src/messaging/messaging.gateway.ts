@@ -2,20 +2,20 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
-  ConnectedSocket,
   WebSocketServer,
+  ConnectedSocket,
 } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
-import { HealthCheckDto } from './dto/health-check.dto';
-import { Socket } from 'net';
+import { MessagingService } from './messaging.service';
 import { Server } from 'socket.io';
+import { Socket } from 'net';
+import { HealthCheckDto } from './dto/health-check.dto';
 
 @WebSocketGateway()
-export class ChatGateway {
+export class MessagingGateway {
   @WebSocketServer()
   wss: Server;
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly messagingService: MessagingService) {}
 
   @SubscribeMessage('health')
   create(

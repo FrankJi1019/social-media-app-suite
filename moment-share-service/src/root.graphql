@@ -5,6 +5,7 @@ type Query {
   categories: [Category!]
   tags: [Tag!]
   account(username: String!): Account!
+  chats(input: FetchChatHistoryInput!): [Chat!]
 }
 
 type Mutation {
@@ -18,4 +19,5 @@ type Mutation {
   createTag(input: CreateTagInput!): Tag!
   createAccount(input: CreateAccountInput!): Account!
   createFriendship(input: CreateFriendshipInput!): Boolean!
+  createChat(input: CreateChatMessageInput!): Chat!
 }

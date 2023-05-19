@@ -30,7 +30,7 @@ export abstract class BaseService<T extends BaseEntity> {
     if (entity) {
       return entity;
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(`Entity with id ${id} does not exist`);
     }
   }
 

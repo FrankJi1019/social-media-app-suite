@@ -11,9 +11,10 @@ import { AuthzModule } from './authz/authz.module';
 import { CommentModule } from './comment/comment.module';
 import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
-import { ChatModule } from './chat/chat.module';
 import { AccountModule } from './account/account.module';
 import { FriendModule } from './friend/friend.module';
+import { MessagingModule } from './messaging/messaging.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -25,9 +26,10 @@ import { FriendModule } from './friend/friend.module';
     CommentModule,
     CategoryModule,
     TagModule,
-    ChatModule,
     AccountModule,
     FriendModule,
+    MessagingModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

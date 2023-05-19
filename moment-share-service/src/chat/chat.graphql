@@ -1,0 +1,17 @@
+type Chat {
+  id: ID!
+  sender: Account!
+  receiver: Account!
+  content: String!
+  createdAt: String!
+}
+
+input CreateChatMessageInput {
+  senderId: String!
+  receivedId: String!
+  content: String!
+}
+
+input FetchChatHistoryInput {
+  accountName: String!
+}

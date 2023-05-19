@@ -17,6 +17,7 @@ import PostMomentPageBuilder from "./pages/PostMomentPage"
 import profile from "./assets/placeholders/profile-placeholder.jpg"
 import MomentDetailPageBuilder from "./pages/MomentDetailPage"
 import { useNotification } from "./providers/NotificationProvider"
+import FriendPage from "./pages/FriendPage"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
@@ -96,15 +97,22 @@ const PublicRouter = () => {
 
   return (
     <Routes>
-      <Route path={"/auth"} element={<AuthPageBuilder />} />
-      <Route path={"/"} element={<HomePageBuilder {...commonArgs} />} />
+      <Route path={AppRoutes.AUTH_PATH.path} element={<AuthPageBuilder />} />
       <Route
-        path={"/post"}
+        path={AppRoutes.HOME_PAGE.path}
+        element={<HomePageBuilder {...commonArgs} />}
+      />
+      <Route
+        path={AppRoutes.POST_MOMENT_PAGE.path}
         element={<PostMomentPageBuilder {...commonArgs} />}
       />
       <Route
-        path={"/moments/:id"}
+        path={AppRoutes.MOMENT_DETAIL_PAGE.path}
         element={<MomentDetailPageBuilder {...commonArgs} />}
+      />
+      <Route
+        path={AppRoutes.FRIEND_PAGE.path}
+        element={<FriendPage {...commonArgs} />}
       />
       <Route path={"*"} element={<Navigate to={"/auth"} />} />
     </Routes>

@@ -11,8 +11,8 @@ export const useAddFriendMutation = () => {
       account1Character: string
       account2Character: string
     }) => {
-      const { data } = await mutate({ variables: { input } })
-      return data.createFriendship
+      // const { data } = await mutate({ variables: { input } })
+      // return data.createFriendship
     },
     [mutate]
   )

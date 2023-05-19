@@ -124,6 +124,9 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         })
         return
       }
+      navigate({
+        pathname: Routes.FRIEND_PAGE.generate({ friendshipId: 1 }).toString()
+      })
       const character = pickRandomElement(characterList)
       await addFriend({
         account1Username: username,

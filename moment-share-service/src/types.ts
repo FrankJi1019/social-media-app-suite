@@ -16,6 +16,16 @@ export interface CreateCategoryInput {
     name: string;
 }
 
+export interface CreateChatMessageInput {
+    senderId: string;
+    receivedId: string;
+    content: string;
+}
+
+export interface FetchChatHistoryInput {
+    accountName: string;
+}
+
 export interface CreateCommentInput {
     username: string;
     character: string;
@@ -69,6 +79,14 @@ export interface Character {
     name: string;
 }
 
+export interface Chat {
+    id: string;
+    sender: Account;
+    receiver: Account;
+    content: string;
+    createdAt: string;
+}
+
 export interface Comment {
     id: string;
     account: Account;
@@ -98,6 +116,7 @@ export interface IQuery {
     categories(): Nullable<Category[]> | Promise<Nullable<Category[]>>;
     tags(): Nullable<Tag[]> | Promise<Nullable<Tag[]>>;
     account(username: string): Account | Promise<Account>;
+    chats(input: FetchChatHistoryInput): Nullable<Chat[]> | Promise<Nullable<Chat[]>>;
 }
 
 export interface IMutation {
@@ -111,6 +130,7 @@ export interface IMutation {
     createTag(input: CreateTagInput): Tag | Promise<Tag>;
     createAccount(input: CreateAccountInput): Account | Promise<Account>;
     createFriendship(input: CreateFriendshipInput): boolean | Promise<boolean>;
+    createChat(input: CreateChatMessageInput): Chat | Promise<Chat>;
 }
 
 export interface Tag {
