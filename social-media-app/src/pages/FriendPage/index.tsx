@@ -22,16 +22,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
         currentUsername={getCurrentUser()?.Username as string}
         friendUsername={friendUsername}
         friendCharacter={"Snoopy"}
-        chatHistory={[
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory,
-          ...chatHistory
-        ]}
+        chatHistory={chatHistory}
         onSend={(message) => console.log(message)}
       />
     </Page>

@@ -16,20 +16,30 @@ const ChatMessage: FC<ChatMessageProps> = ({
     <Box
       sx={{
         display: "flex",
-        flexDirection: isOwnMessage ? "row-reverse" : "row"
+        justifyContent: isOwnMessage ? "flex-end" : "flex-start"
       }}
     >
-      <Avatar src={profileImage} />
       <Box
         sx={{
-          p: 1,
-          marginX: 0.5,
-          backgroundColor: isOwnMessage ? "primary.dark" : "primary.extraLight",
-          color: isOwnMessage ? "primary.extraLight" : "primary.dark",
-          borderRadius: "10px"
+          width: "80%",
+          display: "flex",
+          flexDirection: isOwnMessage ? "row-reverse" : "row"
         }}
       >
-        <Typography>{content}</Typography>
+        <Avatar src={profileImage} />
+        <Box
+          sx={{
+            p: 1,
+            marginX: 0.5,
+            backgroundColor: isOwnMessage
+              ? "primary.dark"
+              : "primary.extraLight",
+            color: isOwnMessage ? "primary.extraLight" : "primary.dark",
+            borderRadius: "10px"
+          }}
+        >
+          <Typography>{content}</Typography>
+        </Box>
       </Box>
     </Box>
   )

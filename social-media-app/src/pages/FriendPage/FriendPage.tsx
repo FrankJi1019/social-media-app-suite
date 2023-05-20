@@ -57,7 +57,7 @@ const FriendPage: FC<FriendPageProps> = ({
         >
           {chatHistory.map(
             ({ id, content, sender: { username: senderName } }) => (
-              <Box key={id} sx={{ paddingY: 1 }}>
+              <Box key={id} sx={{ paddingY: 2 }}>
                 <ChatMessage
                   profileImage={profileImage}
                   content={content}
