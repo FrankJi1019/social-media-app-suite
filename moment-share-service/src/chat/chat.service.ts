@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseService } from '../base/base.service';
 import { Chat } from './entities/chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Account } from '../account/entities/account.entity';
 
 @Injectable()
@@ -16,12 +16,12 @@ export class ChatService extends BaseService<Chat> {
     super(chatRepository);
   }
 
-  async getChatHistory(accountName: string) {
+  async getChatHistory(accountNames: Array<string>) {
     return await super.findAll({
-      where: [
-        { sender: { username: accountName } },
-        { receiver: { username: accountName } },
-      ],
+      where: {
+        sender: { username: In(accountNames) },
+        receiver: { username: In(accountNames) },
+      },
     });
   }
 

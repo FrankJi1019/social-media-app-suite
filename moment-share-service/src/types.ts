@@ -23,7 +23,7 @@ export interface CreateChatMessageInput {
 }
 
 export interface FetchChatHistoryInput {
-    accountName: string;
+    accountNames?: Nullable<string[]>;
 }
 
 export interface CreateCommentInput {

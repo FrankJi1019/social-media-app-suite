@@ -1,3 +1,3 @@
 export class FetchChatHistoryInput {
-  accountName;
+  accountNames: Array<string>;
 }

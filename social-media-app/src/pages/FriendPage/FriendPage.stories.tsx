@@ -15,6 +15,7 @@ const render = (args: any) => Decorate(<FriendPage {...args} />)
 export const General = {
   render,
   args: {
+    currentUsername: "Bob",
     friendUsername: "Alice",
     friendCharacter: "Snoopy",
     chatHistory: [],

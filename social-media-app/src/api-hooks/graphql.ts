@@ -124,3 +124,19 @@ export const CREATE_ACCOUNT_MUTATION = gql`
     }
   }
 `
+
+export const CHAT_HISTORY_QUERY = gql`
+  query ($input: FetchChatHistoryInput!) {
+    chats(input: $input) {
+      id
+      sender {
+        username
+      }
+      receiver {
+        username
+      }
+      content
+      createdAt
+    }
+  }
+`

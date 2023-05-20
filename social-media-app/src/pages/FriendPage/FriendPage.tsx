@@ -1,15 +1,21 @@
 import React, { FC } from "react"
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material"
 import StandardContainer from "../../containers/StandardContainer"
+import { Chat } from "../../types/chat"
+import ChatMessage from "../../components/ChatMessage"
+// @ts-ignore
+import profileImage from "../../assets/placeholders/profile-placeholder.jpg"
 
 export interface FriendPageProps {
+  currentUsername: string
   friendUsername: string
   friendCharacter: string
-  chatHistory: Array<any>
+  chatHistory: Array<Chat>
   onSend: (message: string) => void
 }
 
 const FriendPage: FC<FriendPageProps> = ({
+  currentUsername,
   friendCharacter,
   friendUsername,
   chatHistory,
@@ -25,7 +31,8 @@ const FriendPage: FC<FriendPageProps> = ({
           p: 0,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
+          overflow: "hidden"
         }}
       >
         <Box
@@ -39,7 +46,27 @@ const FriendPage: FC<FriendPageProps> = ({
             {friendCharacter}
           </Typography>
         </Box>
-        <Box sx={{ flex: 1 }}></Box>
+        <Box
+          sx={{
+            flex: 1,
+            paddingX: 2,
+            paddingY: 1,
+            overflow: "auto",
+            "&::-webkit-scrollbar": { width: 0 }
+          }}
+        >
+          {chatHistory.map(
+            ({ id, content, sender: { username: senderName } }) => (
+              <Box key={id} sx={{ paddingY: 1 }}>
+                <ChatMessage
+                  profileImage={profileImage}
+                  content={content}
+                  isOwnMessage={senderName === currentUsername}
+                />
+              </Box>
+            )
+          )}
+        </Box>
         <Box
           sx={{
             boxShadow: `0px 0px 7px 4px ${theme.palette.bg.shadow}`

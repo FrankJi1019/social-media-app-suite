@@ -13,5 +13,5 @@ input CreateChatMessageInput {
 }
 
 input FetchChatHistoryInput {
-  accountName: String!
+  accountNames: [String!]
 }

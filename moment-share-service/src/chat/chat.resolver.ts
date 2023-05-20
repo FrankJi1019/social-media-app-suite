@@ -16,7 +16,7 @@ export class ChatResolver {
 
   @Query('chats')
   async getChatHistory(@Args('input') input: FetchChatHistoryInput) {
-    return await this.chatService.getChatHistory(input.accountName);
+    return await this.chatService.getChatHistory(input.accountNames);
   }
 
   @Mutation('createChat')
