@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material"
 import StandardContainer from "../../containers/StandardContainer"
 import { Chat } from "../../types/chat"
@@ -22,6 +22,8 @@ const FriendPage: FC<FriendPageProps> = ({
   onSend
 }) => {
   const theme = useTheme()
+
+  const [message, setMessage] = useState("")
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -75,6 +77,8 @@ const FriendPage: FC<FriendPageProps> = ({
           <TextField
             multiline
             rows={2}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             sx={{
               "& textarea::-webkit-scrollbar": {
                 width: 0,
@@ -90,7 +94,15 @@ const FriendPage: FC<FriendPageProps> = ({
               justifyContent: "flex-end"
             }}
           >
-            <Button sx={{ p: 0 }}>Send</Button>
+            <Button
+              sx={{ p: 0 }}
+              onClick={() => {
+                onSend(message)
+                setMessage("")
+              }}
+            >
+              Send
+            </Button>
           </Box>
         </Box>
       </StandardContainer>

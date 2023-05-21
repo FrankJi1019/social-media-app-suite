@@ -26,31 +26,29 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
   socketUrl,
   children
 }) => {
-  const socket = useRef(io(socketUrl, { autoConnect: false }))
+  const socketRef = useRef(io(socketUrl, { autoConnect: false }))
   const { getCurrentUser } = useAuth()
 
   const disconnectSocketServer = useCallback(() => {
-    console.log("deregister")
-    if (socket.current.connected) {
-      socket.current.emit("deregister")
-      socket.current.disconnect()
+    if (socketRef.current.connected) {
+      socketRef.current.emit("deregister")
+      socketRef.current.disconnect()
     }
   }, [])
 
   const emit = useCallback((message: string, data: any) => {
-    if (socket.current.connected) {
-      socket.current.emit(message, data)
+    if (socketRef.current.connected) {
+      socketRef.current.emit(message, data)
     }
   }, [])
 
   useEffect(() => {
     ;(async () => {
       const user = getCurrentUser()
-      if (user && !socket.current.connected) {
-        console.log("connect & register")
-        socket.current.connect()
-        socket.current.on("connect", () => {
-          socket.current.emit("register", {
+      if (user && !socketRef.current.connected) {
+        socketRef.current.connect()
+        socketRef.current.on("connect", () => {
+          socketRef.current.emit("register", {
             accountName: user.Username
           })
         })
@@ -67,7 +65,7 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
 
   const value = useMemo(
     () => ({
-      socket: socket.current,
+      socket: socketRef.current,
       emit
     }),
     [emit]
@@ -79,3 +77,20 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
 export default MessagingSocketProvider
 
 export const useMessagingSocket = () => useContext(context)
+
+export const useSingleSubscribe = (
+  message: string,
+  handler: (data: any) => void,
+  deps: Array<any>
+) => {
+  const { socket } = useMessagingSocket()
+  useEffect(() => {
+    if (!socket.hasListeners(message)) {
+      socket.on(message, handler)
+    }
+    return () => {
+      socket.off(message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handler, message, socket, ...deps])
+}

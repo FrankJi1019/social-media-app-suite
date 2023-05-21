@@ -47,16 +47,12 @@ export class MessagingGateway
     @MessageBody() data: RegisterClientDto,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('--- registered ---');
-    console.log('data', data);
     this.onlineUsers[data.accountName] = client;
     client.emit('greet', { msg: `Hi ${data.accountName}` });
   }
 
   @SubscribeMessage('deregister')
   deregisterClient(@ConnectedSocket() client: Socket) {
-    console.log('--- deregister ---');
-    console.log(this.onlineUsers);
     const accountName = Object.entries(this.onlineUsers).find(
       ([, socket]) => socket.id === client.id,
     )[0];
@@ -69,8 +65,6 @@ export class MessagingGateway
     @MessageBody() data: MessageSentDto,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('--- message-sent ---');
-    console.log('data', data);
     const chat = await this.messagingService.handleMessageSent(
       data.senderUsername,
       data.receiverUsername,
