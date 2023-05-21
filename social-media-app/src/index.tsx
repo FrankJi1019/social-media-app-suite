@@ -12,6 +12,7 @@ import { client } from "./prismic"
 import NotificationProvider from "./providers/NotificationProvider"
 import { theme } from "./theme"
 import "./fonts.css"
+import MessagingSocketProvider from "./providers/MessagingSocketProvider"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
@@ -27,7 +28,11 @@ root.render(
             <GraphqlProvider>
               <PrismicProvider client={client}>
                 <NotificationProvider>
-                  <App />
+                  <MessagingSocketProvider
+                    socketUrl={process.env.REACT_APP_SOCKET_URL as string}
+                  >
+                    <App />
+                  </MessagingSocketProvider>
                 </NotificationProvider>
               </PrismicProvider>
             </GraphqlProvider>

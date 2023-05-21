@@ -12,17 +12,26 @@ import { Server, Socket } from 'socket.io';
 import { HealthCheckDto } from './dto/health-check.dto';
 import { MessageSentDto } from './dto/message-sent.dto';
 import { SocketMapping } from '../types/socket';
-import { NotImplementedException } from '@nestjs/common';
 import { RegisterClientDto } from './dto/register-client.dto';
 
-@WebSocketGateway()
-export class MessagingGateway {
+@WebSocketGateway({ cors: true })
+export class MessagingGateway
+  implements OnGatewayDisconnect, OnGatewayConnection
+{
   @WebSocketServer()
   wss: Server;
 
   private onlineUsers: SocketMapping = {};
 
   constructor(private readonly messagingService: MessagingService) {}
+
+  handleConnection(client: Socket) {
+    console.log(`Client ${client.id} connected`);
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log(`Client ${client.id} disconnected`);
+  }
 
   @SubscribeMessage('health')
   getHealth(
@@ -38,12 +47,16 @@ export class MessagingGateway {
     @MessageBody() data: RegisterClientDto,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log('--- registered ---');
+    console.log('data', data);
     this.onlineUsers[data.accountName] = client;
     client.emit('greet', { msg: `Hi ${data.accountName}` });
   }
 
   @SubscribeMessage('deregister')
   deregisterClient(@ConnectedSocket() client: Socket) {
+    console.log('--- deregister ---');
+    console.log(this.onlineUsers);
     const accountName = Object.entries(this.onlineUsers).find(
       ([, socket]) => socket.id === client.id,
     )[0];
@@ -56,6 +69,8 @@ export class MessagingGateway {
     @MessageBody() data: MessageSentDto,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log('--- message-sent ---');
+    console.log('data', data);
     const chat = await this.messagingService.handleMessageSent(
       data.senderUsername,
       data.receiverUsername,

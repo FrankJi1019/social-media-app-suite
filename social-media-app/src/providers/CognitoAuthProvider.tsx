@@ -131,7 +131,8 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
       clientId,
       cognitoClient,
       fetchUserWithToken,
-      refreshTokenCookieName
+      refreshTokenCookieName,
+      setCurrentUser
     ]
   )
 
@@ -197,7 +198,7 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
     cookies.remove(refreshTokenCookieName)
     cookies.remove(accessTokenCookieName)
     setCurrentUser(null)
-  }, [accessTokenCookieName, refreshTokenCookieName])
+  }, [accessTokenCookieName, refreshTokenCookieName, setCurrentUser])
 
   useEffect(() => {
     ;(async () => {
@@ -207,7 +208,7 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
         setCurrentUser(user)
       }
     })()
-  }, [accessTokenCookieName, fetchUserWithToken])
+  }, [accessTokenCookieName, fetchUserWithToken, setCurrentUser])
 
   const values = useMemo(
     () =>
