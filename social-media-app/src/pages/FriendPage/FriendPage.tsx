@@ -17,7 +17,6 @@ export interface FriendPageProps {
 const FriendPage: FC<FriendPageProps> = ({
   currentUsername,
   friendCharacter,
-  friendUsername,
   chatHistory,
   onSend
 }) => {
@@ -74,36 +73,38 @@ const FriendPage: FC<FriendPageProps> = ({
             boxShadow: `0px 0px 7px 4px ${theme.palette.bg.shadow}`
           }}
         >
-          <TextField
-            multiline
-            rows={2}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            sx={{
-              "& textarea::-webkit-scrollbar": {
-                width: 0,
-                height: 0
-              }
-            }}
-          />
-          <Box
-            sx={{
-              paddingX: 2,
-              pb: 2,
-              display: "flex",
-              justifyContent: "flex-end"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              onSend(message)
+              setMessage("")
             }}
           >
-            <Button
-              sx={{ p: 0 }}
-              onClick={() => {
-                onSend(message)
-                setMessage("")
+            <TextField
+              multiline
+              rows={2}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              sx={{
+                "& textarea::-webkit-scrollbar": {
+                  width: 0,
+                  height: 0
+                }
+              }}
+            />
+            <Box
+              sx={{
+                paddingX: 2,
+                pb: 2,
+                display: "flex",
+                justifyContent: "flex-end"
               }}
             >
-              Send
-            </Button>
-          </Box>
+              <Button type={"submit"} sx={{ p: 0 }}>
+                Send
+              </Button>
+            </Box>
+          </form>
         </Box>
       </StandardContainer>
     </Box>

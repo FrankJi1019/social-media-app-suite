@@ -17,12 +17,22 @@ export class ChatService extends BaseService<Chat> {
   }
 
   async getChatHistory(accountNames: Array<string>) {
-    return await super.findAll({
-      where: {
-        sender: { username: In(accountNames) },
-        receiver: { username: In(accountNames) },
-      },
-    });
+    const res = await this.chatRepository
+      .createQueryBuilder('c')
+      .innerJoinAndSelect('c.sender', 's')
+      .innerJoinAndSelect('c.receiver', 'r')
+      .where('s.username IN (:...accountNames)', { accountNames })
+      .andWhere('r.username IN (:...accountNames)', { accountNames })
+      .andWhere('s.username != r.username')
+      .getMany();
+    return res;
+
+    // return await super.findAll({
+    //   where: {
+    //     sender: { username: In(accountNames) },
+    //     receiver: { username: In(accountNames) },
+    //   },
+    // });
   }
 
   async createChatMsg(content: string, senderId: number, receiverId: number) {

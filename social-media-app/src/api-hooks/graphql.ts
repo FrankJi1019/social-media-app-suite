@@ -141,9 +141,17 @@ export const CHAT_HISTORY_QUERY = gql`
   }
 `
 
-export const FIND_OR_CREATE_FRIEND_QUERY = gql`
+export const FIND_OR_CREATE_FRIEND_MUTATION = gql`
   mutation FindOrCreateFriendship($input: FindOrCreateFriendshipInput!) {
     findOrCreateFriendship(input: $input) {
+      id
+    }
+  }
+`
+
+export const FETCH_FRIENDSHIP_BY_ID = gql`
+  query FindFriendshipById($id: ID!) {
+    friendship(id: $id) {
       id
       userAccount {
         username

@@ -1,5 +1,9 @@
-import { useMutation } from "@apollo/client"
-import { ADD_FRIEND_MUTATION, FIND_OR_CREATE_FRIEND_QUERY } from "./graphql"
+import { useMutation, useQuery } from "@apollo/client"
+import {
+  ADD_FRIEND_MUTATION,
+  FETCH_FRIENDSHIP_BY_ID,
+  FIND_OR_CREATE_FRIEND_MUTATION
+} from "./graphql"
 import { useCallback } from "react"
 import { Friendship } from "../types/friend"
 
@@ -21,7 +25,7 @@ export const useAddFriendMutation = () => {
 }
 
 export const useFindOrCreateFriendshipMutation = () => {
-  const [mutate, { loading }] = useMutation(FIND_OR_CREATE_FRIEND_QUERY)
+  const [mutate, { loading }] = useMutation(FIND_OR_CREATE_FRIEND_MUTATION)
   const findOrCreateFriendship = useCallback(
     async (input: { userAccountName: string; friendAccountName: string }) => {
       const { data } = await mutate({ variables: { input } })
@@ -30,4 +34,11 @@ export const useFindOrCreateFriendshipMutation = () => {
     [mutate]
   )
   return { mutate: findOrCreateFriendship, loading }
+}
+
+export const useFetchFriendshipById = (id: string | number) => {
+  const { data, loading, error } = useQuery(FETCH_FRIENDSHIP_BY_ID, {
+    variables: { id }
+  })
+  return { data: data?.friendship as Friendship | undefined, loading, error }
 }

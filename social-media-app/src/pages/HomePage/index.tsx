@@ -13,10 +13,7 @@ import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
 import { useNotification } from "../../providers/NotificationProvider"
-import {
-  useAddFriendMutation,
-  useFindOrCreateFriendshipMutation
-} from "../../api-hooks/friend"
+import { useFindOrCreateFriendshipMutation } from "../../api-hooks/friend"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 
 interface HomepageProps extends PageProps {}
@@ -45,7 +42,6 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
 
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
-  const { mutate: addFriend } = useAddFriendMutation()
   const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
 
   const allCategories = useMemo(() => {
@@ -110,7 +106,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   )
 
   const momentChatHandler = useCallback(
-    async (friendUsername: string, friendCharacter: string) => {
+    async (friendUsername: string) => {
       if (characterList.length === 0) return
       const username = getCurrentUser()?.Username
       if (!username) {
@@ -131,7 +127,6 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         userAccountName: username,
         friendAccountName: friendUsername
       })
-      console.log(friendship)
       navigate({
         pathname: Routes.FRIEND_PAGE.generate({
           friendshipId: friendship.id
