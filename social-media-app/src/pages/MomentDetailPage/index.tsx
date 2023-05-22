@@ -14,8 +14,6 @@ import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
 import { useAddFriendMutation } from "../../api-hooks/friend"
 import { useNotification } from "../../providers/NotificationProvider"
-import { Routes } from "../../routes/routes"
-import { pickRandomElement } from "../../utils/random"
 
 interface MomentDetailPageProps extends PageProps {}
 
@@ -89,37 +87,39 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     [characterList, createComment, getCurrentUser, moment, reFetchMoment]
   )
 
-  const ChatHandler = useCallback(
-    async (friendUsername: string, friendCharacter: string) => {
-      if (characterList.length === 0) return
-      const username = getCurrentUser()?.Username
-      if (!username) {
-        notify("Please login first", {
-          buttonOptions: [
-            {
-              text: "Signup",
-              props: {
-                variant: "contained",
-                onClick: () => navigate({ pathname: Routes.AUTH_PATH.path })
-              }
-            }
-          ]
-        })
-        return
-      }
-      navigate({
-        pathname: Routes.FRIEND_PAGE.generate({ friendshipId: 1 }).toString()
-      })
-      const character = pickRandomElement(characterList)
-      await addFriend({
-        account1Username: username,
-        account1Character: character,
-        account2Username: friendUsername,
-        account2Character: friendCharacter
-      })
-    },
-    [addFriend, characterList, getCurrentUser, navigate, notify]
-  )
+  const chatHandler = () => {}
+
+  // const chatHandler = useCallback(
+  //   async (friendUsername: string, friendCharacter: string) => {
+  //     if (characterList.length === 0) return
+  //     const username = getCurrentUser()?.Username
+  //     if (!username) {
+  //       notify("Please login first", {
+  //         buttonOptions: [
+  //           {
+  //             text: "Signup",
+  //             props: {
+  //               variant: "contained",
+  //               onClick: () => navigate({ pathname: Routes.AUTH_PATH.path })
+  //             }
+  //           }
+  //         ]
+  //       })
+  //       return
+  //     }
+  //     navigate({
+  //       pathname: Routes.FRIEND_PAGE.generate({ friendshipId: 1 }).toString()
+  //     })
+  //     const character = pickRandomElement(characterList)
+  //     await addFriend({
+  //       account1Username: username,
+  //       account1Character: character,
+  //       account2Username: friendUsername,
+  //       account2Character: friendCharacter
+  //     })
+  //   },
+  //   [addFriend, characterList, getCurrentUser, navigate, notify]
+  // )
 
   const reportMomentHandler = useCallback(
     () => notify("Feature to be implemented"),
@@ -138,7 +138,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
         onLike={likeMomentHandler}
         onUnlike={unlikeMomentHandler}
         onComment={commentHandler}
-        onChat={ChatHandler}
+        onChat={chatHandler}
         onReport={reportMomentHandler}
       />
     </Page>

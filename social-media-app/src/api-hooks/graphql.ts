@@ -140,3 +140,23 @@ export const CHAT_HISTORY_QUERY = gql`
     }
   }
 `
+
+export const FIND_OR_CREATE_FRIEND_QUERY = gql`
+  mutation FindOrCreateFriendship($input: FindOrCreateFriendshipInput!) {
+    findOrCreateFriendship(input: $input) {
+      id
+      userAccount {
+        username
+      }
+      friendAccount {
+        username
+      }
+      userCharacter {
+        name
+      }
+      friendCharacter {
+        name
+      }
+    }
+  }
+`

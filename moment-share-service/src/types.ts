@@ -33,11 +33,14 @@ export interface CreateCommentInput {
     momentId: string;
 }
 
-export interface CreateFriendshipInput {
-    account1Username: string;
-    account2Username: string;
-    account1Character: string;
-    account2Character: string;
+export interface FetchFriendshipInput {
+    userAccountName: string;
+    friendAccountName: string;
+}
+
+export interface FindOrCreateFriendshipInput {
+    userAccountName: string;
+    friendAccountName: string;
 }
 
 export interface CreateMomentInput {
@@ -96,6 +99,15 @@ export interface Comment {
     moment: Moment;
 }
 
+export interface Friendship {
+    id: string;
+    hasUnread: boolean;
+    userAccount: Account;
+    userCharacter: Character;
+    friendAccount: Account;
+    friendCharacter: Character;
+}
+
 export interface Moment {
     id: string;
     character: Character;
@@ -117,6 +129,7 @@ export interface IQuery {
     tags(): Nullable<Tag[]> | Promise<Nullable<Tag[]>>;
     account(username: string): Account | Promise<Account>;
     chats(input: FetchChatHistoryInput): Nullable<Chat[]> | Promise<Nullable<Chat[]>>;
+    friendship(id: string): Friendship | Promise<Friendship>;
 }
 
 export interface IMutation {
@@ -129,8 +142,8 @@ export interface IMutation {
     createCategory(input: CreateCategoryInput): Category | Promise<Category>;
     createTag(input: CreateTagInput): Tag | Promise<Tag>;
     createAccount(input: CreateAccountInput): Account | Promise<Account>;
-    createFriendship(input: CreateFriendshipInput): boolean | Promise<boolean>;
     createChat(input: CreateChatMessageInput): Chat | Promise<Chat>;
+    findOrCreateFriendship(input: FindOrCreateFriendshipInput): Friendship | Promise<Friendship>;
 }
 
 export interface Tag {

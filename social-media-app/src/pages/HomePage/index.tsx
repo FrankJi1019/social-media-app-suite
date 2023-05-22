@@ -13,9 +13,11 @@ import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
 import { useNotification } from "../../providers/NotificationProvider"
-import { useAddFriendMutation } from "../../api-hooks/friend"
+import {
+  useAddFriendMutation,
+  useFindOrCreateFriendshipMutation
+} from "../../api-hooks/friend"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
-import { pickRandomElement } from "../../utils/random"
 
 interface HomepageProps extends PageProps {}
 
@@ -44,6 +46,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
   const { mutate: addFriend } = useAddFriendMutation()
+  const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
 
   const allCategories = useMemo(() => {
     const categories = [
@@ -124,18 +127,24 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         })
         return
       }
-      navigate({
-        pathname: Routes.FRIEND_PAGE.generate({ friendshipId: 1 }).toString()
+      const friendship = await findOrCreateFriendship({
+        userAccountName: username,
+        friendAccountName: friendUsername
       })
-      const character = pickRandomElement(characterList)
-      await addFriend({
-        account1Username: username,
-        account1Character: character,
-        account2Username: friendUsername,
-        account2Character: friendCharacter
+      console.log(friendship)
+      navigate({
+        pathname: Routes.FRIEND_PAGE.generate({
+          friendshipId: friendship.id
+        }).toString()
       })
     },
-    [addFriend, characterList, getCurrentUser, navigate, notify]
+    [
+      characterList.length,
+      findOrCreateFriendship,
+      getCurrentUser,
+      navigate,
+      notify
+    ]
   )
 
   const reportMomentHandler = useCallback(() => {
