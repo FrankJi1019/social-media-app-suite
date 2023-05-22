@@ -1,10 +1,18 @@
 import React, { FC, useState } from "react"
-import { Box, Button, TextField, Typography, useTheme } from "@mui/material"
+import {
+  Box,
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+  useTheme
+} from "@mui/material"
 import StandardContainer from "../../containers/StandardContainer"
 import { Chat } from "../../types/chat"
 import ChatMessage from "../../components/ChatMessage"
 // @ts-ignore
 import profileImage from "../../assets/placeholders/profile-placeholder.jpg"
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 
 export interface FriendPageProps {
   currentUsername: string
@@ -12,13 +20,15 @@ export interface FriendPageProps {
   friendCharacter: string
   chatHistory: Array<Chat>
   onSend: (message: string) => void
+  onBack: () => void
 }
 
 const FriendPage: FC<FriendPageProps> = ({
   currentUsername,
   friendCharacter,
   chatHistory,
-  onSend
+  onSend,
+  onBack
 }) => {
   const theme = useTheme()
 
@@ -40,12 +50,24 @@ const FriendPage: FC<FriendPageProps> = ({
           sx={{
             backgroundColor: "primary.dark",
             paddingX: 2.5,
-            paddingY: 1
+            paddingY: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
+          <Box sx={{ flex: 1 }}>
+            <IconButton onClick={onBack}>
+              <ArrowBackIosNewIcon
+                fontSize={"small"}
+                sx={{ color: "primary.extraLight" }}
+              />
+            </IconButton>
+          </Box>
           <Typography variant={"h5"} color={"primary.extraLight"}>
             {friendCharacter}
           </Typography>
+          <Box sx={{ flex: 1 }} />
         </Box>
         <Box
           sx={{

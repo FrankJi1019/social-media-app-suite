@@ -58,6 +58,7 @@ export const General = {
     friendUsername: "Alice",
     friendCharacter: "Snoopy",
     chatHistory,
-    onSend: FUNCTION_PLACE_HOLDER
+    onSend: FUNCTION_PLACE_HOLDER,
+    onBack: FUNCTION_PLACE_HOLDER
   } as FriendPageProps
 } as StoryObj

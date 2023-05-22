@@ -43,6 +43,8 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
     [emit, friendship?.friendAccount.username, getCurrentUser]
   )
 
+  const goBackHandler = useCallback(() => window.history.back(), [])
+
   useSingleSubscribe(
     "message-received",
     (chat) => {
@@ -82,6 +84,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
           friendCharacter={friendship.friendCharacter.name}
           chatHistory={chatHistory}
           onSend={sendMessageHandler}
+          onBack={goBackHandler}
         />
       ) : null}
     </Page>
