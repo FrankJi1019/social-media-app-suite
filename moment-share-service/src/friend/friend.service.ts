@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BaseService } from '../base/base.service';
 import { Friend } from './entities/friend.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,6 +31,9 @@ export class FriendService extends BaseService<Friend> {
     account2Username,
     account2Character,
   }: CreateFriendInput) {
+    if (account1Username === account1Username) {
+      throw new ForbiddenException('Self-chatting is prohibited');
+    }
     const account1FindPromise = this.accountRepository.findOne({
       where: { username: account1Username },
     });
@@ -74,6 +81,9 @@ export class FriendService extends BaseService<Friend> {
     userAccountName: string,
     friendAccountName: string,
   ) {
+    if (userAccountName === friendAccountName) {
+      throw new ForbiddenException('Self-chatting is prohibited');
+    }
     const res = await super.findOne({
       where: {
         userAccount: { username: userAccountName },

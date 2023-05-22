@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BaseService } from '../base/base.service';
 import { Chat } from './entities/chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Account } from '../account/entities/account.entity';
 
 @Injectable()
@@ -17,7 +21,7 @@ export class ChatService extends BaseService<Chat> {
   }
 
   async getChatHistory(accountNames: Array<string>) {
-    const res = await this.chatRepository
+    return await this.chatRepository
       .createQueryBuilder('c')
       .innerJoinAndSelect('c.sender', 's')
       .innerJoinAndSelect('c.receiver', 'r')
@@ -25,17 +29,12 @@ export class ChatService extends BaseService<Chat> {
       .andWhere('r.username IN (:...accountNames)', { accountNames })
       .andWhere('s.username != r.username')
       .getMany();
-    return res;
-
-    // return await super.findAll({
-    //   where: {
-    //     sender: { username: In(accountNames) },
-    //     receiver: { username: In(accountNames) },
-    //   },
-    // });
   }
 
   async createChatMsg(content: string, senderId: number, receiverId: number) {
+    if (senderId === receiverId) {
+      throw new ForbiddenException('Self-chatting is prohibited');
+    }
     const senderPromise = this.accountRepository.findOne({
       where: { id: senderId },
     });

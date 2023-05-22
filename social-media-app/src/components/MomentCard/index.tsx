@@ -54,14 +54,16 @@ const MomentCard: FC<MomentCardProps> = ({
           }}
           anchorEl={anchorPos}
         >
-          <MenuItem
-            onClick={() => {
-              onChat()
-              setAnchorPos(null)
-            }}
-          >
-            <Typography>Chat</Typography>
-          </MenuItem>
+          {!isOwnMoment && (
+            <MenuItem
+              onClick={() => {
+                onChat()
+                setAnchorPos(null)
+              }}
+            >
+              <Typography>Chat</Typography>
+            </MenuItem>
+          )}
           <MenuItem
             onClick={() => {
               onReport()
