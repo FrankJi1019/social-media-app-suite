@@ -63,12 +63,6 @@ export class FriendService extends BaseService<Friend> {
       throw new NotFoundException(`Entity not found: ${nullEntity}`);
     }
     const [account1, character1, account2, character2] = res;
-    await this.create({
-      userAccount: account2,
-      userCharacter: character2,
-      friendAccount: account1,
-      friendCharacter: character1,
-    });
     return await this.create({
       userAccount: account1,
       userCharacter: character1,

@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BaseService } from '../base/base.service';
 import { Chat } from '../chat/entities/chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from '../account/entities/account.entity';
+import { Friend } from '../friend/entities/friend.entity';
+import { Character } from '../character/entities/character.entity';
+import { pickRandomElement } from '../utils/random';
 
 @Injectable()
 export class MessagingService extends BaseService<Chat> {
@@ -12,12 +15,12 @@ export class MessagingService extends BaseService<Chat> {
     private readonly chatRepository: Repository<Chat>,
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
+    @InjectRepository(Friend)
+    private readonly friendRepository: Repository<Friend>,
+    @InjectRepository(Character)
+    private readonly characterRepository: Repository<Character>,
   ) {
     super(chatRepository);
-  }
-
-  getGreetingMessage() {
-    return 'Hello';
   }
 
   async handleMessageSent(
@@ -44,6 +47,24 @@ export class MessagingService extends BaseService<Chat> {
       throw new NotFoundException(
         `Account with username ${nullName} does not exist`,
       );
+    }
+    const friendship = await this.friendRepository.findOne({
+      where: {
+        userAccount: { username: receiverUsername },
+        friendAccount: { username: senderUsername },
+      },
+    });
+    console.log(friendship);
+    if (!friendship) {
+      const characters = await this.characterRepository.find();
+      await this.friendRepository
+        .create({
+          userAccount: receiver,
+          friendAccount: sender,
+          userCharacter: pickRandomElement(characters),
+          friendCharacter: pickRandomElement(characters),
+        })
+        .save();
     }
     return await this.create({ sender, receiver, content });
   }
