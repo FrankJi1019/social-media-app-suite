@@ -13,6 +13,7 @@ import profilePlaceholder from "../assets/placeholders/profile-placeholder.jpg"
 import { utcTimestampToDate } from "../utils/time"
 import { Character } from "../types/character"
 import { useAuth } from "../providers/CognitoAuthProvider"
+import { Account } from "../types/account"
 
 export const useFetchAllMoments = (input?: {
   category?: string
@@ -22,13 +23,15 @@ export const useFetchAllMoments = (input?: {
     fetchPolicy: "network-only",
     variables: { input }
   })
+
   const { getCurrentUser } = useAuth()
   const moments: Array<MomentBrief> = useMemo(() => {
     if (!data || loading) return []
+
     return data.moments.map(
       (moment: {
         id: string
-        username: string
+        account: Account
         character: Character
         content: string
         createdAt: string
@@ -38,7 +41,7 @@ export const useFetchAllMoments = (input?: {
       }) => {
         return {
           ...moment,
-          isOwnMoment: getCurrentUser()?.Username === moment.username,
+          isOwnMoment: getCurrentUser()?.Username === moment.account.username,
           profile: profilePlaceholder,
           postDate: utcTimestampToDate(Number(moment.createdAt))
         } as MomentBrief
@@ -52,6 +55,7 @@ export const useFetchMomentById = (id: string) => {
   const { data, loading, error, refetch } = useQuery(MOMENT_BY_ID_QUERY, {
     variables: { id }
   })
+
   const { getCurrentUser } = useAuth()
   const moment: Moment | undefined = useMemo(() => {
     return (
@@ -61,16 +65,18 @@ export const useFetchMomentById = (id: string) => {
         profile: profilePlaceholder,
         postDate: utcTimestampToDate(Number(data.moment.createdAt)),
         comments: data.moment.comments.map(
-          (comment: { createdAt: number; username: string }) => ({
+          (comment: { createdAt: number; account: { username: string } }) => ({
             ...comment,
             commentDate: utcTimestampToDate(Number(comment.createdAt)),
             profile: profilePlaceholder,
-            isOwnComment: getCurrentUser()?.Username === comment.username
+            isOwnComment:
+              getCurrentUser()?.Username === comment.account.username
           })
         )
       } as Moment)
     )
   }, [data, getCurrentUser])
+
   return { data: moment, loading, error, reFetch: refetch }
 }
 

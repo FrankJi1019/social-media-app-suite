@@ -4,7 +4,9 @@ export const ALL_MOMENTS_QUERY = gql`
   query AllMoments($input: FilterMomentInput) {
     moments(input: $input) {
       id
-      username
+      account {
+        username
+      }
       character {
         name
       }
@@ -21,7 +23,9 @@ export const MOMENT_BY_ID_QUERY = gql`
   query Moment($id: ID!) {
     moment(id: $id) {
       id
-      username
+      account {
+        username
+      }
       character {
         name
       }
@@ -31,11 +35,13 @@ export const MOMENT_BY_ID_QUERY = gql`
       isLiked
       comments {
         id
-        username
         content
         createdAt
         character {
           name
+        }
+        account {
+          username
         }
       }
       tags {
@@ -101,6 +107,79 @@ export const ALL_TAGS_QUERY = gql`
     tags {
       id
       name
+    }
+  }
+`
+
+export const ADD_FRIEND_MUTATION = gql`
+  mutation AddFriend($input: CreateFriendshipInput!) {
+    createFriendship(input: $input)
+  }
+`
+
+export const CREATE_ACCOUNT_MUTATION = gql`
+  mutation CreateAccount($input: CreateAccountInput!) {
+    createAccount(input: $input) {
+      id
+    }
+  }
+`
+
+export const CHAT_HISTORY_QUERY = gql`
+  query ($input: FetchChatHistoryInput!) {
+    chats(input: $input) {
+      id
+      sender {
+        username
+      }
+      receiver {
+        username
+      }
+      content
+      createdAt
+    }
+  }
+`
+
+export const FIND_OR_CREATE_FRIEND_MUTATION = gql`
+  mutation FindOrCreateFriendship($input: FindOrCreateFriendshipInput!) {
+    findOrCreateFriendship(input: $input) {
+      id
+    }
+  }
+`
+
+export const FETCH_FRIENDSHIP_BY_ID = gql`
+  query FindFriendshipById($id: ID!) {
+    friendship(id: $id) {
+      id
+      userAccount {
+        username
+      }
+      friendAccount {
+        username
+      }
+      userCharacter {
+        name
+      }
+      friendCharacter {
+        name
+      }
+    }
+  }
+`
+
+export const FETCH_FRIENDS_BY_USER = gql`
+  query FetchFriends($username: String!) {
+    account(username: $username) {
+      friends {
+        friendAccount {
+          username
+        }
+        friendCharacter {
+          name
+        }
+      }
     }
   }
 `

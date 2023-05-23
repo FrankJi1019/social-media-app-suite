@@ -10,7 +10,7 @@ export const typeormConfigOptions = {
   database: constants.database.DBNAME,
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
-  logging: true,
+  // logging: true,
 } as DataSourceOptions;
 
 const dataSource = new DataSource(typeormConfigOptions);

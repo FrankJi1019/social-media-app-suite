@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react"
-import Page from "../../containers/Page"
-import { PageProps } from "../../types/props"
+import Page, { PageProps } from "../../containers/Page"
 import PostMomentPage from "./PostMomentPage"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useAuth } from "../../providers/CognitoAuthProvider"
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { Routes } from "../../routes/routes"
 import { useFetchAllTags } from "../../api-hooks/tag"
 import { useNotification } from "../../providers/NotificationProvider"
+import { pickRandomElement } from "../../utils/random"
 
 const MAX_TAG_NUM = 3
 
@@ -47,9 +47,7 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
 
   const requestRandomNameHandler = useCallback(() => {
     if (characterList.length === 0) return
-    setCharacter(
-      characterList[Math.floor(Math.random() * characterList.length)]
-    )
+    setCharacter(pickRandomElement(characterList))
   }, [characterList])
 
   const goBackHandler = useCallback(() => {

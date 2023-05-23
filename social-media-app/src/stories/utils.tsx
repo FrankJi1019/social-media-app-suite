@@ -29,4 +29,6 @@ export const Decorate = (component: ReactNode) => (
   </BrowserRouter>
 )
 
-export const FUNCTION_PLACE_HOLDER = () => {}
+export const FUNCTION_PLACE_HOLDER = () => {
+  return {} as any
+}

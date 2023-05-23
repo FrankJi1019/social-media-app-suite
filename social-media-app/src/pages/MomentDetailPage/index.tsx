@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useMemo } from "react"
-import { PageProps } from "../../types/props"
-import Page from "../../containers/Page"
+import Page, { PageProps } from "../../containers/Page"
 import MomentDetailPage from "./MomentDetailPage"
 import { useParams } from "react-router-dom"
 import {
@@ -12,12 +11,14 @@ import { Box } from "@mui/material"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
+import { useNotification } from "../../providers/NotificationProvider"
 
 interface MomentDetailPageProps extends PageProps {}
 
 const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
+  const notify = useNotification()
 
   const {
     data: moment,
@@ -25,6 +26,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     reFetch: reFetchMoment
   } = useFetchMomentById(id as string)
   const { data: characterList } = useFetchAllCharacters()
+
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
   const { mutate: createComment } = useCreateCommentMutation()
@@ -43,7 +45,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       })
       await reFetchMoment()
     } else {
-      commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+      commonArgs.onRunUnauthenticatedAction &&
+        commonArgs.onRunUnauthenticatedAction()
     }
   }, [commonArgs, getCurrentUser, id, likeMoment, reFetchMoment])
 
@@ -56,7 +59,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       })
       await reFetchMoment()
     } else {
-      commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+      commonArgs.onRunUnauthenticatedAction &&
+        commonArgs.onRunUnauthenticatedAction()
     }
   }, [getCurrentUser, unlikeMoment, id, reFetchMoment, commonArgs])
 
@@ -81,6 +85,18 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     [characterList, createComment, getCurrentUser, moment, reFetchMoment]
   )
 
+  const chatHandler = useCallback(
+    async (username: string) => {
+      await commonArgs.onFriendAvatarClick(username)
+    },
+    [commonArgs]
+  )
+
+  const reportMomentHandler = useCallback(
+    () => notify("Feature to be implemented"),
+    [notify]
+  )
+
   const isLoading = useMemo(() => !moment || loading, [moment, loading])
 
   if (isLoading) return <Box>Loading</Box>
@@ -93,6 +109,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
         onLike={likeMomentHandler}
         onUnlike={unlikeMomentHandler}
         onComment={commentHandler}
+        onChat={chatHandler}
+        onReport={reportMomentHandler}
       />
     </Page>
   )

@@ -1,6 +1,5 @@
 type Moment {
     id: ID!
-    username: String!
     character: Character!
     content: String!
     createdAt: String!
@@ -9,6 +8,7 @@ type Moment {
     isLiked: Boolean!
     comments: [Comment!]
     tags: [Tag!]!
+    account: Account!
 }
 
 input CreateMomentInput {

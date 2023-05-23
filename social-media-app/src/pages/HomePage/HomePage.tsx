@@ -15,6 +15,8 @@ export interface HomePageProps {
   onMomentLike: (id: string) => void
   onMomentUnlike: (id: string) => void
   onMomentOpen: (id: string) => void
+  onMomentChat: (username: string, character: string) => void
+  onMomentReport: (id: string) => void
 }
 
 const HomePage: FC<HomePageProps> = ({
@@ -23,7 +25,9 @@ const HomePage: FC<HomePageProps> = ({
   filterOptions,
   onMomentLike,
   onMomentUnlike,
-  onMomentOpen
+  onMomentOpen,
+  onMomentChat,
+  onMomentReport
 }) => {
   return (
     <Box
@@ -83,8 +87,8 @@ const HomePage: FC<HomePageProps> = ({
           <Box
             key={moment.id}
             sx={{
-              mb: { xs: 1.5, md: 3 },
-              pb: { xs: 1.5, md: 3 },
+              mb: { xs: 0.75, md: 2 },
+              pb: { xs: 0.75, md: 2 },
               borderBottom: "1px solid",
               borderColor:
                 index !== moments.length - 1 ? "primary.main" : "transparent"
@@ -95,6 +99,10 @@ const HomePage: FC<HomePageProps> = ({
               onLike={() => onMomentLike(moment.id)}
               onUnlike={() => onMomentUnlike(moment.id)}
               onOpen={() => onMomentOpen(moment.id)}
+              onChat={() =>
+                onMomentChat(moment.account.username, moment.character.name)
+              }
+              onReport={() => onMomentReport(moment.id)}
             />
           </Box>
         ))}

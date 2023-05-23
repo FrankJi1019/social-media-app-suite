@@ -11,18 +11,27 @@ import AuthPageBuilder from "./pages/AuthPage"
 import HomePageBuilder from "./pages/HomePage"
 import { useAuth } from "./providers/CognitoAuthProvider"
 import { Routes as AppRoutes } from "../src/routes/routes"
-import { PageProps } from "./types/props"
+import { PageProps } from "./containers/Page"
 import PostMomentPageBuilder from "./pages/PostMomentPage"
-// @ts-ignore
-import profile from "./assets/placeholders/profile-placeholder.jpg"
 import MomentDetailPageBuilder from "./pages/MomentDetailPage"
 import { useNotification } from "./providers/NotificationProvider"
+import FriendPage from "./pages/FriendPage"
+import {
+  useFetchFriends,
+  useFindOrCreateFriendshipMutation
+} from "./api-hooks/friend"
+import { usePersistentSubscribe } from "./providers/MessagingSocketProvider"
+import { useFetchAllCharacters } from "./api-hooks/characters"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
   const navigate = useNavigate()
   const notify = useNotification()
   const { pathname } = useLocation()
+
+  const { data: characterList } = useFetchAllCharacters()
+
+  const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
 
   const navigateLoginHandler = useCallback(() => {
     navigate({
@@ -66,13 +75,56 @@ const PublicRouter = () => {
     })
   }, [navigate, pathname])
 
-  const tempFriends = Array(3)
-    .fill({})
-    .map(() => ({
-      id: `${Math.random()}`,
-      profile,
-      name: "Frank Ji"
-    }))
+  const { data: friends, reFetch: reFetchFriends } = useFetchFriends(
+    getCurrentUser()?.Username as string
+  )
+
+  const chatHandler = useCallback(
+    async (friendUsername: string) => {
+      if (characterList.length === 0) return
+      const username = getCurrentUser()?.Username
+      if (!username) {
+        notify("Please login first", {
+          buttonOptions: [
+            {
+              text: "Signup",
+              props: {
+                variant: "contained",
+                onClick: () => navigate({ pathname: AppRoutes.AUTH_PATH.path })
+              }
+            }
+          ]
+        })
+        return
+      }
+      const friendship = await findOrCreateFriendship({
+        userAccountName: username,
+        friendAccountName: friendUsername
+      })
+      navigate({
+        pathname: AppRoutes.FRIEND_PAGE.generate({
+          friendshipId: friendship.id
+        }).toString()
+      })
+    },
+    [
+      characterList.length,
+      findOrCreateFriendship,
+      getCurrentUser,
+      navigate,
+      notify
+    ]
+  )
+
+  usePersistentSubscribe(
+    "fetch-friends",
+    () => {
+      ;(async () => {
+        await reFetchFriends()
+      })()
+    },
+    [reFetchFriends]
+  )
 
   const commonArgs = useMemo(
     () =>
@@ -80,31 +132,40 @@ const PublicRouter = () => {
         user: getCurrentUser(),
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
-        friends: tempFriends,
-        notifyLoginOrRegister,
-        onPostNew: postNewMomentHandler
+        friends,
+        onRunUnauthenticatedAction: notifyLoginOrRegister,
+        onPostNew: postNewMomentHandler,
+        onFriendAvatarClick: chatHandler
       } as PageProps),
     [
       getCurrentUser,
       navigateLoginHandler,
       navigateRegisterHandler,
-      tempFriends,
+      friends,
       notifyLoginOrRegister,
-      postNewMomentHandler
+      postNewMomentHandler,
+      chatHandler
     ]
   )
 
   return (
     <Routes>
-      <Route path={"/auth"} element={<AuthPageBuilder />} />
-      <Route path={"/"} element={<HomePageBuilder {...commonArgs} />} />
+      <Route path={AppRoutes.AUTH_PATH.path} element={<AuthPageBuilder />} />
       <Route
-        path={"/post"}
+        path={AppRoutes.HOME_PAGE.path}
+        element={<HomePageBuilder {...commonArgs} />}
+      />
+      <Route
+        path={AppRoutes.POST_MOMENT_PAGE.path}
         element={<PostMomentPageBuilder {...commonArgs} />}
       />
       <Route
-        path={"/moments/:id"}
+        path={AppRoutes.MOMENT_DETAIL_PAGE.path}
         element={<MomentDetailPageBuilder {...commonArgs} />}
+      />
+      <Route
+        path={AppRoutes.FRIEND_PAGE.path}
+        element={<FriendPage {...commonArgs} />}
       />
       <Route path={"*"} element={<Navigate to={"/auth"} />} />
     </Routes>

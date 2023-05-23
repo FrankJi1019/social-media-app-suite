@@ -12,6 +12,7 @@ import { Character } from '../character/entities/character.entity';
 import { Like } from './entities/like.entity';
 import { Comment } from '../comment/entities/comment.entity';
 import { Tag } from '../tag/entities/tag.entity';
+import { Account } from '../account/entities/account.entity';
 
 @Injectable()
 export class MomentService extends BaseService<Moment> {
@@ -26,6 +27,8 @@ export class MomentService extends BaseService<Moment> {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(Account)
+    private readonly accountRepository: Repository<Account>,
   ) {
     super(momentRepository);
   }
@@ -37,6 +40,9 @@ export class MomentService extends BaseService<Moment> {
     if (!character) {
       throw new NotFoundException('Invalid character name');
     }
+    const account = await this.accountRepository.findOne({
+      where: { username: createMomentInput.username },
+    });
     for (const tag of createMomentInput.tags) {
       if (!(await this.tagRepository.exist({ where: { name: tag } }))) {
         const newTag = this.tagRepository.create({ name: tag });
@@ -52,6 +58,7 @@ export class MomentService extends BaseService<Moment> {
       ...createMomentInput,
       character,
       tags: tagEntities,
+      account,
     });
     await entity.save();
     return entity;
@@ -82,7 +89,10 @@ export class MomentService extends BaseService<Moment> {
 
   async likeMoment(momentId: number, username: string) {
     try {
-      const likeEntity = await this.likeRepository.create({ username });
+      const account = await this.accountRepository.findOne({
+        where: { username },
+      });
+      const likeEntity = await this.likeRepository.create({ account });
       const moment = await this.findById(momentId);
       likeEntity.moment = moment;
       await likeEntity.save();
@@ -100,7 +110,7 @@ export class MomentService extends BaseService<Moment> {
     const moment = await this.findById(momentId);
     const likeEntity = await this.likeRepository.findOne({
       where: {
-        username,
+        account: { username },
         moment: { id: momentId },
       },
     });
@@ -114,7 +124,7 @@ export class MomentService extends BaseService<Moment> {
   async isLikedByUser(username: string, momentId: number) {
     return await this.likeRepository.exist({
       where: {
-        username,
+        account: { username },
         moment: { id: momentId },
       },
     });
@@ -155,13 +165,19 @@ export class MomentService extends BaseService<Moment> {
     } else {
       return await super.findAll({
         where: [
-          { likes: { username: followedBy } },
-          { comments: { username: followedBy } },
+          { likes: { account: { username: followedBy } } },
+          { comments: { account: { username: followedBy } } },
         ],
         order: {
           createdAt: 'DESC',
         },
       });
     }
+  }
+
+  async findAccount(id: number) {
+    return (
+      await super.findOne({ where: { id }, relations: { account: true } })
+    ).account;
   }
 }

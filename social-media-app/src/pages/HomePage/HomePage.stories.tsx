@@ -17,7 +17,11 @@ const render = (args: any) => Decorate(<HomePage {...args} />)
 
 const moment = {
   id: "1",
-  username: "Alice",
+  account: {
+    id: "1",
+    username: "Alice",
+    createdAt: new Date()
+  },
   content:
     // eslint-disable-next-line max-len
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero justo laoreet sit amet cursus sit. Ac turpis egestas sed tempus.",
@@ -83,6 +87,8 @@ export const General = {
     filterOptions,
     onMomentLike: FUNCTION_PLACE_HOLDER,
     onMomentUnlike: FUNCTION_PLACE_HOLDER,
-    onMomentOpen: FUNCTION_PLACE_HOLDER
+    onMomentOpen: FUNCTION_PLACE_HOLDER,
+    onMomentReport: FUNCTION_PLACE_HOLDER,
+    onMomentChat: FUNCTION_PLACE_HOLDER
   } as HomePageProps
 } as StoryObj

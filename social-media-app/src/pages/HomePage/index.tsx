@@ -1,8 +1,6 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react"
 import HomePage from "./HomePage"
-import { PageProps } from "../../types/props"
-// @ts-ignore
-import Page from "../../containers/Page"
+import Page, { PageProps } from "../../containers/Page"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import {
   useFetchAllMoments,
@@ -12,6 +10,7 @@ import {
 import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
+import { useNotification } from "../../providers/NotificationProvider"
 
 interface HomepageProps extends PageProps {}
 
@@ -19,6 +18,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { getCurrentUser, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const notify = useNotification()
 
   const filterOption = useMemo(() => {
     const filter = searchParams.get("filter")
@@ -31,12 +31,10 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     }
   }, [getCurrentUser, searchParams])
 
-  const {
-    data: allMoments,
-    loading: isFetchingMoments,
-    reFetch: reFetchAllMoments
-  } = useFetchAllMoments(filterOption)
+  const { data: allMoments, reFetch: reFetchAllMoments } =
+    useFetchAllMoments(filterOption)
   const { data: categoriesResponse } = useFetchAllCategories()
+
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
 
@@ -75,7 +73,8 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         await likeMoment({ momentId, username: user.Username as string })
         await reFetchAllMoments()
       } else {
-        commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+        commonArgs.onRunUnauthenticatedAction &&
+          commonArgs.onRunUnauthenticatedAction()
       }
     },
     [commonArgs, getCurrentUser, likeMoment, reFetchAllMoments]
@@ -88,7 +87,8 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         await unlikeMoment({ momentId, username: user.Username as string })
         await reFetchAllMoments()
       } else {
-        commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+        commonArgs.onRunUnauthenticatedAction &&
+          commonArgs.onRunUnauthenticatedAction()
       }
     },
     [getCurrentUser, unlikeMoment, reFetchAllMoments, commonArgs]
@@ -100,6 +100,17 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     },
     [navigate]
   )
+
+  const momentChatHandler = useCallback(
+    async (username: string) => {
+      await commonArgs.onFriendAvatarClick(username)
+    },
+    [commonArgs]
+  )
+
+  const reportMomentHandler = useCallback(() => {
+    notify("Feature to be implemented")
+  }, [notify])
 
   const signOutHandler = useCallback(() => {
     signOut()
@@ -126,6 +137,8 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
         onMomentLike={likeMomentHandler}
         onMomentUnlike={unlikeMomentHandler}
         onMomentOpen={openMomentHandler}
+        onMomentChat={momentChatHandler}
+        onMomentReport={reportMomentHandler}
       />
     </Page>
   )

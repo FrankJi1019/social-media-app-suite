@@ -3,6 +3,7 @@ import AuthPage from "./AuthPage"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
+import { useCreateAccount } from "../../api-hooks/account"
 
 const AuthPageBuilder = () => {
   const [username, setUsername] = useState("")
@@ -12,6 +13,8 @@ const AuthPageBuilder = () => {
   const { signIn, register, confirmUser } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+
+  const { mutate: createAccount } = useCreateAccount()
 
   const loginHandler = useCallback(
     async (username: string, password: string) => {
@@ -35,11 +38,12 @@ const AuthPageBuilder = () => {
         setEmail(email)
         setPassword(password)
         setSearchParams({ form: "confirm" })
+        await createAccount({ username })
       } catch (e: any) {
         throw new Error(e.message)
       }
     },
-    [register, setSearchParams]
+    [createAccount, register, setSearchParams]
   )
 
   const confirmUserHandler = useCallback(

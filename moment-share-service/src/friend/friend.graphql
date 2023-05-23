@@ -1,0 +1,18 @@
+type Friendship {
+  id: ID!
+  hasUnread: Boolean!
+  userAccount: Account!
+  userCharacter: Character!
+  friendAccount: Account!
+  friendCharacter: Character!
+}
+
+input FetchFriendshipInput {
+  userAccountName: String!
+  friendAccountName: String!
+}
+
+input FindOrCreateFriendshipInput {
+  userAccountName: String!
+  friendAccountName: String!
+}
