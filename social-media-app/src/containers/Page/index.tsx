@@ -10,6 +10,8 @@ import HomeIcon from "@mui/icons-material/Home"
 import TextsmsIcon from "@mui/icons-material/Textsms"
 import ControlPointIcon from "@mui/icons-material/ControlPoint"
 import PersonIcon from "@mui/icons-material/Person"
+import { Friendship } from "../../types/friend"
+import UserAvatar from "../../components/UserAvatar"
 
 export interface PageProps {
   children: ReactNode
@@ -18,7 +20,7 @@ export interface PageProps {
   title?: string
   sx?: SxProps
   loading?: boolean
-  friends?: Array<{ id: string; profile: string; name: string }>
+  friends?: Array<Friendship>
   onLogin?: () => void
   onRegister?: () => void
   onSignOut?: () => void
@@ -28,7 +30,7 @@ export interface PageProps {
 const Page: FC<PageProps> = ({
   user,
   title = "[IncognitoNet]",
-  // friends = [],
+  friends = [],
   loading = false,
   sx,
   onLogin = () => {},
@@ -116,7 +118,15 @@ const Page: FC<PageProps> = ({
             onRegister={user ? undefined : onRegister}
           />
         </Box>
-        <Box>To Be Implemented</Box>
+        <Box sx={{ p: 2 }}>
+          {friends?.map(
+            ({ friendAccount: { username }, friendCharacter: { name } }) => (
+              <Box key={username} sx={{ pb: 2 }}>
+                <UserAvatar profile={profile} name={name} />
+              </Box>
+            )
+          )}
+        </Box>
       </Grid>
 
       <Grid

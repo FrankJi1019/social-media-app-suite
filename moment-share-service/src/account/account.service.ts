@@ -12,4 +12,13 @@ export class AccountService extends BaseService<Account> {
   ) {
     super(accountRepository);
   }
+
+  async findAllFriends(username: string) {
+    return (
+      await this.findOne({
+        where: { username },
+        relations: { friends: true },
+      })
+    ).friends;
+  }
 }

@@ -69,6 +69,7 @@ export interface Account {
     id?: Nullable<string>;
     username?: Nullable<string>;
     createdAt?: Nullable<string>;
+    friends?: Nullable<Friendship[]>;
 }
 
 export interface Category {

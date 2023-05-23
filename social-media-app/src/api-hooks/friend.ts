@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client"
 import {
   ADD_FRIEND_MUTATION,
+  FETCH_FRIENDS_BY_USER,
   FETCH_FRIENDSHIP_BY_ID,
   FIND_OR_CREATE_FRIEND_MUTATION
 } from "./graphql"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { Friendship } from "../types/friend"
 
 export const useAddFriendMutation = () => {
@@ -41,4 +42,15 @@ export const useFetchFriendshipById = (id: string | number) => {
     variables: { id }
   })
   return { data: data?.friendship as Friendship | undefined, loading, error }
+}
+
+export const useFetchFriends = (username: string) => {
+  const { data, loading, error, refetch } = useQuery(FETCH_FRIENDS_BY_USER, {
+    variables: { username }
+  })
+  const friends = useMemo(() => {
+    if (!data) return []
+    return data.account.friends as Array<Friendship>
+  }, [data])
+  return { data: friends, loading, error, reFetch: refetch }
 }

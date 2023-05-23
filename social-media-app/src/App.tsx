@@ -13,11 +13,10 @@ import { useAuth } from "./providers/CognitoAuthProvider"
 import { Routes as AppRoutes } from "../src/routes/routes"
 import { PageProps } from "./types/props"
 import PostMomentPageBuilder from "./pages/PostMomentPage"
-// @ts-ignore
-import profile from "./assets/placeholders/profile-placeholder.jpg"
 import MomentDetailPageBuilder from "./pages/MomentDetailPage"
 import { useNotification } from "./providers/NotificationProvider"
 import FriendPage from "./pages/FriendPage"
+import { useFetchFriends } from "./api-hooks/friend"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
@@ -67,13 +66,9 @@ const PublicRouter = () => {
     })
   }, [navigate, pathname])
 
-  const tempFriends = Array(3)
-    .fill({})
-    .map(() => ({
-      id: `${Math.random()}`,
-      profile,
-      name: "Frank Ji"
-    }))
+  const { data: friends } = useFetchFriends(
+    getCurrentUser()?.Username as string
+  )
 
   const commonArgs = useMemo(
     () =>
@@ -81,7 +76,7 @@ const PublicRouter = () => {
         user: getCurrentUser(),
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
-        friends: tempFriends,
+        friends,
         notifyLoginOrRegister,
         onPostNew: postNewMomentHandler
       } as PageProps),
@@ -89,7 +84,7 @@ const PublicRouter = () => {
       getCurrentUser,
       navigateLoginHandler,
       navigateRegisterHandler,
-      tempFriends,
+      friends,
       notifyLoginOrRegister,
       postNewMomentHandler
     ]

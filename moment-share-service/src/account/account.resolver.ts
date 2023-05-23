@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AccountService } from './account.service';
 import { CreateAccountInput } from './dto/create-account.input';
 
@@ -14,5 +21,10 @@ export class AccountResolver {
   @Mutation('createAccount')
   async createAccount(@Args('input') { username }: CreateAccountInput) {
     return await this.accountService.create({ username });
+  }
+
+  @ResolveField('friends')
+  async findFriends(@Parent() { username }: { username: string }) {
+    return await this.accountService.findAllFriends(username);
   }
 }

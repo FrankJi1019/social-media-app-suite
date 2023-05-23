@@ -168,3 +168,18 @@ export const FETCH_FRIENDSHIP_BY_ID = gql`
     }
   }
 `
+
+export const FETCH_FRIENDS_BY_USER = gql`
+  query FetchFriends($username: String!) {
+    account(username: $username) {
+      friends {
+        friendAccount {
+          username
+        }
+        friendCharacter {
+          name
+        }
+      }
+    }
+  }
+`
