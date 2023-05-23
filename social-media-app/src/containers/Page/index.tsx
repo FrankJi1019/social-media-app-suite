@@ -81,11 +81,25 @@ const Page: FC<PageProps> = ({
     if (currentSection === "main") {
       return children
     } else if (currentSection === "friends") {
-      return <Box>To be implemented</Box>
+      return (
+        <Box>
+          {friends?.map(
+            ({ friendAccount: { username }, friendCharacter: { name } }) => (
+              <Box key={username} sx={{ pb: 2 }}>
+                <UserAvatar
+                  profile={profile}
+                  name={name}
+                  onClick={() => onFriendAvatarClick(username)}
+                />
+              </Box>
+            )
+          )}
+        </Box>
+      )
     } else {
       return <Box>To be implemented</Box>
     }
-  }, [children, currentSection])
+  }, [children, currentSection, friends, onFriendAvatarClick])
 
   if (loading) return <Box>Loading...</Box>
 
