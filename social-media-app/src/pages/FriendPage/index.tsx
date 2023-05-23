@@ -11,6 +11,7 @@ import {
 } from "../../providers/MessagingSocketProvider"
 import { useParams } from "react-router-dom"
 import { useFetchFriendshipById } from "../../api-hooks/friend"
+import { utcTimestampToDate } from "../../utils/time"
 
 interface FriendPageProps extends PageProps {}
 
@@ -48,8 +49,10 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
   useSingleSubscribe(
     "message-received",
     (chat) => {
-      console.log("chat", chat)
-      setChatHistory((prev) => [...prev, chat])
+      setChatHistory((prev) => [
+        ...prev,
+        { ...chat, sentTime: utcTimestampToDate(+new Date(chat.createdAt)) }
+      ])
     },
     [setChatHistory]
   )

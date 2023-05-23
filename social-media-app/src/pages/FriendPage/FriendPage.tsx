@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useMemo, useState } from "react"
 import {
   Box,
   Button,
@@ -35,6 +35,37 @@ const FriendPage: FC<FriendPageProps> = ({
   const theme = useTheme()
 
   const [message, setMessage] = useState("")
+
+  const chatMessageList = useMemo(
+    () =>
+      chatHistory.map(
+        (
+          { id, content, sentTime, sender: { username: senderName } },
+          index
+        ) => {
+          const shouldShowTime =
+            index === 0 ||
+            +sentTime - +chatHistory[index - 1].sentTime > 5 * 60 * 1000
+          return (
+            <Box key={id} sx={{ paddingY: 2 }}>
+              {shouldShowTime && (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <TimeLabel
+                    time={moment(sentTime).format("hh:mm DD/MM/YYYY")}
+                  />
+                </Box>
+              )}
+              <ChatMessage
+                profileImage={profileImage}
+                content={content}
+                isOwnMessage={senderName === currentUsername}
+              />
+            </Box>
+          )
+        }
+      ),
+    [chatHistory, currentUsername]
+  )
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -80,32 +111,7 @@ const FriendPage: FC<FriendPageProps> = ({
             "&::-webkit-scrollbar": { width: 0 }
           }}
         >
-          {chatHistory.map(
-            (
-              { id, content, sentTime, sender: { username: senderName } },
-              index
-            ) => {
-              const shouldShowTime =
-                index === 0 ||
-                +sentTime - +chatHistory[index - 1].sentTime > 5 * 60 * 1000
-              return (
-                <Box key={id} sx={{ paddingY: 2 }}>
-                  {shouldShowTime && (
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                      <TimeLabel
-                        time={moment(sentTime).format("hh:mm DD/MM/YYYY")}
-                      />
-                    </Box>
-                  )}
-                  <ChatMessage
-                    profileImage={profileImage}
-                    content={content}
-                    isOwnMessage={senderName === currentUsername}
-                  />
-                </Box>
-              )
-            }
-          )}
+          {chatMessageList}
         </Box>
         <Box
           sx={{

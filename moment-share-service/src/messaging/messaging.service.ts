@@ -54,7 +54,6 @@ export class MessagingService extends BaseService<Chat> {
         friendAccount: { username: senderUsername },
       },
     });
-    console.log(friendship);
     if (!friendship) {
       const characters = await this.characterRepository.find();
       await this.friendRepository

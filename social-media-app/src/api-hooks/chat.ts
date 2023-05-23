@@ -9,7 +9,6 @@ export const useLazyFetchChatHistory = () => {
     useLazyQuery(CHAT_HISTORY_QUERY)
   const fetchChatHistory = useCallback(
     async (input: { accountNames: Array<string> }) => {
-      console.log(input)
       await fetch({
         fetchPolicy: "network-only",
         variables: { input }
