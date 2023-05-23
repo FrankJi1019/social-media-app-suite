@@ -1,8 +1,7 @@
 import React, { FC, useCallback, useMemo } from "react"
-import { PageProps } from "../../types/props"
-import Page from "../../containers/Page"
+import Page, { PageProps } from "../../containers/Page"
 import MomentDetailPage from "./MomentDetailPage"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import {
   useFetchMomentById,
   useLikeMomentMutation,
@@ -12,16 +11,13 @@ import { Box } from "@mui/material"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
-import { useFindOrCreateFriendshipMutation } from "../../api-hooks/friend"
 import { useNotification } from "../../providers/NotificationProvider"
-import { Routes } from "../../routes/routes"
 
 interface MomentDetailPageProps extends PageProps {}
 
 const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
-  const navigate = useNavigate()
   const notify = useNotification()
 
   const {
@@ -34,7 +30,6 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
   const { mutate: createComment } = useCreateCommentMutation()
-  const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
 
   const goBackHandler = useCallback(() => {
     // eslint-disable-next-line no-restricted-globals
@@ -50,7 +45,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       })
       await reFetchMoment()
     } else {
-      commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+      commonArgs.onRunUnauthenticatedAction &&
+        commonArgs.onRunUnauthenticatedAction()
     }
   }, [commonArgs, getCurrentUser, id, likeMoment, reFetchMoment])
 
@@ -63,7 +59,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       })
       await reFetchMoment()
     } else {
-      commonArgs.notifyLoginOrRegister && commonArgs.notifyLoginOrRegister()
+      commonArgs.onRunUnauthenticatedAction &&
+        commonArgs.onRunUnauthenticatedAction()
     }
   }, [getCurrentUser, unlikeMoment, id, reFetchMoment, commonArgs])
 
@@ -89,40 +86,10 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   )
 
   const chatHandler = useCallback(
-    async (friendUsername: string) => {
-      if (characterList.length === 0) return
-      const username = getCurrentUser()?.Username
-      if (!username) {
-        notify("Please login first", {
-          buttonOptions: [
-            {
-              text: "Signup",
-              props: {
-                variant: "contained",
-                onClick: () => navigate({ pathname: Routes.AUTH_PATH.path })
-              }
-            }
-          ]
-        })
-        return
-      }
-      const friendship = await findOrCreateFriendship({
-        userAccountName: username,
-        friendAccountName: friendUsername
-      })
-      navigate({
-        pathname: Routes.FRIEND_PAGE.generate({
-          friendshipId: friendship.id
-        }).toString()
-      })
+    async (username: string) => {
+      await commonArgs.onFriendAvatarClick(username)
     },
-    [
-      characterList.length,
-      findOrCreateFriendship,
-      getCurrentUser,
-      navigate,
-      notify
-    ]
+    [commonArgs]
   )
 
   const reportMomentHandler = useCallback(

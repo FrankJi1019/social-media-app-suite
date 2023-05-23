@@ -11,19 +11,27 @@ import AuthPageBuilder from "./pages/AuthPage"
 import HomePageBuilder from "./pages/HomePage"
 import { useAuth } from "./providers/CognitoAuthProvider"
 import { Routes as AppRoutes } from "../src/routes/routes"
-import { PageProps } from "./types/props"
+import { PageProps } from "./containers/Page"
 import PostMomentPageBuilder from "./pages/PostMomentPage"
 import MomentDetailPageBuilder from "./pages/MomentDetailPage"
 import { useNotification } from "./providers/NotificationProvider"
 import FriendPage from "./pages/FriendPage"
-import { useFetchFriends } from "./api-hooks/friend"
+import {
+  useFetchFriends,
+  useFindOrCreateFriendshipMutation
+} from "./api-hooks/friend"
 import { usePersistentSubscribe } from "./providers/MessagingSocketProvider"
+import { useFetchAllCharacters } from "./api-hooks/characters"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
   const navigate = useNavigate()
   const notify = useNotification()
   const { pathname } = useLocation()
+
+  const { data: characterList } = useFetchAllCharacters()
+
+  const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
 
   const navigateLoginHandler = useCallback(() => {
     navigate({
@@ -71,6 +79,43 @@ const PublicRouter = () => {
     getCurrentUser()?.Username as string
   )
 
+  const chatHandler = useCallback(
+    async (friendUsername: string) => {
+      if (characterList.length === 0) return
+      const username = getCurrentUser()?.Username
+      if (!username) {
+        notify("Please login first", {
+          buttonOptions: [
+            {
+              text: "Signup",
+              props: {
+                variant: "contained",
+                onClick: () => navigate({ pathname: AppRoutes.AUTH_PATH.path })
+              }
+            }
+          ]
+        })
+        return
+      }
+      const friendship = await findOrCreateFriendship({
+        userAccountName: username,
+        friendAccountName: friendUsername
+      })
+      navigate({
+        pathname: AppRoutes.FRIEND_PAGE.generate({
+          friendshipId: friendship.id
+        }).toString()
+      })
+    },
+    [
+      characterList.length,
+      findOrCreateFriendship,
+      getCurrentUser,
+      navigate,
+      notify
+    ]
+  )
+
   usePersistentSubscribe(
     "fetch-friends",
     () => {
@@ -88,8 +133,9 @@ const PublicRouter = () => {
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
         friends,
-        notifyLoginOrRegister,
-        onPostNew: postNewMomentHandler
+        onRunUnauthenticatedAction: notifyLoginOrRegister,
+        onPostNew: postNewMomentHandler,
+        onFriendAvatarClick: chatHandler
       } as PageProps),
     [
       getCurrentUser,
@@ -97,7 +143,8 @@ const PublicRouter = () => {
       navigateRegisterHandler,
       friends,
       notifyLoginOrRegister,
-      postNewMomentHandler
+      postNewMomentHandler,
+      chatHandler
     ]
   )
 

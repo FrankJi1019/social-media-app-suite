@@ -14,7 +14,7 @@ import { Friendship } from "../../types/friend"
 import UserAvatar from "../../components/UserAvatar"
 
 export interface PageProps {
-  children: ReactNode
+  children?: ReactNode
   onPostNew: () => void
   user?: User
   title?: string
@@ -24,7 +24,9 @@ export interface PageProps {
   onLogin?: () => void
   onRegister?: () => void
   onSignOut?: () => void
+  onFriendAvatarClick: (username: string) => Promise<void>
   hideMobileNavBar?: boolean
+  onRunUnauthenticatedAction: () => void
 }
 
 const Page: FC<PageProps> = ({
@@ -37,6 +39,7 @@ const Page: FC<PageProps> = ({
   onRegister = () => {},
   children,
   onSignOut = () => {},
+  onFriendAvatarClick,
   onPostNew,
   hideMobileNavBar = false
 }) => {
@@ -122,7 +125,11 @@ const Page: FC<PageProps> = ({
           {friends?.map(
             ({ friendAccount: { username }, friendCharacter: { name } }) => (
               <Box key={username} sx={{ pb: 2 }}>
-                <UserAvatar profile={profile} name={name} />
+                <UserAvatar
+                  profile={profile}
+                  name={name}
+                  onClick={() => onFriendAvatarClick(username)}
+                />
               </Box>
             )
           )}

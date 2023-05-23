@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useState } from "react"
-import { PageProps } from "../../types/props"
-import Page from "../../containers/Page"
+import Page, { PageProps } from "../../containers/Page"
 import FriendPage from "./FriendPage"
 import { useLazyFetchChatHistory } from "../../api-hooks/chat"
 import { useAuth } from "../../providers/CognitoAuthProvider"
