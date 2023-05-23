@@ -101,18 +101,20 @@ const PublicRouter = () => {
         userAccountName: username,
         friendAccountName: friendUsername
       })
-      navigate({
-        pathname: AppRoutes.FRIEND_PAGE.generate({
-          friendshipId: friendship.id
-        }).toString()
-      })
+      const newPath = AppRoutes.FRIEND_PAGE.generate({
+        friendshipId: friendship.id
+      }).toString()
+      if (newPath !== pathname) {
+        navigate({ pathname: newPath })
+      }
     },
     [
       characterList.length,
       findOrCreateFriendship,
       getCurrentUser,
       navigate,
-      notify
+      notify,
+      pathname
     ]
   )
 
