@@ -76,4 +76,11 @@ export class MessagingGateway
       receiverSocket.emit('message-received', chat);
     }
   }
+
+  requestReFetchFriends(username: string) {
+    const socket = this.onlineUsers[username];
+    if (socket) {
+      socket.emit('fetch-friends');
+    }
+  }
 }

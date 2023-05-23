@@ -94,3 +94,22 @@ export const useSingleSubscribe = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handler, message, socket, ...deps])
 }
+
+export const usePersistentSubscribe = (
+  message: string,
+  handler: (data: any) => void,
+  deps: Array<any>
+) => {
+  const { socket } = useMessagingSocket()
+  useEffect(() => {
+    if (!socket.hasListeners(message)) {
+      socket.on(message, handler)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handler, message, socket, ...deps])
+}
+
+export const useUnsubscribeMessage = () => {
+  const { socket } = useMessagingSocket()
+  return (message: string) => socket.off(message)
+}

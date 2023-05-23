@@ -8,10 +8,14 @@ import {
 } from '@nestjs/graphql';
 import { FriendService } from './friend.service';
 import { FindOrCreateFriendshipDto } from './dto/find-or-create-friendship.dto';
+import { MessagingGateway } from '../messaging/messaging.gateway';
 
 @Resolver('Friendship')
 export class FriendResolver {
-  constructor(private readonly friendService: FriendService) {}
+  constructor(
+    private readonly friendService: FriendService,
+    private readonly messagingGateway: MessagingGateway,
+  ) {}
 
   @Query('friendship')
   async findOne(@Args('id') id: number) {
@@ -22,6 +26,7 @@ export class FriendResolver {
   async findOrCreateFriendship(
     @Args('input') input: FindOrCreateFriendshipDto,
   ) {
+    this.messagingGateway.requestReFetchFriends(input.userAccountName);
     return await this.friendService.findOrCreateFriendship(
       input.userAccountName,
       input.friendAccountName,

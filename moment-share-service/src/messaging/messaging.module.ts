@@ -10,5 +10,6 @@ import { Character } from '../character/entities/character.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Chat, Account, Friend, Character])],
   providers: [MessagingGateway, MessagingService],
+  exports: [MessagingGateway],
 })
 export class MessagingModule {}

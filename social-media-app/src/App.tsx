@@ -17,6 +17,7 @@ import MomentDetailPageBuilder from "./pages/MomentDetailPage"
 import { useNotification } from "./providers/NotificationProvider"
 import FriendPage from "./pages/FriendPage"
 import { useFetchFriends } from "./api-hooks/friend"
+import { usePersistentSubscribe } from "./providers/MessagingSocketProvider"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
@@ -66,8 +67,18 @@ const PublicRouter = () => {
     })
   }, [navigate, pathname])
 
-  const { data: friends } = useFetchFriends(
+  const { data: friends, reFetch: reFetchFriends } = useFetchFriends(
     getCurrentUser()?.Username as string
+  )
+
+  usePersistentSubscribe(
+    "fetch-friends",
+    () => {
+      ;(async () => {
+        await reFetchFriends()
+      })()
+    },
+    [reFetchFriends]
   )
 
   const commonArgs = useMemo(
