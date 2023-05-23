@@ -43,18 +43,18 @@ const MomentCard: FC<MomentCardProps> = ({
         p: 1
       }}
     >
-      <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-        <Box onClick={(e) => setAnchorPos(e.currentTarget)}>
-          <MoreHorizIcon sx={{ color: "grey.A400" }} />
-        </Box>
-        <Menu
-          open={Boolean(anchorPos)}
-          onClose={() => {
-            setAnchorPos(null)
-          }}
-          anchorEl={anchorPos}
-        >
-          {!isOwnMoment && (
+      {!isOwnMoment && (
+        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+          <Box onClick={(e) => setAnchorPos(e.currentTarget)}>
+            <MoreHorizIcon sx={{ color: "grey.A400" }} />
+          </Box>
+          <Menu
+            open={Boolean(anchorPos)}
+            onClose={() => {
+              setAnchorPos(null)
+            }}
+            anchorEl={anchorPos}
+          >
             <MenuItem
               onClick={() => {
                 onChat()
@@ -63,17 +63,17 @@ const MomentCard: FC<MomentCardProps> = ({
             >
               <Typography>Chat</Typography>
             </MenuItem>
-          )}
-          <MenuItem
-            onClick={() => {
-              onReport()
-              setAnchorPos(null)
-            }}
-          >
-            <Typography>Report</Typography>
-          </MenuItem>
-        </Menu>
-      </Box>
+            <MenuItem
+              onClick={() => {
+                onReport()
+                setAnchorPos(null)
+              }}
+            >
+              <Typography>Report</Typography>
+            </MenuItem>
+          </Menu>
+        </Box>
+      )}
       <Box sx={{ mr: 1 }}>
         <Avatar src={profile} />
       </Box>

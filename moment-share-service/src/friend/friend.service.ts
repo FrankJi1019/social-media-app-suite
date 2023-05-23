@@ -31,7 +31,7 @@ export class FriendService extends BaseService<Friend> {
     account2Username,
     account2Character,
   }: CreateFriendInput) {
-    if (account1Username === account1Username) {
+    if (account1Username === account2Username) {
       throw new ForbiddenException('Self-chatting is prohibited');
     }
     const account1FindPromise = this.accountRepository.findOne({

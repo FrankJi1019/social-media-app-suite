@@ -13,6 +13,8 @@ import ChatMessage from "../../components/ChatMessage"
 // @ts-ignore
 import profileImage from "../../assets/placeholders/profile-placeholder.jpg"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
+import TimeLabel from "../../components/TimeLabel"
+import moment from "moment"
 
 export interface FriendPageProps {
   currentUsername: string
@@ -79,15 +81,30 @@ const FriendPage: FC<FriendPageProps> = ({
           }}
         >
           {chatHistory.map(
-            ({ id, content, sender: { username: senderName } }) => (
-              <Box key={id} sx={{ paddingY: 2 }}>
-                <ChatMessage
-                  profileImage={profileImage}
-                  content={content}
-                  isOwnMessage={senderName === currentUsername}
-                />
-              </Box>
-            )
+            (
+              { id, content, sentTime, sender: { username: senderName } },
+              index
+            ) => {
+              const shouldShowTime =
+                index === 0 ||
+                +sentTime - +chatHistory[index - 1].sentTime > 5 * 60 * 1000
+              return (
+                <Box key={id} sx={{ paddingY: 2 }}>
+                  {shouldShowTime && (
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <TimeLabel
+                        time={moment(sentTime).format("hh:mm DD/MM/YYYY")}
+                      />
+                    </Box>
+                  )}
+                  <ChatMessage
+                    profileImage={profileImage}
+                    content={content}
+                    isOwnMessage={senderName === currentUsername}
+                  />
+                </Box>
+              )
+            }
           )}
         </Box>
         <Box
