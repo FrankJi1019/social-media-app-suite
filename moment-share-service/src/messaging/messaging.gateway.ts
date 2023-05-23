@@ -53,11 +53,14 @@ export class MessagingGateway
 
   @SubscribeMessage('deregister')
   deregisterClient(@ConnectedSocket() client: Socket) {
-    const accountName = Object.entries(this.onlineUsers).find(
+    const accountNames = Object.entries(this.onlineUsers).find(
       ([, socket]) => socket.id === client.id,
-    )[0];
-    this.onlineUsers[accountName] = undefined;
-    client.emit('greet', { msg: `Bye ${accountName}` });
+    );
+    if (accountNames) {
+      const accountName = accountNames[0];
+      this.onlineUsers[accountName] = undefined;
+      client.emit('greet', { msg: `Bye ${accountName}` });
+    }
   }
 
   @SubscribeMessage('message-sent')
@@ -74,6 +77,7 @@ export class MessagingGateway
     const receiverSocket = this.onlineUsers[data.receiverUsername];
     if (receiverSocket) {
       receiverSocket.emit('message-received', chat);
+      receiverSocket.emit('fetch-friends');
     }
   }
 
