@@ -183,3 +183,11 @@ export const FETCH_FRIENDS_BY_USER = gql`
     }
   }
 `
+
+export const REPORT_MOMENT_MUTATION = gql`
+  mutation CreateReport($input: ReportMomentInput!) {
+    reportMoment(input: $input) {
+      id
+    }
+  }
+`

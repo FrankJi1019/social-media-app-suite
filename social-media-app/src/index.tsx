@@ -13,6 +13,7 @@ import NotificationProvider from "./providers/NotificationProvider"
 import { theme } from "./theme"
 import "./fonts.css"
 import MessagingSocketProvider from "./providers/MessagingSocketProvider"
+import ModalProvider from "./providers/ModalProvider"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
@@ -31,7 +32,9 @@ root.render(
                   <MessagingSocketProvider
                     socketUrl={process.env.REACT_APP_SOCKET_URL as string}
                   >
-                    <App />
+                    <ModalProvider>
+                      <App />
+                    </ModalProvider>
                   </MessagingSocketProvider>
                 </NotificationProvider>
               </PrismicProvider>

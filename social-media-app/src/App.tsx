@@ -22,6 +22,7 @@ import {
 } from "./api-hooks/friend"
 import { usePersistentSubscribe } from "./providers/MessagingSocketProvider"
 import { useFetchAllCharacters } from "./api-hooks/characters"
+import { useReportMomentMutation } from "./api-hooks/report"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
@@ -32,6 +33,7 @@ const PublicRouter = () => {
   const { data: characterList } = useFetchAllCharacters()
 
   const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
+  const { mutate: reportMoment } = useReportMomentMutation()
 
   const navigateLoginHandler = useCallback(() => {
     navigate({
@@ -118,6 +120,23 @@ const PublicRouter = () => {
     ]
   )
 
+  const reportMomentHandler = useCallback(
+    async (momentId: string, reason: string) => {
+      const user = getCurrentUser()
+      if (!user) {
+        notifyLoginOrRegister()
+      } else {
+        await reportMoment({
+          momentId,
+          reporterUsername: user.Username as string,
+          reason
+        })
+        notify("Thank you for reporting. We will review the post promptly.")
+      }
+    },
+    [getCurrentUser, notify, notifyLoginOrRegister, reportMoment]
+  )
+
   usePersistentSubscribe(
     "fetch-friends",
     () => {
@@ -137,7 +156,8 @@ const PublicRouter = () => {
         friends,
         onRunUnauthenticatedAction: notifyLoginOrRegister,
         onPostNew: postNewMomentHandler,
-        onFriendAvatarClick: chatHandler
+        onFriendAvatarClick: chatHandler,
+        onReportMoment: reportMomentHandler
       } as PageProps),
     [
       getCurrentUser,

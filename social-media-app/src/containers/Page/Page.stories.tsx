@@ -43,6 +43,7 @@ export const General = {
     onSignOut: FUNCTION_PLACE_HOLDER,
     onPostNew: FUNCTION_PLACE_HOLDER,
     onFriendAvatarClick: FUNCTION_PLACE_HOLDER,
-    onRunUnauthenticatedAction: FUNCTION_PLACE_HOLDER
+    onRunUnauthenticatedAction: FUNCTION_PLACE_HOLDER,
+    onReportMoment: FUNCTION_PLACE_HOLDER
   } as PageProps
 } as StoryObj

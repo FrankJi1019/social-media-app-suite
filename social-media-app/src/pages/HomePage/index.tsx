@@ -11,6 +11,8 @@ import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
 import { useNotification } from "../../providers/NotificationProvider"
+import { useModal } from "../../providers/ModalProvider"
+import ReportModal from "../../modals/ReportModal"
 
 interface HomepageProps extends PageProps {}
 
@@ -19,6 +21,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const notify = useNotification()
+  const { closeModal, openModal } = useModal()
 
   const filterOption = useMemo(() => {
     const filter = searchParams.get("filter")
@@ -110,7 +113,9 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
 
   const reportMomentHandler = useCallback(() => {
     notify("Feature to be implemented")
-  }, [notify])
+    //TODO
+    openModal(<ReportModal onClose={closeModal} />)
+  }, [closeModal, notify, openModal])
 
   const signOutHandler = useCallback(() => {
     signOut()

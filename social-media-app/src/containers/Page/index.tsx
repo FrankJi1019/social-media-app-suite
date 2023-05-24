@@ -15,18 +15,19 @@ import UserAvatar from "../../components/UserAvatar"
 
 export interface PageProps {
   children?: ReactNode
-  onPostNew: () => void
   user?: User
   title?: string
   sx?: SxProps
   loading?: boolean
   friends?: Array<Friendship>
+  hideMobileNavBar?: boolean
+  onPostNew: () => void
   onLogin?: () => void
   onRegister?: () => void
   onSignOut?: () => void
   onFriendAvatarClick: (username: string) => Promise<void>
-  hideMobileNavBar?: boolean
   onRunUnauthenticatedAction: () => void
+  onReportMoment: (momentId: string, reason: string) => void
 }
 
 const Page: FC<PageProps> = ({
