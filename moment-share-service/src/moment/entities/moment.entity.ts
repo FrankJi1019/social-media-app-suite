@@ -13,6 +13,7 @@ import { Character } from '../../character/entities/character.entity';
 import { Comment } from '../../comment/entities/comment.entity';
 import { Tag } from '../../tag/entities/tag.entity';
 import { Account } from '../../account/entities/account.entity';
+import { Report } from '../../report/entities/report.entity';
 
 @Entity('moment')
 export class Moment extends BaseEntity {
@@ -49,4 +50,7 @@ export class Moment extends BaseEntity {
     },
   })
   tags: Array<Tag>;
+
+  @OneToMany(() => Report, (report) => report.moment)
+  reports: Array<Report>;
 }

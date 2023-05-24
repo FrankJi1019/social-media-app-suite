@@ -5,6 +5,7 @@ import { Moment } from '../../moment/entities/moment.entity';
 import { Like } from '../../moment/entities/like.entity';
 import { Comment } from '../../comment/entities/comment.entity';
 import { Chat } from '../../chat/entities/chat.entity';
+import { Report } from '../../report/entities/report.entity';
 
 @Entity('account')
 export class Account extends BaseEntity {
@@ -31,4 +32,7 @@ export class Account extends BaseEntity {
 
   @OneToMany(() => Friend, (friend) => friend.friendAccount)
   _friends: Array<Friend>;
+
+  @OneToMany(() => Report, (report) => report.reporter)
+  reports: Array<Report>;
 }
