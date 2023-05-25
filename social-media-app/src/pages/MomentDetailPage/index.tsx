@@ -12,6 +12,8 @@ import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
 import { useNotification } from "../../providers/NotificationProvider"
+import { useModal } from "../../providers/ModalProvider"
+import ReportModal from "../../modals/ReportModal"
 
 interface MomentDetailPageProps extends PageProps {}
 
@@ -19,6 +21,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
   const notify = useNotification()
+  const { openModal, closeModal } = useModal()
 
   const {
     data: moment,
@@ -92,10 +95,19 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     [commonArgs]
   )
 
-  const reportMomentHandler = useCallback(
-    () => notify("Feature to be implemented"),
-    [notify]
-  )
+  const reportMomentHandler = useCallback(() => {
+    if (!moment) return
+    openModal(
+      <ReportModal
+        content={moment.content}
+        onClose={closeModal}
+        onSubmit={async (reason) => {
+          await commonArgs.onReportMoment(moment.id, reason)
+          closeModal()
+        }}
+      />
+    )
+  }, [closeModal, commonArgs, moment, openModal])
 
   const isLoading = useMemo(() => !moment || loading, [moment, loading])
 

@@ -15,6 +15,7 @@ import { AccountModule } from './account/account.module';
 import { FriendModule } from './friend/friend.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { ChatModule } from './chat/chat.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ChatModule } from './chat/chat.module';
     FriendModule,
     MessagingModule,
     ChatModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

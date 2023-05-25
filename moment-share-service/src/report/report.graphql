@@ -1,0 +1,13 @@
+type Report {
+  id: ID!
+  moment: Moment!
+  reporter: Account!
+  reason: String!
+  createdAt: String!
+}
+
+input ReportMomentInput {
+  momentId: String!
+  reporterUsername: String!
+  reason: String!
+}

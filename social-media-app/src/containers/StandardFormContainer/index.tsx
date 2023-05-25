@@ -14,6 +14,7 @@ const StandardFormContainer: FC<StandardFormContainerProps> = ({
 }) => {
   return (
     <form
+      style={{ height: "100%" }}
       onSubmit={(e) => {
         e.preventDefault()
         onSubmit(e)

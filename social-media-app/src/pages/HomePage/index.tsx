@@ -4,12 +4,16 @@ import Page, { PageProps } from "../../containers/Page"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import {
   useFetchAllMoments,
+  useLazyFetchMomentById,
   useLikeMomentMutation,
   useUnlikeMomentMutation
 } from "../../api-hooks/moments"
 import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
+import { useModal } from "../../providers/ModalProvider"
+import ReportModal from "../../modals/ReportModal"
+import { useReportMomentMutation } from "../../api-hooks/report"
 import { useNotification } from "../../providers/NotificationProvider"
 
 interface HomepageProps extends PageProps {}
@@ -18,6 +22,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { getCurrentUser, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { closeModal, openModal } = useModal()
   const notify = useNotification()
 
   const filterOption = useMemo(() => {
@@ -34,9 +39,11 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { data: allMoments, reFetch: reFetchAllMoments } =
     useFetchAllMoments(filterOption)
   const { data: categoriesResponse } = useFetchAllCategories()
+  const { fetch: fetchMoment } = useLazyFetchMomentById()
 
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
+  const { mutate: reportMoment } = useReportMomentMutation()
 
   const allCategories = useMemo(() => {
     const categories = [
@@ -108,9 +115,22 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     [commonArgs]
   )
 
-  const reportMomentHandler = useCallback(() => {
-    notify("Feature to be implemented")
-  }, [notify])
+  const reportMomentHandler = useCallback(
+    async (id: string) => {
+      const data = await fetchMoment(id)
+      openModal(
+        <ReportModal
+          content={data.content}
+          onClose={closeModal}
+          onSubmit={async (reason) => {
+            await commonArgs.onReportMoment(id, reason)
+            closeModal()
+          }}
+        />
+      )
+    },
+    [closeModal, commonArgs, fetchMoment, openModal]
+  )
 
   const signOutHandler = useCallback(() => {
     signOut()

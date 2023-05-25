@@ -21,4 +21,5 @@ type Mutation {
   createAccount(input: CreateAccountInput!): Account!
   createChat(input: CreateChatMessageInput!): Chat!
   findOrCreateFriendship(input: FindOrCreateFriendshipInput!): Friendship!
+  reportMoment(input: ReportMomentInput!): Report!
 }

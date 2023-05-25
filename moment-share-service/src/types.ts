@@ -60,6 +60,12 @@ export interface FilterMomentInput {
     followedBy?: Nullable<string>;
 }
 
+export interface ReportMomentInput {
+    momentId: string;
+    reporterUsername: string;
+    reason: string;
+}
+
 export interface CreateTagInput {
     name: string;
     category?: Nullable<string>;
@@ -122,6 +128,14 @@ export interface Moment {
     account: Account;
 }
 
+export interface Report {
+    id: string;
+    moment: Moment;
+    reporter: Account;
+    reason: string;
+    createdAt: string;
+}
+
 export interface IQuery {
     moments(input?: Nullable<FilterMomentInput>): Nullable<Moment[]> | Promise<Nullable<Moment[]>>;
     moment(id: string): Moment | Promise<Moment>;
@@ -145,6 +159,7 @@ export interface IMutation {
     createAccount(input: CreateAccountInput): Account | Promise<Account>;
     createChat(input: CreateChatMessageInput): Chat | Promise<Chat>;
     findOrCreateFriendship(input: FindOrCreateFriendshipInput): Friendship | Promise<Friendship>;
+    reportMoment(input: ReportMomentInput): Report | Promise<Report>;
 }
 
 export interface Tag {
