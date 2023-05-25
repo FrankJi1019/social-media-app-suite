@@ -1,13 +1,16 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { Box, Button, TextField, Typography } from "@mui/material"
 import { ModalProps } from "../../types/props"
 import StandardModalElement from "../../containers/StandardModalElement"
 
 export interface ReportModalProps extends ModalProps {
   content: string
+  onSubmit: (reason: string) => void
 }
 
-const ReportModal: FC<ReportModalProps> = ({ content, onClose }) => {
+const ReportModal: FC<ReportModalProps> = ({ content, onClose, onSubmit }) => {
+  const [reason, setReason] = useState("")
+
   return (
     <Box
       sx={{
@@ -39,7 +42,9 @@ const ReportModal: FC<ReportModalProps> = ({ content, onClose }) => {
       <Box>
         <StandardModalElement>
           <TextField
+            value={reason}
             placeholder={"Enter the reason..."}
+            onChange={(e) => setReason(e.target.value)}
             sx={{ backgroundColor: "grey.300" }}
           />
         </StandardModalElement>
@@ -49,7 +54,9 @@ const ReportModal: FC<ReportModalProps> = ({ content, onClose }) => {
           <Button variant={"outlined"} onClick={onClose}>
             Cancel
           </Button>
-          <Button sx={{ ml: 1 }}>Submit</Button>
+          <Button onClick={() => onSubmit(reason)} sx={{ ml: 1 }}>
+            Submit
+          </Button>
         </StandardModalElement>
       </Box>
     </Box>

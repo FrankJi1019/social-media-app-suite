@@ -27,7 +27,7 @@ export interface PageProps {
   onSignOut?: () => void
   onFriendAvatarClick: (username: string) => Promise<void>
   onRunUnauthenticatedAction: () => void
-  onReportMoment: (momentId: string, reason: string) => void
+  onReportMoment: (momentId: string, reason: string) => Promise<void>
 }
 
 const Page: FC<PageProps> = ({

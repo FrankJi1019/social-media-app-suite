@@ -13,6 +13,8 @@ import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
 import { useModal } from "../../providers/ModalProvider"
 import ReportModal from "../../modals/ReportModal"
+import { useReportMomentMutation } from "../../api-hooks/report"
+import { useNotification } from "../../providers/NotificationProvider"
 
 interface HomepageProps extends PageProps {}
 
@@ -21,6 +23,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { closeModal, openModal } = useModal()
+  const notify = useNotification()
 
   const filterOption = useMemo(() => {
     const filter = searchParams.get("filter")
@@ -40,6 +43,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
 
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
+  const { mutate: reportMoment } = useReportMomentMutation()
 
   const allCategories = useMemo(() => {
     const categories = [
@@ -114,9 +118,18 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const reportMomentHandler = useCallback(
     async (id: string) => {
       const data = await fetchMoment(id)
-      openModal(<ReportModal content={data.content} onClose={closeModal} />)
+      openModal(
+        <ReportModal
+          content={data.content}
+          onClose={closeModal}
+          onSubmit={async (reason) => {
+            await commonArgs.onReportMoment(id, reason)
+            closeModal()
+          }}
+        />
+      )
     },
-    [closeModal, fetchMoment, openModal]
+    [closeModal, commonArgs, fetchMoment, openModal]
   )
 
   const signOutHandler = useCallback(() => {

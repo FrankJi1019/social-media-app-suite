@@ -166,7 +166,8 @@ const PublicRouter = () => {
       friends,
       notifyLoginOrRegister,
       postNewMomentHandler,
-      chatHandler
+      chatHandler,
+      reportMomentHandler
     ]
   )
 
