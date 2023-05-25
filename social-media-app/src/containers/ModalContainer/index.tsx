@@ -14,11 +14,22 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open }) => {
           top: "50%",
           left: "50%",
           p: 2,
+          width: {
+            xs: "90%",
+            md: "50%"
+          },
+          maxHeight: {
+            xs: "90%",
+            md: "50%"
+          },
           transform: "translate(-50%, -50%)",
           backgroundColor: "primary.extraLight",
           border: "3px solid",
           borderColor: "primary.main",
-          borderRadius: "15px"
+          borderRadius: "15px",
+          "& div.MuiBox-root": {
+            marginY: 0
+          }
         }}
       >
         {children}

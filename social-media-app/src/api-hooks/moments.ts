@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import {
   ALL_MOMENTS_QUERY,
   LIKE_MOMENT_MUTATION,
@@ -7,7 +7,7 @@ import {
   UNLIKE_MOMENT_MUTATION
 } from "./graphql"
 import { Moment, MomentBrief } from "../types/moment"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 // @ts-ignore
 import profilePlaceholder from "../assets/placeholders/profile-placeholder.jpg"
 import { utcTimestampToDate } from "../utils/time"
@@ -78,6 +78,22 @@ export const useFetchMomentById = (id: string) => {
   }, [data, getCurrentUser])
 
   return { data: moment, loading, error, reFetch: refetch }
+}
+
+export const useLazyFetchMomentById = () => {
+  const [fetch, { data, loading, error, called }] =
+    useLazyQuery(MOMENT_BY_ID_QUERY)
+  const fetchMoment = useCallback(
+    async (id: string) => {
+      const data = await fetch({
+        fetchPolicy: "network-only",
+        variables: { id }
+      })
+      return data.data.moment as Moment
+    },
+    [fetch]
+  )
+  return { fetch: fetchMoment, loading, data, error, called }
 }
 
 export const usePostMomentMutation = () => {

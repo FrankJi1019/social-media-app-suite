@@ -4,13 +4,13 @@ import Page, { PageProps } from "../../containers/Page"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import {
   useFetchAllMoments,
+  useLazyFetchMomentById,
   useLikeMomentMutation,
   useUnlikeMomentMutation
 } from "../../api-hooks/moments"
 import { Routes } from "../../routes/routes"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCategories } from "../../api-hooks/category"
-import { useNotification } from "../../providers/NotificationProvider"
 import { useModal } from "../../providers/ModalProvider"
 import ReportModal from "../../modals/ReportModal"
 
@@ -20,7 +20,6 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { getCurrentUser, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const notify = useNotification()
   const { closeModal, openModal } = useModal()
 
   const filterOption = useMemo(() => {
@@ -37,6 +36,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
   const { data: allMoments, reFetch: reFetchAllMoments } =
     useFetchAllMoments(filterOption)
   const { data: categoriesResponse } = useFetchAllCategories()
+  const { fetch: fetchMoment } = useLazyFetchMomentById()
 
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
@@ -111,11 +111,13 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     [commonArgs]
   )
 
-  const reportMomentHandler = useCallback(() => {
-    notify("Feature to be implemented")
-    //TODO
-    openModal(<ReportModal onClose={closeModal} />)
-  }, [closeModal, notify, openModal])
+  const reportMomentHandler = useCallback(
+    async (id: string) => {
+      const data = await fetchMoment(id)
+      openModal(<ReportModal content={data.content} onClose={closeModal} />)
+    },
+    [closeModal, fetchMoment, openModal]
+  )
 
   const signOutHandler = useCallback(() => {
     signOut()
