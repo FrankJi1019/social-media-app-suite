@@ -20,6 +20,15 @@ export class ReportService extends BaseService<Report> {
   }
 
   async createReport(momentId: number, accountName: string, reason: string) {
+    const hasReported = await super.findOne({
+      where: {
+        moment: { id: momentId },
+        reporter: { username: accountName },
+      },
+    });
+    if (hasReported) {
+      return hasReported;
+    }
     const momentPromise = this.momentRepository.findOne({
       where: { id: momentId },
     });
