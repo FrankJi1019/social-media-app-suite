@@ -3,28 +3,43 @@ import { BaseService } from '../base/base.service';
 import { Moment } from '../moment/entities/moment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InjectAwsService } from 'nest-aws-sdk';
-import { S3 } from 'aws-sdk';
+import { S3Service } from '../common/s3.service';
+import { MomentAttachmentController } from './moment-attachment.controller';
 
 @Injectable()
 export class MomentAttachmentService extends BaseService<Moment> {
+  static MomentImageS3Key(id: string | number, order: string | number) {
+    return `moments/${id}/${order}`;
+  }
+
   constructor(
     @InjectRepository(Moment)
     private readonly momentRepository: Repository<Moment>,
-    @InjectAwsService(S3)
-    private readonly s3: S3,
+    private readonly s3Service: S3Service,
   ) {
     super(momentRepository);
   }
 
-  async uploadObject(file: Express.Multer.File) {
-    return await this.s3
-      .putObject({
-        Bucket: 'frank-incognitonet',
-        Key: 'demo',
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      })
-      .promise();
+  async getObject(momentId: string, order: string) {
+    return await this.s3Service.getObject(
+      MomentAttachmentService.MomentImageS3Key(momentId, order),
+    );
+  }
+
+  async getObjectSignedUrl(momentId: string, order: string) {
+    return await this.s3Service.getObjectSignedUrl(
+      MomentAttachmentService.MomentImageS3Key(momentId, order),
+    );
+  }
+
+  async uploadObject(
+    momentId: string,
+    order: string,
+    file: Express.Multer.File,
+  ) {
+    return await this.s3Service.uploadObject(
+      MomentAttachmentService.MomentImageS3Key(momentId, order),
+      file,
+    );
   }
 }

@@ -14,6 +14,7 @@ import { Comment } from '../../comment/entities/comment.entity';
 import { Tag } from '../../tag/entities/tag.entity';
 import { Account } from '../../account/entities/account.entity';
 import { Report } from '../../report/entities/report.entity';
+import { MomentImage } from '../../moment-attachment/entities/moment-image.entity';
 
 @Entity('moment')
 export class Moment extends BaseEntity {
@@ -53,4 +54,7 @@ export class Moment extends BaseEntity {
 
   @OneToMany(() => Report, (report) => report.moment)
   reports: Array<Report>;
+
+  @OneToMany(() => MomentImage, (image) => image.moment)
+  images: Array<MomentImage>;
 }

@@ -1,5 +1,7 @@
 import {
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -15,6 +17,14 @@ export class MomentAttachmentController {
     private readonly momentAttachmentService: MomentAttachmentService,
   ) {}
 
+  @Get(':id/images/:order')
+  async getImage(@Param('id') momentId: string, @Param('order') order: string) {
+    return await this.momentAttachmentService.getObjectSignedUrl(
+      momentId,
+      order,
+    );
+  }
+
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -29,9 +39,17 @@ export class MomentAttachmentController {
       },
     },
   })
-  @Post(':id/images')
+  @Post(':id/images/:order')
   @UseInterceptors(FileInterceptor('file'))
-  findAll(@UploadedFile() file: Express.Multer.File) {
-    return this.momentAttachmentService.uploadObject(file);
+  async findAll(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') momentId: string,
+    @Param('order') imageOrder: string,
+  ) {
+    return await this.momentAttachmentService.uploadObject(
+      momentId,
+      imageOrder,
+      file,
+    );
   }
 }
