@@ -15,6 +15,7 @@ export const ALL_MOMENTS_QUERY = gql`
       likeNumber
       commentNumber
       isLiked
+      images
     }
   }
 `
@@ -33,6 +34,7 @@ export const MOMENT_BY_ID_QUERY = gql`
       createdAt
       likeNumber
       isLiked
+      images
       comments {
         id
         content

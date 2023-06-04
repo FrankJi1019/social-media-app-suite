@@ -38,6 +38,7 @@ export const useFetchAllMoments = (input?: {
         likeNumber: number
         commentNumber: number
         isLiked: boolean
+        images: Array<string>
       }) => {
         return {
           ...moment,

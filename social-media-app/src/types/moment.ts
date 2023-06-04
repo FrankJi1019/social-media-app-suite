@@ -14,6 +14,7 @@ export interface MomentBrief {
   isLiked: boolean
   isOwnMoment: boolean
   account: Account
+  images: Array<string>
 }
 
 export interface Moment {
@@ -27,4 +28,5 @@ export interface Moment {
   comments: Array<Comment>
   isLiked: boolean
   tags: Array<Tag>
+  images: Array<string>
 }

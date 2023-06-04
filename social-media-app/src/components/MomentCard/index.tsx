@@ -6,6 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite"
 import moment from "moment"
 import { MomentBrief } from "../../types/moment"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import ImageGrid from "../ImageGrid"
 
 export interface MomentCardProps {
   moment: MomentBrief
@@ -25,7 +26,8 @@ const MomentCard: FC<MomentCardProps> = ({
     profile,
     character,
     isLiked,
-    isOwnMoment
+    isOwnMoment,
+    images
   },
   onLike,
   onOpen,
@@ -117,6 +119,9 @@ const MomentCard: FC<MomentCardProps> = ({
               <Typography sx={{ pl: 0.5 }}>{commentNumber}</Typography>
             </StandardIconText>
           </Box>
+        </Box>
+        <Box>
+          <ImageGrid images={images} />
         </Box>
       </Box>
     </Box>
