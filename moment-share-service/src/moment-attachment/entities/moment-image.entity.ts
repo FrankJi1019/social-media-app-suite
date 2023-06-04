@@ -7,9 +7,6 @@ export class MomentImage extends BaseEntity {
   @Column()
   order: number;
 
-  @Column()
-  link: string;
-
   @ManyToOne(() => Moment, (moment) => moment.images)
   @JoinColumn({ name: 'moment' })
   moment: Moment;

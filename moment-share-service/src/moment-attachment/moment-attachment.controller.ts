@@ -17,6 +17,17 @@ export class MomentAttachmentController {
     private readonly momentAttachmentService: MomentAttachmentService,
   ) {}
 
+  @Get(':id/images')
+  async getMomentImages(
+    @Param('id') momentId: string,
+    @Param('order') order: string,
+  ) {
+    return await this.momentAttachmentService.getObjectSignedUrl(
+      momentId,
+      order,
+    );
+  }
+
   @Get(':id/images/:order')
   async getImage(@Param('id') momentId: string, @Param('order') order: string) {
     return await this.momentAttachmentService.getObjectSignedUrl(
