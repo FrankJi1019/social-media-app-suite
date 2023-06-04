@@ -22,15 +22,25 @@ export class MomentAttachmentService extends BaseService<MomentImage> {
     super(repository);
   }
 
-  async getObject(momentId: string, order: string) {
-    return await this.s3Service.getObject(
+  async getObjectSignedUrl(momentId: string, order: string) {
+    return await this.s3Service.getObjectSignedUrl(
       MomentAttachmentService.MomentImageS3Key(momentId, order),
     );
   }
 
-  async getObjectSignedUrl(momentId: string, order: string) {
-    return await this.s3Service.getObjectSignedUrl(
-      MomentAttachmentService.MomentImageS3Key(momentId, order),
+  async getMomentImageUrls(momentId: string) {
+    const moment = await this.momentRepository.findOne({
+      where: { id: Number(momentId) },
+      relations: { images: true },
+    });
+    if (!moment) {
+      throw new NotFoundException('Invalid moment ID');
+    }
+    const orders = moment.images.map(({ order }) => order);
+    return await Promise.all(
+      orders.map((order) =>
+        this.getObjectSignedUrl(momentId, order.toString()),
+      ),
     );
   }
 

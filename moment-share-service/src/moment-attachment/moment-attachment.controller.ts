@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { MomentAttachmentService } from './moment-attachment.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Moments')
@@ -17,6 +17,7 @@ export class MomentAttachmentController {
     private readonly momentAttachmentService: MomentAttachmentService,
   ) {}
 
+  @ApiOperation({ deprecated: true })
   @Get(':id/images')
   async getMomentImages(
     @Param('id') momentId: string,
@@ -28,6 +29,7 @@ export class MomentAttachmentController {
     );
   }
 
+  @ApiOperation({ deprecated: true })
   @Get(':id/images/:order')
   async getImage(@Param('id') momentId: string, @Param('order') order: string) {
     return await this.momentAttachmentService.getObjectSignedUrl(

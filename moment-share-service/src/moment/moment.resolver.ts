@@ -98,4 +98,9 @@ export class MomentResolver {
   async findAccount(@Parent() { id }: { id: number }) {
     return await this.momentService.findAccount(id);
   }
+
+  @ResolveField('images')
+  async findImages(@Parent() { id }: { id: number }) {
+    return await this.momentService.findAllImages(id);
+  }
 }

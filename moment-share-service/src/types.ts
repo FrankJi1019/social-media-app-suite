@@ -126,6 +126,7 @@ export interface Moment {
     comments?: Nullable<Comment[]>;
     tags: Tag[];
     account: Account;
+    images: string[];
 }
 
 export interface Report {
