@@ -17,6 +17,7 @@ const tags = ["music", "travel", "programming", "friends"]
 export const WithoutMaxLength = {
   render,
   args: {
+    maxImgNumber: 9,
     maxMomentLength: Number.MAX_VALUE,
     minMomentLength: 0,
     tags,
@@ -33,6 +34,7 @@ export const WithoutMaxLength = {
 export const WithMaxLength = {
   render,
   args: {
+    maxImgNumber: 9,
     maxMomentLength: 20,
     minMomentLength: 0,
     tags,

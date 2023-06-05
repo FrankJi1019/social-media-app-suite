@@ -20,6 +20,7 @@ import ImageGrid from "../../components/ImageGrid"
 
 export interface PostMomentPageProps {
   maxTagNumber: number
+  maxImgNumber: number
   isSubmitting?: boolean
   character: string
   tags: Array<string>
@@ -32,6 +33,7 @@ export interface PostMomentPageProps {
 }
 
 const PostMomentPage: FC<PostMomentPageProps> = ({
+  maxImgNumber,
   maxTagNumber,
   isSubmitting,
   character,
@@ -141,19 +143,24 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
             }}
           >
             <Box sx={{ display: "flex", flex: 1 }}>
-              <IconButton
-                onClick={() =>
-                  fileInputRef.current && (fileInputRef.current as any).click()
-                }
-              >
-                <CollectionsIcon sx={{ color: "primary.dark" }} />
-              </IconButton>
-              <input
-                type={"file"}
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={selectFileHandler}
-              />
+              {maxImgNumber > imageData.length && (
+                <>
+                  <IconButton
+                    onClick={() =>
+                      fileInputRef.current &&
+                      (fileInputRef.current as any).click()
+                    }
+                  >
+                    <CollectionsIcon sx={{ color: "primary.dark" }} />
+                  </IconButton>
+                  <input
+                    type={"file"}
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={selectFileHandler}
+                  />
+                </>
+              )}
               <Box sx={{ width: { xs: "100%", md: "50%" } }}>
                 {addingTag ? (
                   <TagDropdown
