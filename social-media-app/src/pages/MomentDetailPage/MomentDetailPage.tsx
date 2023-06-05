@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -20,6 +21,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import InTextTag from "../../components/InTextTag"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import ImageGrid from "../../components/ImageGrid"
 
 export interface MomentDetailPageProps {
   moment: Moment
@@ -29,6 +31,7 @@ export interface MomentDetailPageProps {
   onComment: (comment: string) => void
   onChat: (momentAuthorUsername: string, momentAuthorCharacter: string) => void
   onReport: () => void
+  onViewImage: (imageList: Array<string>, index: number) => void
 }
 
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
@@ -38,7 +41,8 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
   onLike,
   onComment,
   onChat,
-  onReport
+  onReport,
+  onViewImage
 }) => {
   const [comment, setComment] = useState("")
   const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
@@ -99,20 +103,31 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
             </Typography>
           </Box>
         </Box>
-        <Box
-          sx={{
-            marginY: 2,
-            paddingY: 2,
-            borderBottom: "1px solid",
-            borderColor: "grey.A400"
-          }}
-        >
+        <Box sx={{ marginY: 2 }}>
           <Typography>
             {moment.content}{" "}
             {moment.tags.map(({ id, name }) => (
               <InTextTag key={id} name={name} />
             ))}
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            borderBottom: "1px solid",
+            borderColor: "grey.A400",
+            pb: 2
+          }}
+        >
+          <Grid container>
+            <Grid item xs={12} md={8}>
+              <ImageGrid
+                images={moment.images}
+                onClick={(index) => {
+                  onViewImage(moment.images, index)
+                }}
+              />
+            </Grid>
+          </Grid>
         </Box>
         <Box
           sx={{
@@ -181,7 +196,11 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
         <Box sx={{ mt: 7 }}>
           {moment.comments.map((comment) => (
             <Box key={comment.id} sx={{ mb: 2 }}>
-              <Comment {...comment} character={comment.character.name} />
+              <Comment
+                {...comment}
+                character={comment.character.name}
+                isAuthor={comment.account.username === moment.account.username}
+              />
             </Box>
           ))}
         </Box>

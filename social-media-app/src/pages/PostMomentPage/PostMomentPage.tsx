@@ -1,8 +1,9 @@
-import React, { FC, useState } from "react"
+import React, { FC, useCallback, useRef, useState } from "react"
 import {
   Box,
   Button,
   CircularProgress,
+  Grid,
   IconButton,
   TextField,
   Typography
@@ -16,22 +17,24 @@ import TagIcon from "@mui/icons-material/Tag"
 import { LoadingButton } from "@mui/lab"
 import TagDropdown from "../../components/TagDropdown"
 import TagLabel from "../../components/TagLabel"
-import { useNotification } from "../../providers/NotificationProvider"
+import ImageGrid from "../../components/ImageGrid"
 
 export interface PostMomentPageProps {
   maxTagNumber: number
+  maxImgNumber: number
   isSubmitting?: boolean
   character: string
   tags: Array<string>
   minMomentLength?: number
   maxMomentLength?: number
   onRequestNewCharacter: () => void
-  onPost: (moment: string, tags: Array<string>) => void
+  onPost: (moment: string, tags: Array<string>, images: Array<FormData>) => void
   onBack: () => void
   onExceedMaxTag: () => void
 }
 
 const PostMomentPage: FC<PostMomentPageProps> = ({
+  maxImgNumber,
   maxTagNumber,
   isSubmitting,
   character,
@@ -45,10 +48,33 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
 }) => {
   const [content, setContent] = useState("")
   const [momentTags, setMomentTags] = useState<Array<string>>([])
-
+  const [imageUrls, setImageUrls] = useState<Array<string>>([])
+  const [imageData, setImageData] = useState<Array<FormData>>([])
   const [addingTag, setAddingTag] = useState(false)
 
-  const notify = useNotification()
+  const fileInputRef = useRef(null)
+
+  const selectFileHandler = useCallback((e: any) => {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      if (reader.result) {
+        setImageUrls((prev) => [...prev, reader.result!.toString()])
+        const formData = new FormData()
+        formData.append("file", file)
+        setImageData((prev) => [...prev, formData])
+      }
+    }
+  }, [])
+
+  const removeFileHandler = useCallback(
+    (index: number) => {
+      setImageData((prev) => prev.filter((_, i) => i !== index))
+      setImageUrls((prev) => prev.filter((_, i) => i !== index))
+    },
+    [setImageData, setImageUrls]
+  )
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -115,6 +141,13 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
               </Box>
             ))}
           </Box>
+          <Box>
+            <Grid container>
+              <Grid item xs={12} md={5}>
+                <ImageGrid images={imageUrls} onDelete={removeFileHandler} />
+              </Grid>
+            </Grid>
+          </Box>
           <Box
             sx={{
               display: "flex",
@@ -123,9 +156,24 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
             }}
           >
             <Box sx={{ display: "flex", flex: 1 }}>
-              <IconButton onClick={() => notify("Feature to be implemented")}>
-                <CollectionsIcon sx={{ color: "primary.dark" }} />
-              </IconButton>
+              {maxImgNumber > imageData.length && (
+                <>
+                  <IconButton
+                    onClick={() =>
+                      fileInputRef.current &&
+                      (fileInputRef.current as any).click()
+                    }
+                  >
+                    <CollectionsIcon sx={{ color: "primary.dark" }} />
+                  </IconButton>
+                  <input
+                    type={"file"}
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={selectFileHandler}
+                  />
+                </>
+              )}
               <Box sx={{ width: { xs: "100%", md: "50%" } }}>
                 {addingTag ? (
                   <TagDropdown
@@ -180,7 +228,7 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
                   variant={"contained"}
                   loading={isSubmitting}
                   disabled={content.length < minMomentLength}
-                  onClick={() => onPost(content, momentTags)}
+                  onClick={() => onPost(content, momentTags, imageData)}
                 >
                   POST
                 </LoadingButton>

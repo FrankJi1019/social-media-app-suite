@@ -3,7 +3,6 @@ import { Box, Grid, IconButton, SxProps } from "@mui/material"
 import StandardContainer from "./../StandardContainer"
 import { User } from "../../providers/CognitoAuthProvider"
 // @ts-ignore
-// @ts-ignore
 import profile from "../../assets/placeholders/profile-placeholder.jpg"
 import AuthBlock from "../../components/AuthBlock"
 import HomeIcon from "@mui/icons-material/Home"
@@ -109,7 +108,7 @@ const Page: FC<PageProps> = ({
       container
       sx={{
         width: "100%",
-        minHeight: "100vh",
+        height: "100vh",
         display: "flex",
         backgroundColor: "bg.primary",
         ...(sx || {})

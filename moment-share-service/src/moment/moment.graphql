@@ -9,6 +9,7 @@ type Moment {
     comments: [Comment!]
     tags: [Tag!]!
     account: Account!
+    images: [String!]!
 }
 
 input CreateMomentInput {

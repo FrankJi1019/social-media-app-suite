@@ -11,6 +11,7 @@ import { useNotification } from "../../providers/NotificationProvider"
 import { pickRandomElement } from "../../utils/random"
 
 const MAX_TAG_NUM = 3
+const MAX_IMG_NUM = 9
 
 interface PostMomentPageProps extends PageProps {}
 
@@ -27,14 +28,15 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
   const { mutate, loading } = usePostMomentMutation()
 
   const postHandler = useCallback(
-    async (content: string, tags: Array<string>) => {
+    async (content: string, tags: Array<string>, images: Array<FormData>) => {
       const user = await getCurrentUser()
       if (user) {
         const params = {
           content,
           character,
           username: user.Username as string,
-          tags
+          tags,
+          images
         }
         await mutate(params)
         navigate({ pathname: Routes.HOME_PAGE.path })
@@ -71,6 +73,7 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
   return (
     <Page {...commonArgs} onSignOut={signOutHandler} hideMobileNavBar>
       <PostMomentPage
+        maxImgNumber={MAX_IMG_NUM}
         maxTagNumber={MAX_TAG_NUM}
         isSubmitting={loading}
         character={character}

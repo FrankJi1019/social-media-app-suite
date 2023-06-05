@@ -13,10 +13,12 @@ import { Like } from './entities/like.entity';
 import { Comment } from '../comment/entities/comment.entity';
 import { Tag } from '../tag/entities/tag.entity';
 import { Account } from '../account/entities/account.entity';
+import { MomentAttachmentService } from '../moment-attachment/moment-attachment.service';
 
 @Injectable()
 export class MomentService extends BaseService<Moment> {
   constructor(
+    private readonly momentAttachmentService: MomentAttachmentService,
     @InjectRepository(Moment)
     private readonly momentRepository: Repository<Moment>,
     @InjectRepository(Character)
@@ -179,5 +181,9 @@ export class MomentService extends BaseService<Moment> {
     return (
       await super.findOne({ where: { id }, relations: { account: true } })
     ).account;
+  }
+
+  async findAllImages(id: number) {
+    return await this.momentAttachmentService.getMomentImageUrls(id.toString());
   }
 }

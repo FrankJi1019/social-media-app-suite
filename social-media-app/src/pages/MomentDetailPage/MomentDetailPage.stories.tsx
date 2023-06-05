@@ -65,6 +65,7 @@ export const General = {
     onLike: FUNCTION_PLACE_HOLDER,
     onComment: FUNCTION_PLACE_HOLDER,
     onChat: FUNCTION_PLACE_HOLDER,
-    onReport: FUNCTION_PLACE_HOLDER
+    onReport: FUNCTION_PLACE_HOLDER,
+    onViewImage: FUNCTION_PLACE_HOLDER
   } as MomentDetailPageProps
 } as StoryObj

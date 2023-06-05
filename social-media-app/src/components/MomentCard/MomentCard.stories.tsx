@@ -91,3 +91,18 @@ export const LongContent = {
     onUnlike: FUNCTION_PLACE_HOLDER
   } as MomentCardProps
 } as StoryObj
+
+export const WithImage = {
+  render,
+  args: {
+    moment: {
+      ...moment,
+      isOwnMoment: false,
+      isLiked: false,
+      images: Array(9).fill(profile)
+    },
+    onLike: FUNCTION_PLACE_HOLDER,
+    onOpen: FUNCTION_PLACE_HOLDER,
+    onUnlike: FUNCTION_PLACE_HOLDER
+  } as MomentCardProps
+} as StoryObj

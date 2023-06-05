@@ -1,11 +1,21 @@
 import React, { FC } from "react"
-import { Avatar, Box, Menu, MenuItem, styled, Typography } from "@mui/material"
+import {
+  Avatar,
+  Box,
+  Grid,
+  Menu,
+  MenuItem,
+  styled,
+  Typography
+} from "@mui/material"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import moment from "moment"
 import { MomentBrief } from "../../types/moment"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import ImageGrid from "../ImageGrid"
+import IsMeTag from "../IsMeTag"
 
 export interface MomentCardProps {
   moment: MomentBrief
@@ -25,7 +35,8 @@ const MomentCard: FC<MomentCardProps> = ({
     profile,
     character,
     isLiked,
-    isOwnMoment
+    isOwnMoment,
+    images
   },
   onLike,
   onOpen,
@@ -82,7 +93,7 @@ const MomentCard: FC<MomentCardProps> = ({
           sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
         >
           <Typography variant={"h6"} sx={{ fontWeight: "bold", mr: 1 }}>
-            {character.name} {isOwnMoment && "(Me)"}
+            {character.name} {isOwnMoment && <IsMeTag />}
           </Typography>
           <Typography color={"grey"}>
             {moment(postDate).format("HH:mm DD MMM")}
@@ -101,6 +112,13 @@ const MomentCard: FC<MomentCardProps> = ({
           }}
         >
           <Typography>{content}</Typography>
+        </Box>
+        <Box>
+          <Grid container>
+            <Grid item xs={12} md={5}>
+              <ImageGrid images={images} />
+            </Grid>
+          </Grid>
         </Box>
         <Box sx={{ display: "flex", mt: 1, justifyContent: "space-between" }}>
           <Box sx={{ display: "flex" }}>

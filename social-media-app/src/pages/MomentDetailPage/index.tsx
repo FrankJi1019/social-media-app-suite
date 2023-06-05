@@ -11,16 +11,15 @@ import { Box } from "@mui/material"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
 import { useCreateCommentMutation } from "../../api-hooks/comment"
-import { useNotification } from "../../providers/NotificationProvider"
 import { useModal } from "../../providers/ModalProvider"
 import ReportModal from "../../modals/ReportModal"
+import ImageModal from "../../modals/ImageModal"
 
 interface MomentDetailPageProps extends PageProps {}
 
 const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
-  const notify = useNotification()
   const { openModal, closeModal } = useModal()
 
   const {
@@ -99,6 +98,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     if (!moment) return
     openModal(
       <ReportModal
+        imageList={moment.images}
         content={moment.content}
         onClose={closeModal}
         onSubmit={async (reason) => {
@@ -108,6 +108,15 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       />
     )
   }, [closeModal, commonArgs, moment, openModal])
+
+  const viewImageHandler = useCallback(
+    (imageList: Array<string>, index: number) => {
+      openModal(
+        <ImageModal imageList={imageList} index={index} onClose={closeModal} />
+      )
+    },
+    [closeModal, openModal]
+  )
 
   const isLoading = useMemo(() => !moment || loading, [moment, loading])
 
@@ -123,6 +132,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
         onComment={commentHandler}
         onChat={chatHandler}
         onReport={reportMomentHandler}
+        onViewImage={viewImageHandler}
       />
     </Page>
   )
