@@ -1,16 +1,22 @@
-import { FC } from "react"
+import { FC, useMemo } from "react"
 import { Grid } from "@mui/material"
 import Image from "material-ui-image"
 
-interface ImageGridProps {
+export interface ImageGridProps {
   images: Array<string>
+  limit?: number
 }
 
-const ImageGrid: FC<ImageGridProps> = ({ images }) => {
+const ImageGrid: FC<ImageGridProps> = ({ images, limit }) => {
+  const slicedImageList = useMemo(
+    () => (limit ? images.slice(0, limit + 1) : images),
+    [images, limit]
+  )
+
   return (
     <Grid container>
-      {images.map((link) => (
-        <Grid key={link} item xs={3} sx={{ p: 1 }}>
+      {slicedImageList.map((link) => (
+        <Grid key={`${Math.random()}`} item xs={3} sx={{ p: 1 }}>
           <Image
             cover
             src={link}

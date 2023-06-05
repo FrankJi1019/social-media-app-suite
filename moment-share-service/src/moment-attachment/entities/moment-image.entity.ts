@@ -7,7 +7,9 @@ export class MomentImage extends BaseEntity {
   @Column()
   order: number;
 
-  @ManyToOne(() => Moment, (moment) => moment.images)
+  @ManyToOne(() => Moment, (moment) => moment.images, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'moment' })
   moment: Moment;
 }
