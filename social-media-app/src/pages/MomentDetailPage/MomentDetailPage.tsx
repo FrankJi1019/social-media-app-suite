@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -115,7 +116,11 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
             pb: 2
           }}
         >
-          <ImageGrid images={moment.images} />
+          <Grid container>
+            <Grid item xs={12} md={8}>
+              <ImageGrid images={moment.images} />
+            </Grid>
+          </Grid>
         </Box>
         <Box
           sx={{

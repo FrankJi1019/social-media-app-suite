@@ -15,7 +15,7 @@ const ImageGrid: FC<ImageGridProps> = ({ images, limit, onDelete }) => {
     [images, limit]
   )
 
-  const [showDeleteIcon, setShowDeleteIcon] = useState(false)
+  const [showDeleteIcon, setShowDeleteIcon] = useState(-1)
 
   return (
     <Grid container>
@@ -23,12 +23,19 @@ const ImageGrid: FC<ImageGridProps> = ({ images, limit, onDelete }) => {
         <Grid
           key={`${Math.random()}`}
           item
-          xs={3}
-          onMouseEnter={() => setShowDeleteIcon(onDelete !== undefined && true)}
-          onMouseLeave={() => setShowDeleteIcon(false)}
-          sx={{ p: 1, position: "relative" }}
+          xs={4}
+          onMouseEnter={() =>
+            setShowDeleteIcon(onDelete !== undefined ? index : -1)
+          }
+          onMouseLeave={() => setShowDeleteIcon(-1)}
+          sx={{
+            pl: index === 0 ? 0 : { xs: 0.3, md: 1 },
+            pr: index === slicedImageList.length ? 0 : { xs: 0.3, md: 1 },
+            paddingY: { xs: 0.3, md: 1 },
+            position: "relative"
+          }}
         >
-          {onDelete && showDeleteIcon && (
+          {onDelete && showDeleteIcon === index && (
             <IconButton
               onClick={() => onDelete(index)}
               sx={{

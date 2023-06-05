@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Grid,
   IconButton,
   TextField,
   Typography
@@ -141,7 +142,11 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
             ))}
           </Box>
           <Box>
-            <ImageGrid images={imageUrls} onDelete={removeFileHandler} />
+            <Grid container>
+              <Grid item xs={12} md={5}>
+                <ImageGrid images={imageUrls} onDelete={removeFileHandler} />
+              </Grid>
+            </Grid>
           </Box>
           <Box
             sx={{

@@ -1,5 +1,13 @@
 import React, { FC } from "react"
-import { Avatar, Box, Menu, MenuItem, styled, Typography } from "@mui/material"
+import {
+  Avatar,
+  Box,
+  Grid,
+  Menu,
+  MenuItem,
+  styled,
+  Typography
+} from "@mui/material"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined"
 import FavoriteIcon from "@mui/icons-material/Favorite"
@@ -104,6 +112,13 @@ const MomentCard: FC<MomentCardProps> = ({
         >
           <Typography>{content}</Typography>
         </Box>
+        <Box>
+          <Grid container>
+            <Grid item xs={12} md={5}>
+              <ImageGrid images={images} />
+            </Grid>
+          </Grid>
+        </Box>
         <Box sx={{ display: "flex", mt: 1, justifyContent: "space-between" }}>
           <Box sx={{ display: "flex" }}>
             <StandardIconText onClick={isLiked ? onUnlike : onLike}>
@@ -119,9 +134,6 @@ const MomentCard: FC<MomentCardProps> = ({
               <Typography sx={{ pl: 0.5 }}>{commentNumber}</Typography>
             </StandardIconText>
           </Box>
-        </Box>
-        <Box>
-          <ImageGrid images={images} />
         </Box>
       </Box>
     </Box>
