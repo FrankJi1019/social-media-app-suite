@@ -35,8 +35,9 @@ const ImageGrid: FC<ImageGridProps> = ({
           }
           onMouseLeave={() => setShowDeleteIcon(-1)}
           sx={{
-            pl: index === 0 ? 0 : { xs: 0.3, md: 1 },
-            pr: index === slicedImageList.length ? 0 : { xs: 0.3, md: 1 },
+            // pl: index === 0 ? 0 : { xs: 0.3, md: 1 },
+            // pr: index === slicedImageList.length ? 0 : { xs: 0.3, md: 1 },
+            pr: { xs: 1, md: 1.5 },
             paddingY: { xs: 0.3, md: 1 },
             position: "relative"
           }}
@@ -76,7 +77,12 @@ const ImageGrid: FC<ImageGridProps> = ({
                 }
               }}
             />
-            <Image cover src={link} alt={""} animationDuration={0} />
+            <Image
+              src={link}
+              alt={""}
+              animationDuration={0}
+              style={{ objectFit: "cover" }}
+            />
           </Box>
         </Grid>
       ))}
