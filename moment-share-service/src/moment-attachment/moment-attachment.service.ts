@@ -67,8 +67,4 @@ export class MomentAttachmentService extends BaseService<MomentImage> {
       file,
     );
   }
-
-  async getProfileImages() {
-    return this.s3Service.getFolderObjectKeys('profile-image/default');
-  }
 }

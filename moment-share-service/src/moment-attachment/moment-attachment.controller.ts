@@ -38,11 +38,6 @@ export class MomentAttachmentController {
     );
   }
 
-  @Get('profile-images')
-  async getProfiles() {
-    return await this.momentAttachmentService.getProfileImages();
-  }
-
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {

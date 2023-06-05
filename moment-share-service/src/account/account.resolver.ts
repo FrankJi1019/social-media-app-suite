@@ -20,7 +20,7 @@ export class AccountResolver {
 
   @Mutation('createAccount')
   async createAccount(@Args('input') { username }: CreateAccountInput) {
-    return await this.accountService.create({ username });
+    return await this.accountService.createAccount(username);
   }
 
   @ResolveField('friends')
