@@ -39,4 +39,14 @@ export class S3Service {
       })
       .promise();
   }
+
+  async getFolderObjectKeys(directory: string) {
+    const a = (
+      await this.s3
+        .listObjectsV2({ Bucket: this.bucket, Prefix: directory })
+        .promise()
+    ).Contents.map(({ Key }) => Key.substring(0, Key.lastIndexOf('.')) || Key);
+    console.log(a);
+    return a;
+  }
 }
