@@ -67,6 +67,14 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
     }
   }, [])
 
+  const removeFileHandler = useCallback(
+    (index: number) => {
+      setImageData((prev) => prev.filter((_, i) => i !== index))
+      setImageUrls((prev) => prev.filter((_, i) => i !== index))
+    },
+    [setImageData, setImageUrls]
+  )
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <StandardContainer sx={{ flex: 1 }}>
@@ -133,7 +141,7 @@ const PostMomentPage: FC<PostMomentPageProps> = ({
             ))}
           </Box>
           <Box>
-            <ImageGrid images={imageUrls} />
+            <ImageGrid images={imageUrls} onDelete={removeFileHandler} />
           </Box>
           <Box
             sx={{
