@@ -20,6 +20,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import InTextTag from "../../components/InTextTag"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import ImageGrid from "../../components/ImageGrid"
 
 export interface MomentDetailPageProps {
   moment: Moment
@@ -99,20 +100,22 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
             </Typography>
           </Box>
         </Box>
-        <Box
-          sx={{
-            marginY: 2,
-            paddingY: 2,
-            borderBottom: "1px solid",
-            borderColor: "grey.A400"
-          }}
-        >
+        <Box sx={{ marginY: 2 }}>
           <Typography>
             {moment.content}{" "}
             {moment.tags.map(({ id, name }) => (
               <InTextTag key={id} name={name} />
             ))}
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            borderBottom: "1px solid",
+            borderColor: "grey.A400",
+            pb: 2
+          }}
+        >
+          <ImageGrid images={moment.images} />
         </Box>
         <Box
           sx={{

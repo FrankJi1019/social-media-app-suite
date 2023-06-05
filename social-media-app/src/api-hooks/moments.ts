@@ -14,6 +14,10 @@ import { utcTimestampToDate } from "../utils/time"
 import { Character } from "../types/character"
 import { useAuth } from "../providers/CognitoAuthProvider"
 import { Account } from "../types/account"
+import { useMutation as useRestMutation } from "react-query"
+import axios from "axios"
+
+const REST_BASE_URL = process.env.REACT_APP_REST_URL as string
 
 export const useFetchAllMoments = (input?: {
   category?: string
@@ -97,19 +101,69 @@ export const useLazyFetchMomentById = () => {
   return { fetch: fetchMoment, loading, data, error, called }
 }
 
+// todo add images
 export const usePostMomentMutation = () => {
   const [mutate, { loading }] = useMutation(POST_MOMENT_MUTATION)
-  const postMoment = async (input: {
-    username: string
-    character: string
-    content: string
-    tags: Array<string>
-  }): Promise<string> => {
-    const { data } = await mutate({
-      variables: { input }
-    })
-    return data.createMoment.id
-  }
+
+  //GraphQL Call
+  const postMomentData = useCallback(
+    async (input: {
+      username: string
+      character: string
+      content: string
+      tags: Array<string>
+    }): Promise<string> => {
+      const { data } = await mutate({
+        variables: { input }
+      })
+      return data.createMoment.id
+    },
+    [mutate]
+  )
+
+  // REST Call
+  const { mutateAsync: postMomentImages } = useRestMutation(
+    async ({
+      momentId,
+      images
+    }: {
+      momentId: string
+      images: Array<FormData>
+    }) => {
+      const postImagePromise = images.map((image, index) => {
+        return axios.post(
+          `${REST_BASE_URL}/moments/${momentId}/images/${index}`,
+          image
+        )
+      })
+      await Promise.all(postImagePromise)
+    }
+  )
+  const postMoment = useCallback(
+    async ({
+      username,
+      character,
+      content,
+      tags,
+      images
+    }: {
+      username: string
+      character: string
+      content: string
+      tags: Array<string>
+      images: Array<FormData>
+    }) => {
+      const momentId = await postMomentData({
+        username,
+        character,
+        content,
+        tags
+      })
+      await postMomentImages({ momentId, images })
+      return momentId
+    },
+    [postMomentData, postMomentImages]
+  )
   return { mutate: postMoment, loading }
 }
 
