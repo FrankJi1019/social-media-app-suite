@@ -18,7 +18,8 @@ export const themeData = {
       primary: "#EEF2F7",
       secondary: "#FFFFFF",
       shadow: "#959DA544",
-      pure: "#FFFFFF"
+      pure: "#FFFFFF",
+      oppositePure: "#000000"
     }
   },
   components: {

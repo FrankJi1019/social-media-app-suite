@@ -10,25 +10,26 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open }) => {
     <Modal open={open}>
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          p: 2,
-          width: {
-            xs: "90%",
-            md: "50%"
-          },
-          maxHeight: {
-            xs: "90%",
-            md: "50%"
-          },
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "primary.extraLight",
-          border: "3px solid",
-          borderColor: "primary.main",
-          borderRadius: "15px",
-          "& div.MuiBox-root": {
-            marginY: 0
+          "&>div": {
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            width: {
+              xs: "90%",
+              md: "50%"
+            },
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "primary.extraLight",
+            border: "3px solid",
+            borderColor: "primary.main",
+            borderRadius: "15px",
+            "& div.MuiBox-root": {
+              marginY: 0
+            },
+            overflow: "hidden"
           }
         }}
       >

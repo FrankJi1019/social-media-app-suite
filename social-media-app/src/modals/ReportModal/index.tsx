@@ -17,7 +17,10 @@ const ReportModal: FC<ReportModalProps> = ({ content, onClose, onSubmit }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "100%"
+        maxHeight: {
+          xs: "90%",
+          md: "50%"
+        }
       }}
     >
       <Box>

@@ -31,6 +31,7 @@ export interface MomentDetailPageProps {
   onComment: (comment: string) => void
   onChat: (momentAuthorUsername: string, momentAuthorCharacter: string) => void
   onReport: () => void
+  onViewImage: (imageList: Array<string>, index: number) => void
 }
 
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
@@ -40,7 +41,8 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
   onLike,
   onComment,
   onChat,
-  onReport
+  onReport,
+  onViewImage
 }) => {
   const [comment, setComment] = useState("")
   const [anchorPos, setAnchorPos] = React.useState<null | HTMLElement>(null)
@@ -118,7 +120,12 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
         >
           <Grid container>
             <Grid item xs={12} md={8}>
-              <ImageGrid images={moment.images} />
+              <ImageGrid
+                images={moment.images}
+                onClick={(index) => {
+                  onViewImage(moment.images, index)
+                }}
+              />
             </Grid>
           </Grid>
         </Box>
