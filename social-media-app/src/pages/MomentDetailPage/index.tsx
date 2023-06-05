@@ -98,6 +98,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     if (!moment) return
     openModal(
       <ReportModal
+        imageList={moment.images}
         content={moment.content}
         onClose={closeModal}
         onSubmit={async (reason) => {

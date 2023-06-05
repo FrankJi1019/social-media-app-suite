@@ -120,6 +120,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
       const data = await fetchMoment(id)
       openModal(
         <ReportModal
+          imageList={data.images}
           content={data.content}
           onClose={closeModal}
           onSubmit={async (reason) => {
