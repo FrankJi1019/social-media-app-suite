@@ -189,7 +189,11 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
         <Box sx={{ mt: 7 }}>
           {moment.comments.map((comment) => (
             <Box key={comment.id} sx={{ mb: 2 }}>
-              <Comment {...comment} character={comment.character.name} />
+              <Comment
+                {...comment}
+                character={comment.character.name}
+                isAuthor={comment.account.username === moment.account.username}
+              />
             </Box>
           ))}
         </Box>

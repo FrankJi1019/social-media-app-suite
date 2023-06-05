@@ -15,6 +15,7 @@ import moment from "moment"
 import { MomentBrief } from "../../types/moment"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import ImageGrid from "../ImageGrid"
+import IsMeTag from "../IsMeTag"
 
 export interface MomentCardProps {
   moment: MomentBrief
@@ -92,7 +93,7 @@ const MomentCard: FC<MomentCardProps> = ({
           sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
         >
           <Typography variant={"h6"} sx={{ fontWeight: "bold", mr: 1 }}>
-            {character.name} {isOwnMoment && "(Me)"}
+            {character.name} {isOwnMoment && <IsMeTag />}
           </Typography>
           <Typography color={"grey"}>
             {moment(postDate).format("HH:mm DD MMM")}
