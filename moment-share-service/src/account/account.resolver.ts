@@ -27,4 +27,9 @@ export class AccountResolver {
   async findFriends(@Parent() { username }: { username: string }) {
     return await this.accountService.findAllFriends(username);
   }
+
+  @ResolveField('profileImage')
+  async findProfileImageUrl(@Parent() { id }: { id: number }) {
+    return await this.accountService.findProfileImage(id);
+  }
 }

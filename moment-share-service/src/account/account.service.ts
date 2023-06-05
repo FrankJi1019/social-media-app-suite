@@ -34,4 +34,12 @@ export class AccountService extends BaseService<Account> {
       profileS3ObjectKey: pickRandomElement(profileImageKeys),
     });
   }
+
+  async findProfileImage(id: number) {
+    return await this.s3Service.getObjectSignedUrl(
+      (
+        await this.findById(id)
+      ).profileS3ObjectKey,
+    );
+  }
 }
