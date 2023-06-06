@@ -14,6 +14,7 @@ import { useCreateCommentMutation } from "../../api-hooks/comment"
 import { useModal } from "../../providers/ModalProvider"
 import ReportModal from "../../modals/ReportModal"
 import ImageModal from "../../modals/ImageModal"
+import { useFetchAccount } from "../../api-hooks/account"
 
 interface MomentDetailPageProps extends PageProps {}
 
@@ -21,6 +22,8 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
   const { getCurrentUser, signOut } = useAuth()
   const { openModal, closeModal } = useModal()
+
+  const { data: user } = useFetchAccount(getCurrentUser()?.Username || "")
 
   const {
     data: moment,
@@ -125,6 +128,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   return (
     <Page {...commonArgs} onSignOut={signOutHandler}>
       <MomentDetailPage
+        userProfile={user?.profileImage || ""}
         moment={moment!}
         onBack={goBackHandler}
         onLike={likeMomentHandler}

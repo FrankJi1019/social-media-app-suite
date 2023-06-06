@@ -15,7 +15,6 @@ import { Moment } from "../../types/moment"
 import momentFormatter from "moment"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 // @ts-ignore
-import profilePlaceholder from "../../assets/placeholders/profile-placeholder.jpg"
 import Comment from "../../components/Comment"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
@@ -24,6 +23,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import ImageGrid from "../../components/ImageGrid"
 
 export interface MomentDetailPageProps {
+  userProfile: string
   moment: Moment
   onBack: () => void
   onLike: () => void
@@ -35,6 +35,7 @@ export interface MomentDetailPageProps {
 }
 
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
+  userProfile,
   moment,
   onBack,
   onUnlike,
@@ -91,7 +92,7 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
           </Box>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src={moment.profile} sx={{ mr: 1 }} />
+          <Avatar src={moment.account.profileImage} sx={{ mr: 1 }} />
           <Box
             sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
           >
@@ -191,13 +192,14 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               />
             </form>
           </Box>
-          <Avatar src={profilePlaceholder} />
+          <Avatar src={userProfile} />
         </Box>
         <Box sx={{ mt: 7 }}>
           {moment.comments.map((comment) => (
             <Box key={comment.id} sx={{ mb: 2 }}>
               <Comment
                 {...comment}
+                profile={comment.account.profileImage}
                 character={comment.character.name}
                 isAuthor={comment.account.username === moment.account.username}
               />

@@ -59,6 +59,7 @@ const moment = {
 export const General = {
   render,
   args: {
+    userProfile: profile,
     moment,
     onBack: FUNCTION_PLACE_HOLDER,
     onUnlike: FUNCTION_PLACE_HOLDER,
