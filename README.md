@@ -36,4 +36,4 @@ One of the unique features of IncognitoNet is the random nickname assigned to ea
 
 ## Tech Stacks
 
-IncognitoNet is a social media platform that uses cutting-edge technologies to provide users with a fast, reliable, and secure experience. The app is built using **React** and **TypeScript** on the front end, **Nest** and **TypeScript** on the back end, **GraphQL** for seamless communication between the client and server, **AWS Cognito** for user authentication, and **TypeORM** for (PostgreSQL) database integration.
+IncognitoNet is a social media platform that uses cutting-edge technologies to provide users with a fast, reliable, and secure experience. The app is built using **React** and **TypeScript** on the front end, **Nest** and **TypeScript** on the back end, **GraphQL** for seamless communication between the client and server, **AWS S3** for image storage, **AWS Cognito** for user authentication, and **TypeORM** for (PostgreSQL) database integration.
