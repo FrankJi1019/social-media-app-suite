@@ -76,6 +76,7 @@ export interface Account {
     username?: Nullable<string>;
     createdAt?: Nullable<string>;
     friends?: Nullable<Friendship[]>;
+    profileImage: string;
 }
 
 export interface Category {

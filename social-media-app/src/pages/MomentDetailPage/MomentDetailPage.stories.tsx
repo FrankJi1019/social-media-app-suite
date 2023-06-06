@@ -59,7 +59,9 @@ const moment = {
 export const General = {
   render,
   args: {
+    userProfile: profile,
     moment,
+    showSubmenu: true,
     onBack: FUNCTION_PLACE_HOLDER,
     onUnlike: FUNCTION_PLACE_HOLDER,
     onLike: FUNCTION_PLACE_HOLDER,

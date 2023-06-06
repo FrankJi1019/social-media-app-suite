@@ -3,6 +3,7 @@ type Account {
   username: String
   createdAt: String
   friends: [Friendship!]
+  profileImage: String!
 }
 
 input CreateAccountInput {

@@ -20,6 +20,7 @@ import { MomentAttachmentModule } from './moment-attachment/moment-attachment.mo
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
+import { AccountAttachmentModule } from './account-attachment/account-attachment.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { S3 } from 'aws-sdk';
     ChatModule,
     ReportModule,
     MomentAttachmentModule,
+    AccountAttachmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
