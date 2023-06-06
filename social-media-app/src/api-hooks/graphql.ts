@@ -202,6 +202,7 @@ export const ACCOUNT_BY_USERNAME_QUERY = gql`
   query GetAccount($username: String!) {
     account(username: $username) {
       id
+      username
       profileImage
     }
   }

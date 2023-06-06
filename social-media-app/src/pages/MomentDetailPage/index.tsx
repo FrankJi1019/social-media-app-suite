@@ -128,6 +128,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   return (
     <Page {...commonArgs} onSignOut={signOutHandler}>
       <MomentDetailPage
+        showSubmenu={user?.username !== moment?.account.username}
         userProfile={user?.profileImage || ""}
         moment={moment!}
         onBack={goBackHandler}

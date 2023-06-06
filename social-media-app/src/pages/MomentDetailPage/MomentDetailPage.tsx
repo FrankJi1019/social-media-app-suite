@@ -25,6 +25,7 @@ import ImageGrid from "../../components/ImageGrid"
 export interface MomentDetailPageProps {
   userProfile: string
   moment: Moment
+  showSubmenu: boolean
   onBack: () => void
   onLike: () => void
   onUnlike: () => void
@@ -37,6 +38,7 @@ export interface MomentDetailPageProps {
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
   userProfile,
   moment,
+  showSubmenu,
   onBack,
   onUnlike,
   onLike,
@@ -61,35 +63,37 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               BACK
             </Button>
           </Box>
-          <Box>
-            <IconButton onClick={(e) => setAnchorPos(e.currentTarget)}>
-              <MoreHorizIcon sx={{ color: "grey.A400" }} />
-            </IconButton>
-            <Menu
-              open={Boolean(anchorPos)}
-              onClose={() => {
-                setAnchorPos(null)
-              }}
-              anchorEl={anchorPos}
-            >
-              <MenuItem
-                onClick={() => {
-                  onChat(moment.account.username, moment.character.name)
+          {showSubmenu && (
+            <Box>
+              <IconButton onClick={(e) => setAnchorPos(e.currentTarget)}>
+                <MoreHorizIcon sx={{ color: "grey.A400" }} />
+              </IconButton>
+              <Menu
+                open={Boolean(anchorPos)}
+                onClose={() => {
                   setAnchorPos(null)
                 }}
+                anchorEl={anchorPos}
               >
-                <Typography>Chat</Typography>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onReport()
-                  setAnchorPos(null)
-                }}
-              >
-                <Typography>Report</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+                <MenuItem
+                  onClick={() => {
+                    onChat(moment.account.username, moment.character.name)
+                    setAnchorPos(null)
+                  }}
+                >
+                  <Typography>Chat</Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onReport()
+                    setAnchorPos(null)
+                  }}
+                >
+                  <Typography>Report</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar src={moment.account.profileImage} sx={{ mr: 1 }} />
