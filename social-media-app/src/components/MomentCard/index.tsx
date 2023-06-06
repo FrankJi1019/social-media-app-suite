@@ -36,7 +36,8 @@ const MomentCard: FC<MomentCardProps> = ({
     character,
     isLiked,
     isOwnMoment,
-    images
+    images,
+    account
   },
   onLike,
   onOpen,
@@ -86,7 +87,7 @@ const MomentCard: FC<MomentCardProps> = ({
         </Box>
       )}
       <Box sx={{ mr: 1 }}>
-        <Avatar src={profile} />
+        <Avatar src={account.profileImage} />
       </Box>
       <Box sx={{ flex: 1 }}>
         <Box

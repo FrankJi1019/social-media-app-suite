@@ -6,6 +6,7 @@ export const ALL_MOMENTS_QUERY = gql`
       id
       account {
         username
+        profileImage
       }
       character {
         name
@@ -26,6 +27,7 @@ export const MOMENT_BY_ID_QUERY = gql`
       id
       account {
         username
+        profileImage
       }
       character {
         name
@@ -44,6 +46,7 @@ export const MOMENT_BY_ID_QUERY = gql`
         }
         account {
           username
+          profileImage
         }
       }
       tags {
@@ -177,6 +180,7 @@ export const FETCH_FRIENDS_BY_USER = gql`
       friends {
         friendAccount {
           username
+          profileImage
         }
         friendCharacter {
           name
@@ -190,6 +194,16 @@ export const REPORT_MOMENT_MUTATION = gql`
   mutation CreateReport($input: ReportMomentInput!) {
     reportMoment(input: $input) {
       id
+    }
+  }
+`
+
+export const ACCOUNT_BY_USERNAME_QUERY = gql`
+  query GetAccount($username: String!) {
+    account(username: $username) {
+      id
+      username
+      profileImage
     }
   }
 `

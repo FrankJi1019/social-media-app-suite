@@ -15,7 +15,6 @@ import { Moment } from "../../types/moment"
 import momentFormatter from "moment"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 // @ts-ignore
-import profilePlaceholder from "../../assets/placeholders/profile-placeholder.jpg"
 import Comment from "../../components/Comment"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
@@ -24,7 +23,9 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import ImageGrid from "../../components/ImageGrid"
 
 export interface MomentDetailPageProps {
+  userProfile: string
   moment: Moment
+  showSubmenu: boolean
   onBack: () => void
   onLike: () => void
   onUnlike: () => void
@@ -35,7 +36,9 @@ export interface MomentDetailPageProps {
 }
 
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
+  userProfile,
   moment,
+  showSubmenu,
   onBack,
   onUnlike,
   onLike,
@@ -60,38 +63,40 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               BACK
             </Button>
           </Box>
-          <Box>
-            <IconButton onClick={(e) => setAnchorPos(e.currentTarget)}>
-              <MoreHorizIcon sx={{ color: "grey.A400" }} />
-            </IconButton>
-            <Menu
-              open={Boolean(anchorPos)}
-              onClose={() => {
-                setAnchorPos(null)
-              }}
-              anchorEl={anchorPos}
-            >
-              <MenuItem
-                onClick={() => {
-                  onChat(moment.account.username, moment.character.name)
+          {showSubmenu && (
+            <Box>
+              <IconButton onClick={(e) => setAnchorPos(e.currentTarget)}>
+                <MoreHorizIcon sx={{ color: "grey.A400" }} />
+              </IconButton>
+              <Menu
+                open={Boolean(anchorPos)}
+                onClose={() => {
                   setAnchorPos(null)
                 }}
+                anchorEl={anchorPos}
               >
-                <Typography>Chat</Typography>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onReport()
-                  setAnchorPos(null)
-                }}
-              >
-                <Typography>Report</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+                <MenuItem
+                  onClick={() => {
+                    onChat(moment.account.username, moment.character.name)
+                    setAnchorPos(null)
+                  }}
+                >
+                  <Typography>Chat</Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onReport()
+                    setAnchorPos(null)
+                  }}
+                >
+                  <Typography>Report</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src={moment.profile} sx={{ mr: 1 }} />
+          <Avatar src={moment.account.profileImage} sx={{ mr: 1 }} />
           <Box
             sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
           >
@@ -191,13 +196,14 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               />
             </form>
           </Box>
-          <Avatar src={profilePlaceholder} />
+          <Avatar src={userProfile} />
         </Box>
         <Box sx={{ mt: 7 }}>
           {moment.comments.map((comment) => (
             <Box key={comment.id} sx={{ mb: 2 }}>
               <Comment
                 {...comment}
+                profile={comment.account.profileImage}
                 character={comment.character.name}
                 isAuthor={comment.account.username === moment.account.username}
               />

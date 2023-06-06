@@ -12,6 +12,9 @@ export class Account extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
+  @Column()
+  profileS3ObjectKey: string;
+
   @OneToMany(() => Moment, (moment) => moment.account)
   moments: Array<Moment>;
 

@@ -20,11 +20,16 @@ export class AccountResolver {
 
   @Mutation('createAccount')
   async createAccount(@Args('input') { username }: CreateAccountInput) {
-    return await this.accountService.create({ username });
+    return await this.accountService.createAccount(username);
   }
 
   @ResolveField('friends')
   async findFriends(@Parent() { username }: { username: string }) {
     return await this.accountService.findAllFriends(username);
+  }
+
+  @ResolveField('profileImage')
+  async findProfileImageUrl(@Parent() { id }: { id: number }) {
+    return await this.accountService.findProfileImage(id);
   }
 }

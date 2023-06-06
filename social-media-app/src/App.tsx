@@ -23,6 +23,7 @@ import {
 import { usePersistentSubscribe } from "./providers/MessagingSocketProvider"
 import { useFetchAllCharacters } from "./api-hooks/characters"
 import { useReportMomentMutation } from "./api-hooks/report"
+import { useFetchAccount } from "./api-hooks/account"
 
 const PublicRouter = () => {
   const { getCurrentUser } = useAuth()
@@ -31,6 +32,7 @@ const PublicRouter = () => {
   const { pathname } = useLocation()
 
   const { data: characterList } = useFetchAllCharacters()
+  const { data: account } = useFetchAccount(getCurrentUser()?.Username || "")
 
   const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
   const { mutate: reportMoment } = useReportMomentMutation()
@@ -150,6 +152,7 @@ const PublicRouter = () => {
   const commonArgs = useMemo(
     () =>
       ({
+        account,
         user: getCurrentUser(),
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
@@ -160,6 +163,7 @@ const PublicRouter = () => {
         onReportMoment: reportMomentHandler
       } as PageProps),
     [
+      account,
       getCurrentUser,
       navigateLoginHandler,
       navigateRegisterHandler,

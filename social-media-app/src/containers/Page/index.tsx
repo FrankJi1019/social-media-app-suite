@@ -3,7 +3,6 @@ import { Box, Grid, IconButton, SxProps } from "@mui/material"
 import StandardContainer from "./../StandardContainer"
 import { User } from "../../providers/CognitoAuthProvider"
 // @ts-ignore
-import profile from "../../assets/placeholders/profile-placeholder.jpg"
 import AuthBlock from "../../components/AuthBlock"
 import HomeIcon from "@mui/icons-material/Home"
 import TextsmsIcon from "@mui/icons-material/Textsms"
@@ -11,10 +10,12 @@ import ControlPointIcon from "@mui/icons-material/ControlPoint"
 import PersonIcon from "@mui/icons-material/Person"
 import { Friendship } from "../../types/friend"
 import UserAvatar from "../../components/UserAvatar"
+import { Account } from "../../types/account"
 
 export interface PageProps {
   children?: ReactNode
   user?: User
+  account?: Account
   title?: string
   sx?: SxProps
   loading?: boolean
@@ -30,6 +31,7 @@ export interface PageProps {
 }
 
 const Page: FC<PageProps> = ({
+  account,
   user,
   title = "[IncognitoNet]",
   friends = [],
@@ -84,10 +86,13 @@ const Page: FC<PageProps> = ({
       return (
         <Box>
           {friends?.map(
-            ({ friendAccount: { username }, friendCharacter: { name } }) => (
+            ({
+              friendAccount: { username, profileImage },
+              friendCharacter: { name }
+            }) => (
               <Box key={username} sx={{ pb: 2 }}>
                 <UserAvatar
-                  profile={profile}
+                  profile={profileImage}
                   name={name}
                   onClick={() => onFriendAvatarClick(username)}
                 />
@@ -125,7 +130,7 @@ const Page: FC<PageProps> = ({
             avatarOptions={
               user && {
                 name: user.Username as string,
-                profile,
+                profile: account?.profileImage || "",
                 avatarStyle: "rounded",
                 reverseAlign: false
               }
@@ -137,10 +142,13 @@ const Page: FC<PageProps> = ({
         </Box>
         <Box sx={{ p: 2 }}>
           {friends?.map(
-            ({ friendAccount: { username }, friendCharacter: { name } }) => (
+            ({
+              friendAccount: { username, profileImage },
+              friendCharacter: { name }
+            }) => (
               <Box key={username} sx={{ pb: 2 }}>
                 <UserAvatar
-                  profile={profile}
+                  profile={profileImage}
                   name={name}
                   onClick={() => onFriendAvatarClick(username)}
                 />
@@ -226,7 +234,7 @@ const Page: FC<PageProps> = ({
               avatarOptions={
                 user && {
                   name: user.Username as string,
-                  profile,
+                  profile: account?.profileImage || "",
                   avatarStyle: "rounded",
                   reverseAlign: true
                 }
