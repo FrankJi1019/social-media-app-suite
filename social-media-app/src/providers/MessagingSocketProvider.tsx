@@ -26,7 +26,19 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
   socketUrl,
   children
 }) => {
-  const socketRef = useRef(io(socketUrl, { autoConnect: false }))
+  const { getAccessTokenWithoutRefresh } = useAuth()
+  const socketRef = useRef(
+    io(socketUrl, {
+      autoConnect: false,
+      transportOptions: {
+        polling: {
+          extraHeaders: {
+            Authorization: `Bearer ${getAccessTokenWithoutRefresh()}`
+          }
+        }
+      }
+    })
+  )
   const { getCurrentUser } = useAuth()
 
   const disconnectSocketServer = useCallback(() => {
