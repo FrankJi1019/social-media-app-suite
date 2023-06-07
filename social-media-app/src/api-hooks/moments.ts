@@ -104,6 +104,7 @@ export const useLazyFetchMomentById = () => {
 export const usePostMomentMutation = () => {
   const [mutate] = useMutation(POST_MOMENT_MUTATION)
   const [loading, setLoading] = useState(false)
+  const { getAccessTokenWithoutRefresh } = useAuth()
   const postMomentData = useCallback(
     async (input: {
       username: string
@@ -127,9 +128,15 @@ export const usePostMomentMutation = () => {
       images: Array<FormData>
     }) => {
       const postImagePromise = images.map((image, index) => {
+        const token = getAccessTokenWithoutRefresh()
         return axios.post(
           `${REST_BASE_URL}/moments/${momentId}/images/${index}`,
-          image
+          image,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         )
       })
       await Promise.all(postImagePromise)

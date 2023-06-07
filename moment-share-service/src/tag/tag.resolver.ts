@@ -8,6 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { TagService } from './tag.service';
 import { CreateTagInput } from './dto/create-tag.input';
+import { UseGuards } from '@nestjs/common';
+import { GraphqlJwtGuard } from '../guards/graphql-jwt.guard';
 
 @Resolver('Tag')
 export class TagResolver {
@@ -17,6 +19,7 @@ export class TagResolver {
     return this.tagService.findAll();
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @Mutation('createTag')
   createTag(@Args('input') input: CreateTagInput) {
     return this.tagService.createTag(input.name, input.category);

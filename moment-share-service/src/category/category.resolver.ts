@@ -8,6 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { CategoryService } from './category.service';
 import { CreateCategoryInput } from './dto/create-category.input';
+import { UseGuards } from '@nestjs/common';
+import { GraphqlJwtGuard } from '../guards/graphql-jwt.guard';
 
 @Resolver('Category')
 export class CategoryResolver {
@@ -18,6 +20,7 @@ export class CategoryResolver {
     return this.categoryService.findAll();
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @Mutation('createCategory')
   createCategory(@Args('input') input: CreateCategoryInput) {
     return this.categoryService.create({
