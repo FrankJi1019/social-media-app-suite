@@ -13,6 +13,8 @@ import { HealthCheckDto } from './dto/health-check.dto';
 import { MessageSentDto } from './dto/message-sent.dto';
 import { SocketMapping } from '../types/socket';
 import { RegisterClientDto } from './dto/register-client.dto';
+import { UseGuards } from '@nestjs/common';
+import { WsJwtGuard } from '../guards/ws-jwt.guard';
 
 @WebSocketGateway({ cors: true })
 export class MessagingGateway
@@ -63,11 +65,13 @@ export class MessagingGateway
     }
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('message-sent')
   async handleMessageSent(
     @MessageBody() data: MessageSentDto,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log(data);
     const chat = await this.messagingService.handleMessageSent(
       data.senderUsername,
       data.receiverUsername,

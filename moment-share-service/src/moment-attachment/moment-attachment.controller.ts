@@ -4,11 +4,13 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { MomentAttachmentService } from './moment-attachment.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RestJwtGuard } from '../guards/rest-jwt.guard';
 
 @ApiTags('Moments')
 @Controller('moments')
@@ -52,6 +54,7 @@ export class MomentAttachmentController {
       },
     },
   })
+  @UseGuards(RestJwtGuard)
   @Post(':id/images/:order')
   @UseInterceptors(FileInterceptor('file'))
   async findAll(

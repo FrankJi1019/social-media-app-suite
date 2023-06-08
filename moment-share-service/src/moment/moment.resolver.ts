@@ -37,16 +37,19 @@ export class MomentResolver {
     return await this.momentService.createMoment(input);
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @Mutation('deleteMoment')
   async delete(@Args('id') id: number) {
     return await this.momentService.deleteById(id);
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @Mutation('likeMoment')
   async like(@Args('input') { momentId, username }: LikeAndUnlikeMomentInput) {
     return await this.momentService.likeMoment(momentId, username);
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @Mutation('unlikeMoment')
   async unlike(
     @Args('input') { momentId, username }: LikeAndUnlikeMomentInput,
@@ -69,6 +72,7 @@ export class MomentResolver {
     return this.momentService.findCommentNumberByMomentId(id);
   }
 
+  @UseGuards(GraphqlJwtGuard)
   @ResolveField('isLiked')
   async isLiked(@Context() context, @Parent() { id }: { id: number }) {
     const user = context.req.user;

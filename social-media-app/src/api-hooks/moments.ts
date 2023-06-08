@@ -28,7 +28,7 @@ export const useFetchAllMoments = (input?: {
     variables: { input }
   })
 
-  const { getCurrentUser } = useAuth()
+  const { currentUser } = useAuth()
   const moments: Array<MomentBrief> = useMemo(() => {
     if (!data || loading) return []
 
@@ -46,13 +46,13 @@ export const useFetchAllMoments = (input?: {
       }) => {
         return {
           ...moment,
-          isOwnMoment: getCurrentUser()?.Username === moment.account.username,
+          isOwnMoment: currentUser?.Username === moment.account.username,
           profile: profilePlaceholder,
           postDate: utcTimestampToDate(Number(moment.createdAt))
         } as MomentBrief
       }
     )
-  }, [data, loading, getCurrentUser])
+  }, [data, loading, currentUser])
   return { data: moments, loading, error, reFetch: refetch }
 }
 
@@ -61,7 +61,7 @@ export const useFetchMomentById = (id: string) => {
     variables: { id }
   })
 
-  const { getCurrentUser } = useAuth()
+  const { currentUser } = useAuth()
   const moment: Moment | undefined = useMemo(() => {
     return (
       data &&
@@ -74,13 +74,12 @@ export const useFetchMomentById = (id: string) => {
             ...comment,
             commentDate: utcTimestampToDate(Number(comment.createdAt)),
             profile: profilePlaceholder,
-            isOwnComment:
-              getCurrentUser()?.Username === comment.account.username
+            isOwnComment: currentUser?.Username === comment.account.username
           })
         )
       } as Moment)
     )
-  }, [data, getCurrentUser])
+  }, [data, currentUser])
 
   return { data: moment, loading, error, reFetch: refetch }
 }
@@ -104,6 +103,7 @@ export const useLazyFetchMomentById = () => {
 export const usePostMomentMutation = () => {
   const [mutate] = useMutation(POST_MOMENT_MUTATION)
   const [loading, setLoading] = useState(false)
+  const { getAccessTokenWithoutRefresh } = useAuth()
   const postMomentData = useCallback(
     async (input: {
       username: string
@@ -127,9 +127,15 @@ export const usePostMomentMutation = () => {
       images: Array<FormData>
     }) => {
       const postImagePromise = images.map((image, index) => {
+        const token = getAccessTokenWithoutRefresh()
         return axios.post(
           `${REST_BASE_URL}/moments/${momentId}/images/${index}`,
-          image
+          image,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         )
       })
       await Promise.all(postImagePromise)

@@ -26,13 +26,13 @@ import { useReportMomentMutation } from "./api-hooks/report"
 import { useFetchAccount } from "./api-hooks/account"
 
 const PublicRouter = () => {
-  const { getCurrentUser } = useAuth()
+  const { currentUser } = useAuth()
   const navigate = useNavigate()
   const notify = useNotification()
   const { pathname } = useLocation()
 
   const { data: characterList } = useFetchAllCharacters()
-  const { data: account } = useFetchAccount(getCurrentUser()?.Username || "")
+  const { data: account } = useFetchAccount(currentUser?.Username || "")
 
   const { mutate: findOrCreateFriendship } = useFindOrCreateFriendshipMutation()
   const { mutate: reportMoment } = useReportMomentMutation()
@@ -80,13 +80,13 @@ const PublicRouter = () => {
   }, [navigate, pathname])
 
   const { data: friends, reFetch: reFetchFriends } = useFetchFriends(
-    getCurrentUser()?.Username as string
+    currentUser?.Username as string
   )
 
   const chatHandler = useCallback(
     async (friendUsername: string) => {
       if (characterList.length === 0) return
-      const username = getCurrentUser()?.Username
+      const username = currentUser?.Username
       if (!username) {
         notify("Please login first", {
           buttonOptions: [
@@ -115,7 +115,7 @@ const PublicRouter = () => {
     [
       characterList.length,
       findOrCreateFriendship,
-      getCurrentUser,
+      currentUser,
       navigate,
       notify,
       pathname
@@ -124,7 +124,7 @@ const PublicRouter = () => {
 
   const reportMomentHandler = useCallback(
     async (momentId: string, reason: string) => {
-      const user = getCurrentUser()
+      const user = currentUser
       if (!user) {
         notifyLoginOrRegister()
       } else {
@@ -136,7 +136,7 @@ const PublicRouter = () => {
         notify("Thank you for reporting. We will review the post promptly.")
       }
     },
-    [getCurrentUser, notify, notifyLoginOrRegister, reportMoment]
+    [currentUser, notify, notifyLoginOrRegister, reportMoment]
   )
 
   usePersistentSubscribe(
@@ -153,7 +153,7 @@ const PublicRouter = () => {
     () =>
       ({
         account,
-        user: getCurrentUser(),
+        user: currentUser,
         onLogin: navigateLoginHandler,
         onRegister: navigateRegisterHandler,
         friends,
@@ -164,7 +164,7 @@ const PublicRouter = () => {
       } as PageProps),
     [
       account,
-      getCurrentUser,
+      currentUser,
       navigateLoginHandler,
       navigateRegisterHandler,
       friends,

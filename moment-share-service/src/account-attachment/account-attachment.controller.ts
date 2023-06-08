@@ -4,10 +4,12 @@ import {
   UseInterceptors,
   UploadedFile,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { AccountAttachmentService } from './account-attachment.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RestJwtGuard } from '../guards/rest-jwt.guard';
 
 @ApiTags('Accounts')
 @Controller('account-attachment')
@@ -30,6 +32,7 @@ export class AccountAttachmentController {
       },
     },
   })
+  @UseGuards(RestJwtGuard)
   @Post('default/:id')
   @UseInterceptors(FileInterceptor('file'))
   async uploadProfileImage(
