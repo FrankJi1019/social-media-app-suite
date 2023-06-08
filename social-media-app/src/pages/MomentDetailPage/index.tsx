@@ -10,7 +10,10 @@ import {
 import { Box } from "@mui/material"
 import { useAuth } from "../../providers/CognitoAuthProvider"
 import { useFetchAllCharacters } from "../../api-hooks/characters"
-import { useCreateCommentMutation } from "../../api-hooks/comment"
+import {
+  useCreateCommentMutation,
+  useFetchCommentsByMoment
+} from "../../api-hooks/comment"
 import { useModal } from "../../providers/ModalProvider"
 import ReportModal from "../../modals/ReportModal"
 import ImageModal from "../../modals/ImageModal"
@@ -31,6 +34,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     reFetch: reFetchMoment
   } = useFetchMomentById(id as string)
   const { data: characterList } = useFetchAllCharacters()
+  const { data: comments } = useFetchCommentsByMoment(id as string)
 
   const { mutate: likeMoment } = useLikeMomentMutation()
   const { mutate: unlikeMoment } = useUnlikeMomentMutation()
@@ -131,6 +135,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
         showSubmenu={user?.username !== moment?.account.username}
         userProfile={user?.profileImage || ""}
         moment={moment!}
+        comments={comments}
         onBack={goBackHandler}
         onLike={likeMomentHandler}
         onUnlike={unlikeMomentHandler}

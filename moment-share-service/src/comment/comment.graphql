@@ -13,3 +13,7 @@ input CreateCommentInput {
   content: String!
   momentId: String!
 }
+
+input QueryCommentInput {
+  momentId: String!
+}

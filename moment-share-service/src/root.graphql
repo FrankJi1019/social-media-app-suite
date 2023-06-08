@@ -1,6 +1,7 @@
 type Query {
   moments(input: FilterMomentInput): [Moment!]
   moment(id: ID!): Moment!
+  comments(input: QueryCommentInput!): [Comment!]!
   characters: [Character!]
   categories: [Category!]
   tags: [Tag!]

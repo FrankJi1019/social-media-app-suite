@@ -14,17 +14,18 @@ import StandardContainer from "../../containers/StandardContainer"
 import { Moment } from "../../types/moment"
 import momentFormatter from "moment"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
-// @ts-ignore
 import Comment from "../../components/Comment"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import InTextTag from "../../components/InTextTag"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import ImageGrid from "../../components/ImageGrid"
+import { Comment as CommentType } from "../../types/comment"
 
 export interface MomentDetailPageProps {
   userProfile: string
   moment: Moment
+  comments: Array<CommentType>
   showSubmenu: boolean
   onBack: () => void
   onLike: () => void
@@ -38,6 +39,7 @@ export interface MomentDetailPageProps {
 const MomentDetailPage: FC<MomentDetailPageProps> = ({
   userProfile,
   moment,
+  comments,
   showSubmenu,
   onBack,
   onUnlike,
@@ -154,7 +156,7 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
               <Typography
                 sx={{ fontWeight: "bold", color: "primary.dark", mr: 0.5 }}
               >
-                {moment.comments.length}
+                {comments.length}
               </Typography>
               <Typography>Comments</Typography>
             </Box>
@@ -199,7 +201,7 @@ const MomentDetailPage: FC<MomentDetailPageProps> = ({
           <Avatar src={userProfile} />
         </Box>
         <Box sx={{ mt: 7 }}>
-          {moment.comments.map((comment) => (
+          {comments.map((comment) => (
             <Box key={comment.id} sx={{ mb: 2 }}>
               <Comment
                 {...comment}

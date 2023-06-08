@@ -33,6 +33,10 @@ export interface CreateCommentInput {
     momentId: string;
 }
 
+export interface QueryCommentInput {
+    momentId: string;
+}
+
 export interface FetchFriendshipInput {
     userAccountName: string;
     friendAccountName: string;
@@ -141,6 +145,7 @@ export interface Report {
 export interface IQuery {
     moments(input?: Nullable<FilterMomentInput>): Nullable<Moment[]> | Promise<Nullable<Moment[]>>;
     moment(id: string): Moment | Promise<Moment>;
+    comments(input: QueryCommentInput): Comment[] | Promise<Comment[]>;
     characters(): Nullable<Character[]> | Promise<Nullable<Character[]>>;
     categories(): Nullable<Category[]> | Promise<Nullable<Category[]>>;
     tags(): Nullable<Tag[]> | Promise<Nullable<Tag[]>>;

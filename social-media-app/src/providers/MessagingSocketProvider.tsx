@@ -65,11 +65,6 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
           })
         })
         setSocket(newSocket)
-        // socket.on("connect", () => {
-        //   socket!.emit("register", {
-        //     accountName: currentUser.Username
-        //   })
-        // })
       } else {
         disconnectSocketServer()
       }

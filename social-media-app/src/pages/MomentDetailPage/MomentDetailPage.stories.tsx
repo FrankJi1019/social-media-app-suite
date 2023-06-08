@@ -61,6 +61,7 @@ export const General = {
   args: {
     userProfile: profile,
     moment,
+    comments: moment.comments,
     showSubmenu: true,
     onBack: FUNCTION_PLACE_HOLDER,
     onUnlike: FUNCTION_PLACE_HOLDER,
