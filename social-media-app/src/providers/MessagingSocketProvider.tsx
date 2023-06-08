@@ -50,21 +50,21 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
   useEffect(() => {
     ;(async () => {
       if (!socket && getAccessTokenWithoutRefresh() && currentUser) {
-        setSocket(
-          io(socketUrl, {
-            transportOptions: {
-              polling: {
-                extraHeaders: {
-                  Authorization: `Bearer ${getAccessTokenWithoutRefresh()}`
-                }
+        const newSocket = io(socketUrl, {
+          transportOptions: {
+            polling: {
+              extraHeaders: {
+                Authorization: `Bearer ${getAccessTokenWithoutRefresh()}`
               }
             }
-          }).on("connect", () => {
-            socket!.emit("register", {
-              accountName: currentUser.Username
-            })
+          }
+        })
+        newSocket.on("connect", () => {
+          newSocket!.emit("register", {
+            accountName: currentUser.Username
           })
-        )
+        })
+        setSocket(newSocket)
         // socket.on("connect", () => {
         //   socket!.emit("register", {
         //     accountName: currentUser.Username

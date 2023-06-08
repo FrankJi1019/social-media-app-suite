@@ -71,6 +71,7 @@ export class MessagingGateway
     @MessageBody() data: MessageSentDto,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log(data);
     const chat = await this.messagingService.handleMessageSent(
       data.senderUsername,
       data.receiverUsername,
