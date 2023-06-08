@@ -28,6 +28,7 @@ export class ChatService extends BaseService<Chat> {
       .where('s.username IN (:...accountNames)', { accountNames })
       .andWhere('r.username IN (:...accountNames)', { accountNames })
       .andWhere('s.username != r.username')
+      .orderBy('c.createdAt')
       .getMany();
   }
 
