@@ -68,18 +68,10 @@ export const useFetchMomentById = (id: string) => {
       ({
         ...data.moment,
         profile: profilePlaceholder,
-        postDate: utcTimestampToDate(Number(data.moment.createdAt)),
-        comments: data.moment.comments.map(
-          (comment: { createdAt: number; account: { username: string } }) => ({
-            ...comment,
-            commentDate: utcTimestampToDate(Number(comment.createdAt)),
-            profile: profilePlaceholder,
-            isOwnComment: currentUser?.Username === comment.account.username
-          })
-        )
+        postDate: utcTimestampToDate(Number(data.moment.createdAt))
       } as Moment)
     )
-  }, [data, currentUser])
+  }, [data])
 
   return { data: moment, loading, error, reFetch: refetch }
 }

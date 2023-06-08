@@ -37,21 +37,26 @@ export const MOMENT_BY_ID_QUERY = gql`
       likeNumber
       isLiked
       images
-      comments {
-        id
-        content
-        createdAt
-        character {
-          name
-        }
-        account {
-          username
-          profileImage
-        }
-      }
       tags {
         id
         name
+      }
+    }
+  }
+`
+
+export const MOMENT_COMMENTS_QUERY = gql`
+  query QueryComments($input: QueryCommentInput!) {
+    comments(input: $input) {
+      id
+      content
+      createdAt
+      character {
+        name
+      }
+      account {
+        username
+        profileImage
       }
     }
   }
