@@ -32,7 +32,6 @@ const MomentCard: FC<MomentCardProps> = ({
     likeNumber,
     content,
     commentNumber,
-    profile,
     character,
     isLiked,
     isOwnMoment,

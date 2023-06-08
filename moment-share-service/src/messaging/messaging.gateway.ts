@@ -14,7 +14,7 @@ import { MessageSentDto } from './dto/message-sent.dto';
 import { SocketMapping } from '../types/socket';
 import { RegisterClientDto } from './dto/register-client.dto';
 import { UseGuards } from '@nestjs/common';
-import { WsJwtGuard } from "../guards/ws-jwt.guard";
+import { WsJwtGuard } from '../guards/ws-jwt.guard';
 
 @WebSocketGateway({ cors: true })
 export class MessagingGateway

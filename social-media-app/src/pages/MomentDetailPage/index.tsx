@@ -20,10 +20,10 @@ interface MomentDetailPageProps extends PageProps {}
 
 const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   const { id } = useParams()
-  const { getCurrentUser, signOut } = useAuth()
+  const { currentUser, signOut } = useAuth()
   const { openModal, closeModal } = useModal()
 
-  const { data: user } = useFetchAccount(getCurrentUser()?.Username || "")
+  const { data: user } = useFetchAccount(currentUser?.Username || "")
 
   const {
     data: moment,
@@ -42,7 +42,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
   }, [])
 
   const likeMomentHandler = useCallback(async () => {
-    const user = getCurrentUser()
+    const user = currentUser
     if (user) {
       await likeMoment({
         momentId: id as string,
@@ -53,10 +53,10 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       commonArgs.onRunUnauthenticatedAction &&
         commonArgs.onRunUnauthenticatedAction()
     }
-  }, [commonArgs, getCurrentUser, id, likeMoment, reFetchMoment])
+  }, [commonArgs, currentUser, id, likeMoment, reFetchMoment])
 
   const unlikeMomentHandler = useCallback(async () => {
-    const user = getCurrentUser()
+    const user = currentUser
     if (user) {
       await unlikeMoment({
         momentId: id as string,
@@ -67,7 +67,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       commonArgs.onRunUnauthenticatedAction &&
         commonArgs.onRunUnauthenticatedAction()
     }
-  }, [getCurrentUser, unlikeMoment, id, reFetchMoment, commonArgs])
+  }, [currentUser, unlikeMoment, id, reFetchMoment, commonArgs])
 
   const signOutHandler = useCallback(() => {
     signOut()
@@ -78,7 +78,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
     async (comment: string) => {
       if (characterList.length === 0 || !moment) return
       const data = {
-        username: getCurrentUser()!.Username as string,
+        username: currentUser!.Username as string,
         character:
           characterList[Math.floor(Math.random() * characterList.length)],
         content: comment,
@@ -87,7 +87,7 @@ const MomentDetailPageBuilder: FC<MomentDetailPageProps> = (commonArgs) => {
       await createComment(data)
       await reFetchMoment()
     },
-    [characterList, createComment, getCurrentUser, moment, reFetchMoment]
+    [characterList, createComment, currentUser, moment, reFetchMoment]
   )
 
   const chatHandler = useCallback(

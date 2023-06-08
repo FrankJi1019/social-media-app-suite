@@ -17,7 +17,7 @@ import ReportModal from "../../modals/ReportModal"
 interface HomepageProps extends PageProps {}
 
 const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
-  const { getCurrentUser, signOut } = useAuth()
+  const { currentUser, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { closeModal, openModal } = useModal()
@@ -27,11 +27,11 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
     if (!filter || filter === "all") {
       return undefined
     } else if (filter === "followed") {
-      return { followedBy: getCurrentUser()?.Username }
+      return { followedBy: currentUser?.Username }
     } else {
       return { category: filter }
     }
-  }, [getCurrentUser, searchParams])
+  }, [currentUser, searchParams])
 
   const { data: allMoments, reFetch: reFetchAllMoments } =
     useFetchAllMoments(filterOption)
@@ -71,7 +71,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
 
   const likeMomentHandler = useCallback(
     async (momentId: string) => {
-      const user = getCurrentUser()
+      const user = currentUser
       if (user) {
         await likeMoment({ momentId, username: user.Username as string })
         await reFetchAllMoments()
@@ -80,12 +80,12 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
           commonArgs.onRunUnauthenticatedAction()
       }
     },
-    [commonArgs, getCurrentUser, likeMoment, reFetchAllMoments]
+    [commonArgs, currentUser, likeMoment, reFetchAllMoments]
   )
 
   const unlikeMomentHandler = useCallback(
     async (momentId: string) => {
-      const user = getCurrentUser()
+      const user = currentUser
       if (user) {
         await unlikeMoment({ momentId, username: user.Username as string })
         await reFetchAllMoments()
@@ -94,7 +94,7 @@ const HomePageBuilder: FC<HomepageProps> = (commonArgs) => {
           commonArgs.onRunUnauthenticatedAction()
       }
     },
-    [getCurrentUser, unlikeMoment, reFetchAllMoments, commonArgs]
+    [currentUser, unlikeMoment, reFetchAllMoments, commonArgs]
   )
 
   const openMomentHandler = useCallback(

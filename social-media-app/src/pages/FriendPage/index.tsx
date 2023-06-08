@@ -16,8 +16,8 @@ interface FriendPageProps extends PageProps {}
 
 const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
   const { friendshipId } = useParams()
-  const { getCurrentUser } = useAuth()
-  const { emit } = useMessagingSocket()
+  const { currentUser } = useAuth()
+  const { emit, socket } = useMessagingSocket()
 
   const [chatHistory, setChatHistory] = useState<Array<Chat>>([])
 
@@ -32,7 +32,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
 
   const sendMessageHandler = useCallback(
     (message: string) => {
-      const user = getCurrentUser()
+      const user = currentUser
       if (!user) return
       emit("message-sent", {
         content: message,
@@ -40,7 +40,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
         receiverUsername: friendship?.friendAccount.username
       })
     },
-    [emit, friendship?.friendAccount.username, getCurrentUser]
+    [currentUser, emit, friendship?.friendAccount.username]
   )
 
   const goBackHandler = useCallback(() => window.history.back(), [])
@@ -53,12 +53,12 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
         { ...chat, sentTime: utcTimestampToDate(+new Date(chat.createdAt)) }
       ])
     },
-    [setChatHistory]
+    [setChatHistory, socket?.connected]
   )
 
   useEffect(() => {
     ;(async () => {
-      const user = getCurrentUser()
+      const user = currentUser
       if (user && friendship && !isFetchingChatHistory) {
         if (!hasFetchedChatHistory) {
           await fetchChatHistory({
@@ -72,7 +72,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
     chatHistoryFetch,
     fetchChatHistory,
     friendship,
-    getCurrentUser,
+    currentUser,
     hasFetchedChatHistory,
     isFetchingChatHistory
   ])
@@ -81,7 +81,7 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
     <Page {...commonArgs}>
       {friendship ? (
         <FriendPage
-          currentUsername={getCurrentUser()?.Username as string}
+          currentUsername={currentUser?.Username as string}
           friendUsername={friendship.friendAccount.username}
           friendCharacter={friendship.friendCharacter.name}
           chatHistory={chatHistory}

@@ -6,7 +6,8 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef
+  // useRef,
+  useState
 } from "react"
 import { useAuth } from "./CognitoAuthProvider"
 import { io, Socket } from "socket.io-client"
@@ -16,7 +17,7 @@ interface MessagingSocketProviderProps extends ProviderProps {
 }
 
 interface MessagingSocketProviderValue {
-  socket: Socket
+  socket: Socket | null
   emit: (message: string, data: any) => void
 }
 
@@ -26,49 +27,60 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
   socketUrl,
   children
 }) => {
-  const { getAccessTokenWithoutRefresh } = useAuth()
-  const socketRef = useRef(
-    io(socketUrl, {
-      autoConnect: false,
-      transportOptions: {
-        polling: {
-          extraHeaders: {
-            Authorization: `Bearer ${getAccessTokenWithoutRefresh()}`
-          }
-        }
-      }
-    })
-  )
-  const { getCurrentUser } = useAuth()
+  const { getAccessTokenWithoutRefresh, currentUser } = useAuth()
+  // const socketRef = useRef<Socket | null>(null)
+  const [socket, setSocket] = useState<Socket | null>(null)
 
   const disconnectSocketServer = useCallback(() => {
-    if (socketRef.current.connected) {
-      socketRef.current.emit("deregister")
-      socketRef.current.disconnect()
+    if (socket?.connected) {
+      socket.emit("deregister")
+      socket.disconnect()
     }
-  }, [])
+  }, [socket])
 
-  const emit = useCallback((message: string, data: any) => {
-    if (socketRef.current.connected) {
-      socketRef.current.emit(message, data)
-    }
-  }, [])
+  const emit = useCallback(
+    (message: string, data: any) => {
+      if (socket?.connected) {
+        socket.emit(message, data)
+      }
+    },
+    [socket]
+  )
 
   useEffect(() => {
     ;(async () => {
-      const user = getCurrentUser()
-      if (user && !socketRef.current.connected) {
-        socketRef.current.connect()
-        socketRef.current.on("connect", () => {
-          socketRef.current.emit("register", {
-            accountName: user.Username
+      if (!socket && getAccessTokenWithoutRefresh() && currentUser) {
+        setSocket(
+          io(socketUrl, {
+            transportOptions: {
+              polling: {
+                extraHeaders: {
+                  Authorization: `Bearer ${getAccessTokenWithoutRefresh()}`
+                }
+              }
+            }
+          }).on("connect", () => {
+            socket!.emit("register", {
+              accountName: currentUser.Username
+            })
           })
-        })
+        )
+        // socket.on("connect", () => {
+        //   socket!.emit("register", {
+        //     accountName: currentUser.Username
+        //   })
+        // })
       } else {
         disconnectSocketServer()
       }
     })()
-  }, [disconnectSocketServer, getCurrentUser])
+  }, [
+    socket,
+    disconnectSocketServer,
+    currentUser,
+    socketUrl,
+    getAccessTokenWithoutRefresh
+  ])
 
   useEffect(() => {
     window.addEventListener("beforeunload", disconnectSocketServer)
@@ -77,10 +89,10 @@ const MessagingSocketProvider: FC<MessagingSocketProviderProps> = ({
 
   const value = useMemo(
     () => ({
-      socket: socketRef.current,
+      socket,
       emit
     }),
-    [emit]
+    [emit, socket]
   )
 
   return <context.Provider value={value}>{children}</context.Provider>
@@ -97,11 +109,11 @@ export const useSingleSubscribe = (
 ) => {
   const { socket } = useMessagingSocket()
   useEffect(() => {
-    if (!socket.hasListeners(message)) {
+    if (socket && socket.connected && !socket.hasListeners(message)) {
       socket.on(message, handler)
     }
     return () => {
-      socket.off(message)
+      socket && socket.off(message)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handler, message, socket, ...deps])
@@ -114,7 +126,7 @@ export const usePersistentSubscribe = (
 ) => {
   const { socket } = useMessagingSocket()
   useEffect(() => {
-    if (!socket.hasListeners(message)) {
+    if (socket && !socket.hasListeners(message)) {
       socket.on(message, handler)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,5 +135,5 @@ export const usePersistentSubscribe = (
 
 export const useUnsubscribeMessage = () => {
   const { socket } = useMessagingSocket()
-  return (message: string) => socket.off(message)
+  return (message: string) => socket?.off(message)
 }

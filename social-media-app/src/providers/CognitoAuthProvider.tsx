@@ -28,7 +28,7 @@ interface CognitoAuthProviderValue {
   confirmUser: (username: string, code: string) => Promise<void>
   getAccessToken: () => Promise<string | undefined>
   getAccessTokenWithoutRefresh: () => string | undefined
-  getCurrentUser: () => User | null
+  currentUser: User | null
   isSessionValid: () => boolean
   signOut: () => void
 }
@@ -54,12 +54,10 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
     [region]
   )
 
-  const getCurrentUser = useCallback(() => currentUser, [currentUser])
-
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = new Cookies().get(refreshTokenCookieName)
     if (!refreshToken) {
-      throw new Error("Invalid refresh token")
+      return
     }
     const res = await cognitoClient.send(
       new InitiateAuthCommand({
@@ -225,7 +223,7 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
         confirmUser,
         getAccessToken,
         getAccessTokenWithoutRefresh,
-        getCurrentUser,
+        currentUser,
         isSessionValid,
         signOut
       } as CognitoAuthProviderValue),
@@ -233,7 +231,7 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
       confirmUser,
       getAccessToken,
       getAccessTokenWithoutRefresh,
-      getCurrentUser,
+      currentUser,
       isSessionValid,
       register,
       signIn,

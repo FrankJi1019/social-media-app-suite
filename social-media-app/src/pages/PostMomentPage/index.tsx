@@ -16,7 +16,7 @@ const MAX_IMG_NUM = 9
 interface PostMomentPageProps extends PageProps {}
 
 const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
-  const { getCurrentUser, signOut } = useAuth()
+  const { currentUser, signOut } = useAuth()
   const navigate = useNavigate()
   const notify = useNotification()
 
@@ -29,7 +29,7 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
 
   const postHandler = useCallback(
     async (content: string, tags: Array<string>, images: Array<FormData>) => {
-      const user = await getCurrentUser()
+      const user = await currentUser
       if (user) {
         const params = {
           content,
@@ -44,7 +44,7 @@ const PostMomentPageBuilder: FC<PostMomentPageProps> = (commonArgs) => {
         alert("You are not logged in")
       }
     },
-    [character, getCurrentUser, mutate, navigate]
+    [character, currentUser, mutate, navigate]
   )
 
   const requestRandomNameHandler = useCallback(() => {
