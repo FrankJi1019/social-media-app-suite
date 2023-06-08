@@ -103,6 +103,7 @@ const FriendPage: FC<FriendPageProps> = ({
           <Box sx={{ flex: 1 }} />
         </Box>
         <Box
+          className={"message-container"}
           sx={{
             flex: 1,
             paddingX: 2,
@@ -111,7 +112,7 @@ const FriendPage: FC<FriendPageProps> = ({
             "&::-webkit-scrollbar": { width: 0 }
           }}
         >
-          {chatMessageList}
+          <Box sx={{ height: "100%" }}>{chatMessageList}</Box>
         </Box>
         <Box
           sx={{

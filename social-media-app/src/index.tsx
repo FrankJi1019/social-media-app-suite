@@ -15,6 +15,10 @@ import "./fonts.css"
 import MessagingSocketProvider from "./providers/MessagingSocketProvider"
 import ModalProvider from "./providers/ModalProvider"
 
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual"
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>

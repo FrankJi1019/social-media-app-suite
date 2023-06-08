@@ -30,6 +30,8 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
     loading: isFetchingChatHistory
   } = useLazyFetchChatHistory()
 
+  const scrollMessageContainerToBottom = useCallback(() => {}, [])
+
   const sendMessageHandler = useCallback(
     (message: string) => {
       const user = currentUser
@@ -39,8 +41,14 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
         senderUsername: user.Username,
         receiverUsername: friendship?.friendAccount.username
       })
+      scrollMessageContainerToBottom()
     },
-    [currentUser, emit, friendship?.friendAccount.username]
+    [
+      currentUser,
+      emit,
+      friendship?.friendAccount.username,
+      scrollMessageContainerToBottom
+    ]
   )
 
   const goBackHandler = useCallback(() => window.history.back(), [])
@@ -55,6 +63,15 @@ const FriendPageBuilder: FC<FriendPageProps> = (commonArgs) => {
     },
     [setChatHistory, socket?.connected]
   )
+
+  useEffect(() => {
+    const container = document.querySelector(".message-container")
+    if (!container) return
+    container.scroll({
+      top: container.scrollHeight - container.clientHeight,
+      left: 0
+    })
+  }, [chatHistory.length])
 
   useEffect(() => {
     ;(async () => {
