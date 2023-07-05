@@ -6,16 +6,21 @@ import MomentsScreen from "../screens/MomentsScreen";
 import PostMomentScreen from "../screens/PostMomentScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Color } from "../theme";
+import { useTheme } from "react-native-paper";
 
 const { Screen, Navigator } = createBottomTabNavigator();
 
 const MainRouter = () => {
+  const theme = useTheme();
+
   return (
     <NavigationContainer>
       <Navigator
         screenOptions={{
-          tabBarActiveTintColor: Color.primary.main,
+          tabBarActiveTintColor: theme.colors.onPrimary,
+          tabBarStyle: { backgroundColor: theme.colors.primary },
+          headerTintColor: theme.colors.onPrimary,
+          headerStyle: { backgroundColor: theme.colors.primary },
         }}
       >
         <Screen
