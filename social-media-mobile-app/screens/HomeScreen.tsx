@@ -1,9 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
+import { GRAPHQL_URL } from "@env";
+import { useFetchAllCategories } from "../api-hooks/category";
 
 const HomeScreen = () => {
+  const { data, loading } = useFetchAllCategories();
+
+  console.log(data);
+
   return (
     <View style={styles.container}>
-      <Text>HOME SCREEN</Text>
+      <Text>{GRAPHQL_URL}</Text>
     </View>
   );
 };

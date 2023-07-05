@@ -2,13 +2,16 @@ import { StatusBar } from "expo-status-bar";
 import MainRouter from "./routers/MainRouter";
 import { PaperProvider } from "react-native-paper";
 import { theme } from "./theme";
+import GraphqlProvider from "./providers/GraphqlProvider";
 
 const App = () => {
   return (
     <>
       <StatusBar style="auto" />
       <PaperProvider theme={theme}>
-        <MainRouter />
+        <GraphqlProvider>
+          <MainRouter />
+        </GraphqlProvider>
       </PaperProvider>
     </>
   );
