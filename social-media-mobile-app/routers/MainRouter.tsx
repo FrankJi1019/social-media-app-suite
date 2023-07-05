@@ -1,8 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Screens } from "../routes/screens";
-import HomeScreen from "../screens/HomeScreen";
-import MomentsScreen from "../screens/MomentsScreen";
+import DiscoverScreen from "../screens/DiscoverScreen";
+import FriendsScreen from "../screens/FriendsScreen";
 import PostMomentScreen from "../screens/PostMomentScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -22,10 +22,11 @@ const MainRouter = () => {
           headerTintColor: theme.colors.onPrimary,
           headerStyle: { backgroundColor: theme.colors.primary },
         }}
+        initialRouteName={Screens.DISCOVER_SCREEN}
       >
         <Screen
-          name={Screens.HOME_SCREEN}
-          component={HomeScreen}
+          name={Screens.FRIENDS_SCREEN}
+          component={FriendsScreen}
           options={{
             tabBarLabel: "Buddies",
             tabBarIcon: ({ color, size }) => (
@@ -34,8 +35,8 @@ const MainRouter = () => {
           }}
         />
         <Screen
-          name={Screens.MOMENTS_SCREEN}
-          component={MomentsScreen}
+          name={Screens.DISCOVER_SCREEN}
+          component={DiscoverScreen}
           options={{
             tabBarLabel: "Discover",
             tabBarIcon: ({ color, size }) => (

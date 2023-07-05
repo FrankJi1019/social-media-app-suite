@@ -1,6 +1,6 @@
 export const Screens = {
-  HOME_SCREEN: "home",
-  MOMENTS_SCREEN: "moments",
+  FRIENDS_SCREEN: "friends",
+  DISCOVER_SCREEN: "discover",
   POST_MOMENT_SCREEN: "post-moment",
   PROFILE_SCREEN: "profile",
 };
