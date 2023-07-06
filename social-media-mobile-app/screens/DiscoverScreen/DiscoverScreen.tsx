@@ -33,6 +33,7 @@ const DiscoverScreen: FC<DiscoverScreenProps> = ({
           }}
         >
           <FlatList
+            showsHorizontalScrollIndicator={false}
             horizontal
             data={filterOptions}
             renderItem={({ item: { text, filter }, index }) => (
@@ -69,6 +70,7 @@ const DiscoverScreen: FC<DiscoverScreenProps> = ({
         </View>
         <View style={{ flex: 1 }}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={moments}
             keyExtractor={({ id }) => id}
             renderItem={({ item }) => (
