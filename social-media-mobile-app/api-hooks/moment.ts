@@ -6,7 +6,8 @@ import { Character } from "../types/character";
 import { useMemo } from "react";
 import { utcTimestampToDate } from "../util/time";
 // @ts-ignore
-import profilePlaceholder from "../assets/placeholders/profile-placeholder.jpg"
+import profilePlaceholder from "../assets/placeholders/profile-placeholder.jpg";
+import { Image } from "react-native";
 
 export const useFetchAllMoments = (input?: {
   category?: string;
@@ -16,7 +17,6 @@ export const useFetchAllMoments = (input?: {
     fetchPolicy: "network-only",
     variables: { input },
   });
-
   const moments: Array<MomentBrief> = useMemo(() => {
     if (!data || loading) return [];
 
@@ -35,7 +35,7 @@ export const useFetchAllMoments = (input?: {
         return {
           ...moment,
           isOwnMoment: false,
-          profile: profilePlaceholder,
+          profile: Image.resolveAssetSource(profilePlaceholder).uri,
           postDate: utcTimestampToDate(Number(moment.createdAt)),
         } as MomentBrief;
       }

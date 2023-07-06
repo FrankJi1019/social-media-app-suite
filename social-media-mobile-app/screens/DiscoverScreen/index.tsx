@@ -4,10 +4,20 @@ import { useMemo, useState, useCallback } from "react";
 import { useFetchAllMoments } from "../../api-hooks/moment";
 
 const DiscoverScreenBuilder = () => {
-  const { data: categories } = useFetchAllCategories();
-  const { data: moments } = useFetchAllMoments();
-
   const [filter, setFilter] = useState("all");
+
+  const filterOption = useMemo(() => {
+    if (filter === "all" || filter === "followed") {
+      return undefined;
+    } else {
+      return {
+        category: filter,
+      };
+    }
+  }, [filter]);
+
+  const { data: categories } = useFetchAllCategories();
+  const { data: moments } = useFetchAllMoments(filterOption);
 
   const filterOptions = useMemo(() => {
     if (categories.length === 0) return [];
@@ -27,10 +37,11 @@ const DiscoverScreenBuilder = () => {
     [setFilter]
   );
 
-  console.log(JSON.stringify(moments, null, 2));
+  // console.log(JSON.stringify(moments, null, 2));
 
   return (
     <DiscoverScreen
+      moments={moments}
       currentFilter={filter}
       filterOptions={filterOptions}
       onChangeFilter={changeFilterHandler}

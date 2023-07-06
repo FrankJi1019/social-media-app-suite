@@ -2,6 +2,8 @@ import Screen from "../../containers/Screen";
 import { Text, useTheme } from "react-native-paper";
 import { FC } from "react";
 import { View, FlatList, Pressable, SafeAreaView } from "react-native";
+import { MomentBrief } from "../../types/moment";
+import Moment from "../../components/Moment";
 
 interface DiscoverScreenProps {
   currentFilter: string;
@@ -9,19 +11,21 @@ interface DiscoverScreenProps {
     text: string;
     filter: string;
   }>;
+  moments: Array<MomentBrief>;
   onChangeFilter: (filter: string) => void;
 }
 
 const DiscoverScreen: FC<DiscoverScreenProps> = ({
   filterOptions,
   currentFilter,
+  moments,
   onChangeFilter,
 }) => {
   const theme = useTheme();
 
   return (
     <Screen hideHeader title="Discover">
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
             borderBottomColor: "#ccc",
@@ -63,8 +67,31 @@ const DiscoverScreen: FC<DiscoverScreenProps> = ({
             keyExtractor={(item) => item.filter}
           />
         </View>
-        <View>
-          <Text>Filtering by {currentFilter}</Text>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={moments}
+            keyExtractor={({ id }) => id}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  paddingVertical: 16,
+                  paddingHorizontal: 16,
+                  borderBottomColor: "#f8f8f8",
+                  borderBottomWidth: 16,
+                }}
+              >
+                <Moment
+                  profile={item.profile}
+                  character={item.character.name}
+                  time={item.postDate}
+                  content={item.content}
+                  likeNumber={item.likeNumber}
+                  commentNumber={item.commentNumber}
+                  images={item.images}
+                />
+              </View>
+            )}
+          />
         </View>
       </SafeAreaView>
     </Screen>
