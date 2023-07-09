@@ -5,5 +5,5 @@ export interface ProviderProps {
 }
 
 export interface ContainerProps {
-  children: ReactNode;
+  children?: ReactNode;
 }

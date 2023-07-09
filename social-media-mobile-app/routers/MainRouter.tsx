@@ -17,12 +17,12 @@ const MainRouter = () => {
     <NavigationContainer>
       <Navigator
         screenOptions={{
-          tabBarActiveTintColor: theme.colors.onPrimary,
-          tabBarStyle: { backgroundColor: theme.colors.primary },
-          headerTintColor: theme.colors.onPrimary,
-          headerStyle: { backgroundColor: theme.colors.primary },
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarStyle: { backgroundColor: theme.colors.onPrimary },
+          headerTintColor: theme.colors.primary,
+          headerStyle: { backgroundColor: theme.colors.onPrimary },
         }}
-        initialRouteName={Screens.DISCOVER_SCREEN}
+        initialRouteName={Screens.PROFILE_SCREEN}
       >
         <Screen
           name={Screens.FRIENDS_SCREEN}

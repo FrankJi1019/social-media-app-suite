@@ -55,7 +55,7 @@ const DiscoverScreen: FC<DiscoverScreenProps> = ({
                       ],
                       color:
                         currentFilter === filter
-                          ? theme.colors.onPrimary
+                          ? theme.colors.primary
                           : "#777",
                       fontWeight: "500",
                     }}
