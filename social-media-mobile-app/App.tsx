@@ -9,9 +9,9 @@ const App = () => {
     <>
       <StatusBar style="auto" />
       <PaperProvider theme={theme}>
-        <GraphqlProvider>
-          <MainRouter />
-        </GraphqlProvider>
+          <GraphqlProvider>
+            <MainRouter />
+          </GraphqlProvider>
       </PaperProvider>
     </>
   );

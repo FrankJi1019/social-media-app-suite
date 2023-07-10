@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import { TextInput, Button } from "react-native-paper";
 
 interface RegisterFormProps {
@@ -10,6 +10,10 @@ interface RegisterFormProps {
 const ResigterForm: FC<RegisterFormProps> = ({ onRegister, onSwitchForm }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const registerHandler = useCallback(() => {
+    onRegister(username, password);
+  }, []);
 
   return (
     <View
@@ -58,7 +62,7 @@ const ResigterForm: FC<RegisterFormProps> = ({ onRegister, onSwitchForm }) => {
         </View>
       </View>
       <View>
-        <Button mode="contained" onPress={() => onRegister(username, password)}>
+        <Button mode="contained" onPress={registerHandler}>
           Register
         </Button>
         <Button onPress={onSwitchForm}>Already got account?</Button>
