@@ -37,8 +37,6 @@ const DiscoverScreenBuilder = () => {
     [setFilter]
   );
 
-  // console.log(JSON.stringify(moments, null, 2));
-
   return (
     <DiscoverScreen
       moments={moments}

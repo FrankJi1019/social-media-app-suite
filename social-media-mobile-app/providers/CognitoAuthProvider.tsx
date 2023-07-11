@@ -6,36 +6,19 @@ import {
   useEffect,
   useMemo,
   useState,
+  useLayoutEffect,
 } from "react";
-import {
-  AuthFlowType,
-  CognitoIdentityProviderClient,
-  ConfirmSignUpCommand,
-  GetUserCommand,
-  InitiateAuthCommand,
-  SignUpCommand,
-  GetUserCommandOutput,
-} from "@aws-sdk/client-cognito-identity-provider";
 import { getTokenStatus } from "../util/auth";
 import { ProviderProps } from "../types/props";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Amplify, Auth } from "aws-amplify";
+import { CognitoUserSession } from "amazon-cognito-identity-js";
 
-export type User = GetUserCommandOutput;
+type User = CognitoUserSession;
 
 interface CognitoAuthProviderValue {
-  user: User;
-  refreshAccessToken: () => Promise<void>;
-  getAccessToken: () => string;
-  fetchUserWithToken: () => Promise<User | null>;
+  isSessionValid: boolean;
   signIn: (username: string, password: string) => Promise<void>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
-  confirmUser: (username: string, code: string) => Promise<void>;
-  isSessionValid: () => boolean;
-  signOut: () => Promise<void>;
 }
 
 interface CognitoAuthProviderProps extends ProviderProps {
@@ -53,182 +36,56 @@ const CognitoAuthProvider: FC<CognitoAuthProviderProps> = ({
   children,
   region,
   clientId,
+  userPoolId,
 }) => {
+  const [accessToken, setAccessToken] = useState("");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string>("");
 
-  const cognitoClient = useMemo(
-    () => new CognitoIdentityProviderClient({ region }),
-    [region]
-  );
-
-  const refreshAccessToken = useCallback(async () => {
-    const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
-    if (!refreshToken || refreshToken.trim() === "") {
-      return;
-    }
-    const res = await cognitoClient.send(
-      new InitiateAuthCommand({
-        ClientId: clientId,
-        AuthFlow: AuthFlowType.REFRESH_TOKEN_AUTH,
-        AuthParameters: {
-          REFRESH_TOKEN: refreshToken,
-        },
-      })
-    );
-    const newAccessToken = res.AuthenticationResult?.AccessToken || "";
-    await AsyncStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, newAccessToken);
+  const signIn = useCallback(async (username: string, password: string) => {
+    const signInResponse = await Auth.signIn({ username, password });
+    const user = {
+      username: signInResponse.username,
+      email: signInResponse.attributes.email,
+    };
+    const newAccessToken =
+      signInResponse.signInUserSession.accessToken.jwtToken;
+    const refreshToken = signInResponse.signInUserSession.refreshToken.token;
+    setCurrentUser(await Auth.currentSession());
     setAccessToken(newAccessToken);
-  }, [clientId, cognitoClient, setAccessToken]);
-
-  const getAccessToken = useCallback(() => {
-    const tokenStatus = getTokenStatus(accessToken);
-    if (tokenStatus === "VALID" || tokenStatus === "EMPTY") {
-      return accessToken;
-    } else {
-      setAccessToken("");
-      return "";
-    }
-  }, [accessToken, setAccessToken]);
-
-  const fetchUserWithToken = useCallback(async () => {
-    if (getTokenStatus(accessToken) !== "VALID") {
-      return null;
-    }
-    return (
-      (await cognitoClient.send(
-        new GetUserCommand({
-          AccessToken: accessToken as string,
-        })
-      )) || null
-    );
-  }, [accessToken]);
-
-  const signIn = useCallback(
-    async (username: string, password: string) => {
-      try {
-        const res = await cognitoClient.send(
-          new InitiateAuthCommand({
-            ClientId: clientId,
-            AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
-            AuthParameters: {
-              USERNAME: username,
-              PASSWORD: password,
-            },
-          })
-        );
-        await Promise.all([
-          AsyncStorage.setItem(
-            ACCESS_TOKEN_STORAGE_NAME,
-            res.AuthenticationResult?.AccessToken || ""
-          ),
-          AsyncStorage.setItem(
-            REFRESH_TOKEN_STORAGE_NAME,
-            res.AuthenticationResult?.RefreshToken || ""
-          ),
-        ]);
-        const user = await fetchUserWithToken();
-        setCurrentUser(user);
-      } catch (e: any) {
-        throw new Error(e.message);
-      }
-    },
-    [clientId, cognitoClient, fetchUserWithToken, setCurrentUser]
-  );
-
-  const register = useCallback(
-    async (username: string, email: string, password: string) => {
-      try {
-        await cognitoClient.send(
-          new SignUpCommand({
-            ClientId: clientId,
-            Username: username,
-            Password: password,
-            UserAttributes: [{ Name: "email", Value: email }],
-          })
-        );
-      } catch (e: any) {
-        throw new Error(
-          e.message.includes(":") ? e.message.split(": ")[1] : e.message
-        );
-      }
-    },
-    [clientId, cognitoClient]
-  );
-
-  const confirmUser = useCallback(
-    async (username: string, code: string) => {
-      try {
-        await cognitoClient.send(
-          new ConfirmSignUpCommand({
-            ClientId: clientId,
-            Username: username,
-            ConfirmationCode: code,
-          })
-        );
-      } catch (e: any) {
-        throw new Error(e.message);
-      }
-    },
-    [clientId, cognitoClient]
-  );
-
-  const isSessionValid = useCallback(() => {
-    return getTokenStatus(accessToken) === "VALID";
-  }, [accessToken]);
-
-  const signOut = useCallback(async () => {
     await Promise.all([
-      AsyncStorage.removeItem(REFRESH_TOKEN_STORAGE_NAME),
-      AsyncStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME),
+      AsyncStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, newAccessToken),
+      AsyncStorage.setItem(REFRESH_TOKEN_STORAGE_NAME, refreshToken),
     ]);
-    setCurrentUser(null);
-  }, [setCurrentUser]);
+  }, []);
+
+  const isSessionValid = useMemo(
+    () => getTokenStatus(accessToken) === "VALID",
+    [accessToken]
+  );
 
   useEffect(() => {
     (async () => {
-      if (getTokenStatus(accessToken) !== "VALID") {
-        const storedAccessToken = await AsyncStorage.getItem(
-          ACCESS_TOKEN_STORAGE_NAME
-        );
-        if (
-          storedAccessToken &&
-          getTokenStatus(storedAccessToken) === "VALID"
-        ) {
-          setAccessToken(storedAccessToken);
-        } else {
-          await refreshAccessToken();
-        }
-        const user = await fetchUserWithToken();
-        setCurrentUser(user);
+      const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_STORAGE_NAME);
+      if (accessToken && getTokenStatus(accessToken) === "VALID") {
+        setAccessToken(accessToken);
+        setCurrentUser(await Auth.currentSession());
       }
     })();
-  }, [accessToken, fetchUserWithToken, setCurrentUser]);
+  }, []);
+
+  useLayoutEffect(() => {
+    Amplify.configure({
+      aws_project_region: region,
+      aws_cognito_identity_pool_id: userPoolId,
+      aws_cognito_region: region,
+      aws_user_pools_id: userPoolId,
+      aws_user_pools_web_client_id: clientId,
+    });
+  }, [region, userPoolId, clientId]);
 
   const values = useMemo(
-    () =>
-      ({
-        user: currentUser,
-        refreshAccessToken,
-        getAccessToken,
-        fetchUserWithToken,
-        signIn,
-        register,
-        confirmUser,
-        isSessionValid,
-        signOut,
-      } as CognitoAuthProviderValue),
-    [
-      currentUser,
-      refreshAccessToken,
-      getAccessToken,
-      fetchUserWithToken,
-      signIn,
-      register,
-      confirmUser,
-      isSessionValid,
-      signOut,
-    ]
+    () => ({ signIn, isSessionValid } as CognitoAuthProviderValue),
+    [signIn, isSessionValid]
   );
 
   return <context.Provider value={values}>{children}</context.Provider>;

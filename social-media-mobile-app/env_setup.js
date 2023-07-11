@@ -5,8 +5,8 @@ const nets = networkInterfaces();
 
 const localIp = nets["Wi-Fi"][1].address;
 
-const env = readFileSync(".env.example", "utf-8").replaceAll(
-  "localhost",
+const env = readFileSync(".env", "utf-8").replaceAll(
+  /((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}/g,
   localIp
 );
 

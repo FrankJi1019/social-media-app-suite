@@ -15,11 +15,34 @@ import { FC } from "react";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 interface ProfileScreenProps {
+  isAuthenticated: boolean;
   onSignIn: (username: string, password: string) => void;
   onRegister: (username: string, password: string) => void;
 }
 
-const ProfileScreen: FC<ProfileScreenProps> = ({ onSignIn, onRegister }) => {
+interface UnAuthenticatedScreenProps {
+  onSignIn: (username: string, password: string) => void;
+  onRegister: (username: string, password: string) => void;
+}
+
+const ProfileScreen: FC<ProfileScreenProps> = ({
+  isAuthenticated,
+  onSignIn,
+  onRegister,
+}) => {
+  if (isAuthenticated) {
+    return <AuthenticatedScreen />;
+  } else {
+    return (
+      <UnAuthenticatedScreen onRegister={onRegister} onSignIn={onSignIn} />
+    );
+  }
+};
+
+const UnAuthenticatedScreen: FC<UnAuthenticatedScreenProps> = ({
+  onRegister,
+  onSignIn,
+}) => {
   const theme = useTheme();
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -112,6 +135,14 @@ const ProfileScreen: FC<ProfileScreenProps> = ({ onSignIn, onRegister }) => {
         </KeyboardAvoidingView>
       </ScrollView>
     </Screen>
+  );
+};
+
+const AuthenticatedScreen = () => {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>123</Text>
+    </View>
   );
 };
 
